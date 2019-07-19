@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>景点列表</title>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .table tbody tr td,thead tr th{
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 p-0">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>景点管理</h1>
+                </div>
+                <ol class="breadcrumb text-right">
+                    <li><a>景点列表</a></li>
+                </ol>
+            </div>
+        </div><!-- /# column -->
+    </div><!-- /# row -->
+    <p th:if="${error}" th:text="${error}" style="color: red"></p>
+    <p th:if="${success}" th:text="${success}" style="color: green"></p>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card alert">
+            <div class="favourite-menu-details">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div class="favourite-menu-img">
+                               景点编号
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-des" style="width:300px;margin-right: 0">
+                                <div class="product_name">
+                                    <h4>景点名称</h4>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    国家
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    区域
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                   景点坐标
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    发布日期
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt" style="text-align: center">
+                                    操作
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="place:${placeList}">
+                        <td>
+                            <div class="favourite-menu-img" th:text="${place.id}">
+                                景点编号
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-des" style="width:300px;margin-right: 0">
+                                <div class="product_name">
+                                    <h4 th:text="${place.name}">景点名称</h4>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <span th:if="${place.city}" th:text="${place.city.name}"></span>
+                                    <span th:unless="${place.city}" th:text="未添加坐标">未添加国家</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <span th:text="${place.area}">地区</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <span th:if="${place} and ${place.position}" th:text="'经度:'+${place.position.p1}+'纬度:'+${place.position.p2}"></span>
+                                    <span th:unless="${place} and ${place.position}" th:text="未添加坐标">未添加坐标</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt" th:text="${#dates.format(place.createTime,'yyyy-MM-dd HH:hh:mm')}">
+                                    发布日期
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <a th:href="@{'/admin/place/edit?id='+${place.id}}" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="点击进入可修改信息">修改</a>  <a  th:href="@{'/admin/place/delete?id='+${place.id}}" class="btn btn-danger btn-xs" onClick="return confirm('确定删除?,删除后加入回收站!');" data-toggle="tooltip" data-placement="top" title="删除后加入回收站!">删除</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <!--分页-->
+                <nav aria-label="Page navigation" style="text-align: center">
+                    <ul class="pagination">
+                        <li class="disabled" th:class="${this==1?'disabled':''}" th:switch="${this}">
+                            <a th:case="1" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                            <a th:case="*" th:href="@{'/admin/place/list?pageNum='+${this-1}}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <li th:each="i:${#numbers.sequence(1,pages)}">
+                            <a th:href="@{'/admin/place/list?pageNum='+${i}}" th:text="${i}">1</a>
+                        </li>
+
+                        <li th:class="${this == pages?'disabled':''}" >
+                            <a th:if="${this==pages or this== pages+1}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                            <a th:unless="${this==pages or this== pages+1}" th:href="@{'/admin/place/list?pageNum='+${this + 1}}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <a th:href="@{'/admin/place/edit'}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="添加新景点">添加景点</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a th:href="@{'/admin/place/list'}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="显示全部">查询全部</a>&nbsp;&nbsp;&nbsp;&nbsp;
+            <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"  >搜索景点</a>
+        </div><!-- /# card -->
+    </div>
+</div><!-- /# row -->
+</div>
+
+<!--弹窗查询-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document" style="margin: -100px auto;width: 500px;">
+        <div class="modal-content" >
+            <div class="modal-body">
+                <form action="/admin/place/key" method="post">
+                    <div class="form-group">
+                        <label  class="control-label">需要查找的类型:</label><br/>
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <select name="type" class="btn btn-info" >
+                                    <option value="0">国家</option>
+                                    <option value="1">省份</option>
+                                    <option value="2">城市</option>
+                                    <option value="3">县城</option>
+                                    <option value="-1">景点名称</option>
+                                </select>
+                            </div><!-- /btn-group -->
+                            <input type="text" name="key" class="form-control" placeholder="请输入关键字...."><span class="input-group-btn"><button class="btn btn-success">搜索!</button></span>
+                        </div><!-- /input-group -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js" ></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}" src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js" ></script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('#myModal').on('shown.bs.modal', function () {
+            $('#myInput').focus()
+        })
+    })
+</script>
+</html>

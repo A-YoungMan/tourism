@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- Styles -->
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>景点管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a href="/admin/place/list">景点列表</a></li>
+                            <li><a href="#">景点编辑/新增</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card alert">
+                            <div class="card-header">
+                                <h4>新增/修改景点</h4><br/>
+                                <a href="javascript:history.go(-1)" class="btn btn-success">返回上一页</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="menu-upload-form">
+                                    <!--表单-->
+                                    <form class="form-horizontal" action="/admin/place/save" method="post">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>景点编号</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="id" autocomplete="off" class="form-control"
+                                                       th:if="${place}" th:value="${place.id}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span
+                                                    style="color: red">*</span>名称</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="name" autocomplete="off" class="form-control"
+                                                       placeholder="景点名称....." th:if="${place}"
+                                                       th:value="${place.name}">
+                                                <input type="text" name="name" autocomplete="off" class="form-control"
+                                                       placeholder="景点名称....." th:unless="${place}">
+                                            </div>
+                                        </div>
+                                        <!--Ajax请求国家操作-->
+                                        <div class="form-group" style="margin: 0">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>景点所属国家</label>
+                                            <div class="col-sm-10">
+                                                <p>请选择景点所在的国家&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: red">*</span>
+                                                    <small>如选择不存在,可在右侧添加</small>
+                                                    <span th:if="${place} and ${place.city}" th:text="${place.city.id}" id="cityId" hidden></span>
+                                                </p>
+                                                <div class="input-group" style="border: 2px white solid;width: 500px;">
+                                                    <select name="cityId" style="height: 42px;border-color: #e7e7e7;float: left">
+                                                    </select>
+                                                    <div style="float: left" id="countryBox">
+                                                        <div class="col-lg-6" style="width: 100%">
+                                                            <div class="input-group">
+                                                                <input type="text" name="countryName"
+                                                                       class="form-control" placeholder="新增...">
+                                                                <span class="input-group-btn">
+                                                                    <a class="btn btn-default saveCountry"
+                                                                       type="button" >添加</a>
+                                                                </span>
+                                                            </div><!-- /input-group -->
+                                                        </div><!-- /.col-lg-6 -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>景点所在/国内直接选择，国外手动录入</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="area" autocomplete="off"
+                                                       class="form-control city"
+                                                       placeholder="地区...." th:if="${place}" th:value="${place.area}" required>
+                                                <input type="text" name="area" autocomplete="off"
+                                                       class="form-control city"
+                                                       placeholder="地区...." th:unless="${place}" required>
+                                                省份：<select id="province" hidden></select>
+                                                城市：<select id="city" hidden></select>
+                                                地区：<select id="area" hidden></select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span
+                                                    style="color: red">*</span>经度</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="p1" autocomplete="off" class="form-control"
+                                                       th:if="${place} and ${place.position}"
+                                                       th:value="${place.position.p1}" required>
+                                                <input type="text" name="p1" autocomplete="off" class="form-control"
+                                                       th:unless="${place} and ${place.position}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>纬度</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="p2" autocomplete="off" class="form-control"
+                                                       th:if="${place} and ${place.position}"
+                                                       th:value="${place.position.p2}" required>
+                                                <input type="text" name="p2" autocomplete="off" class="form-control"
+                                                       th:unless="${place} and ${place.position}" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-lg btn-primary">保存</button>
+                                            </div>
+                                        </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+                </div><!-- /# row -->     </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div><!-- /# content wrap -->
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/layDate-v5.0.9/laydate/laydate.js}" src="../../../static/layDate-v5.0.9/laydate/laydate.js"></script>
+<script th:src="@{/js/cropbox.js}" src="../../../static/js/cropbox.js"></script>
+
+<script>
+    /*Ajax对景点所在国家操作*/
+    $(function () {
+        var url = "/admin/place/ajax";
+        countryList(url);
+        addCountry(url);
+        /*判断输入框的值是否可以提交，提示用户*/
+        $("input[name='countryName']").bind('input propertychange',function(){
+            var value = $(this).val();
+            var ib =true;
+            /*判断当前国家是否存在是否*/
+            $("select[name='cityId']").children().each(function (i, v) {
+                var text = v.text
+                value   =   value.replace(/\s+/g,"");
+                if (text == value) { //如果存在该列表则，提示用户不可添加!
+                    ib = false;
+                }
+            })
+            $("#countryBox").children("p").remove();
+            if(ib){
+                $(".saveCountry").attr("disabled",false).css("pointer-events","auto");
+                $("#countryBox").append("<p style='color: green;margin: 0'>当前国家可以新增!</p>")
+            }else{
+                $(".saveCountry").attr("disabled",true).css("pointer-events","none");
+                $("#countryBox").append("<p style='color: red;margin: 0'>当前国家已存在!</p>")
+            }
+        });
+    })
+
+    function countryList(url) {
+        var id =$("#cityId").text();//判断当前景点所属的国家
+        /*查询所有国家*/
+        $.getJSON(url, {'act': 'list'}, function (data) {
+            $("select[name='cityId']").empty();//查询前清空所有
+             $.each(data.list, function (i, v) {
+                 if(id==v.id){
+                     $("select[name='cityId']").append("<option value='" + v.id + "' selected>" + v.name + "</option>")
+                 }else{
+                     $("select[name='cityId']").append("<option value='" + v.id + "'>" + v.name + "</option>")
+                 }
+            })
+        })
+    }
+    function addCountry(url){
+        /*添加*/
+        $(".saveCountry").click(function () {
+            var value = $("input[name='countryName']").val(); //获取需要提交的表单值
+            $("input[name='countryName']").val("");
+            if (value != null && value != "") {
+                var ib =true;
+                /*判断当前国家是否存在是否*/
+                $("select[name='cityId']").children().each(function (i, v) {
+                    var text = v.text
+                    value   =   value.replace(/\s+/g,"");
+                    if (text == value) { //如果存在该列表则，提示用户不可添加!
+                        ib = false;
+                    }
+                })
+                if(ib){
+                    $.getJSON(url, {'act': 'add','name':value}, function (data) {
+                        if(data.type=="ok"){
+                            countryList(url);
+                            $("#countryBox").children("p").remove();
+                            $("#countryBox").append("<p style='color: green;margin: 0'>新增国家‘"+value+"’成功!</p>")
+                        }else if (data.type=="error") {
+                            $("#countryBox").children("p").remove();
+                            $("#countryBox").append("<p style='color: red;margin: 0'>新增国家‘"+value+"’失败!</p>")
+                        }else{
+                            alert("服务器出错！")
+                        }
+                    })
+                }else{
+                    alert("添加失败!当前国家已存在!");
+                }
+            } else {
+                alert("添加失败!内容不能为空!");
+            }
+        })
+    }
+
+    laydate.render({
+        elem: '.birthday'
+    });
+    var test; //
+    var indexneo;//记录第一个下标
+    var indextwe;//记录第二个下标
+    $(".city").click(function () {
+        //初始化加载省份列表
+        init();
+    })
+    //绑定省份下拉框的change事件
+    $("#province").change(function () {
+        //获取选中的省份id
+        $("#city").attr("hidden", false);
+        var provinceId = $(this).val();
+        test = $(this).find('option:selected').text();//获取被选中的值
+        indexneo = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+
+        $.getJSON("/ajax/region", {"pid": provinceId}, function (json) {
+            $("#city").empty();
+            $.each(json, function (i, v) {
+                $("#city").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+
+    })
+
+    //绑定城市下拉框的change事件
+    $("#city").change(loadArea);
+    $("#area").change(function () {
+        test = test.substring(0, indextwe);
+        test = test + $("#area").find('option:selected').text();//获取被选中的值
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+    })
+
+    function init() {
+        $("#province").attr("hidden", false);
+        $.getJSON("/ajax/region", {}, function (data) {
+            $("#province").empty();
+            $.each(data, function (i, v) {
+                $("#province").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+
+    //读取地区列表
+    function loadArea() {
+        $("#area").attr("hidden", false);
+        //获取选中的城市id
+        var cityId = $("#city").val();
+        test = test.substring(0, indexneo);
+        test = test + $("#city").find('option:selected').text();//获取被选中的值
+        indextwe = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+
+        $.getJSON("/ajax/region", {"pid": cityId}, function (json) {
+            $("#area").empty();
+            $.each(json, function (i, v) {
+                $("#area").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+</script>
+</html>

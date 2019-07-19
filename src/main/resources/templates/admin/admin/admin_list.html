@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员列表</title>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .table tbody tr td,thead tr th{
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 p-0">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>管理员信息</h1>
+                </div>
+                <ol class="breadcrumb text-right">
+                    <li><a>列表</a></li>
+                </ol>
+            </div>
+        </div><!-- /# column -->
+    </div><!-- /# row -->
+<div class="row">
+    <div class="col-lg-12">
+        <p th:if="${error}" th:text="${error}" style="color: red"></p>
+        <p th:if="${success}" th:text="${success}" style="color: green"></p>
+        <div class="card alert">
+            <div class="order-list-item">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>账号</th>
+                        <th>用户名</th>
+                        <th>注册时间</th>
+                        <th>类型</th>
+                        <th style="text-align: center">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="manager:${managerList}">
+                        <td th:text="${manager.id}">编号</td>
+                        <td th:text="${manager.account}">账号</td>
+                        <td th:text="${manager.username}">名称</td>
+                        <td th:text="${#dates.format(manager.createTime,'yyyy-MM-dd')}">注册时间</td>
+                        <td th:switch="${manager.type}">
+                            <p th:case="1" th:text="超级管理员">超级管理员</p>
+                            <p th:case="0" th:text="管理员">管理员</p>
+                            </td>
+                        <td><a th:href="@{'/admin/manager/details?id='+${manager.id}}" class="btn btn-info" >查看详情</a> | <a th:href="@{'/admin/manager/edit?id='+${manager.id}}" class="btn btn-warning" >修改</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a th:href="@{'/admin/manager/edit'}" class="btn btn-success" >添加用户</a>
+            </div>
+        </div><!-- /# card -->
+    </div><!-- /# column -->
+</div><!-- /# row -->
+</div>
+</body>
+</html>

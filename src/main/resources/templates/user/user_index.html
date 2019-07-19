@@ -1,0 +1,1114 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>惠玩旅游-用户中心</title>
+    <!-- Slick CSS -->
+    <link rel="stylesheet" th:href="@{/details/assets/css/style.css}" href="../../static/details/assets/css/style.css">
+    <link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.css}" href="../../static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" th:href="@{/index/assets/css/bootstrap.min.css}" href="../../static/index/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/index/assets/css/main.css}" href="../../static/index/assets/css/main.css">
+    <link rel="stylesheet" th:href="@{/index/assets/css/blue.css}" href="../../static/index/assets/css/blue.css">
+    <link rel="stylesheet" th:href="@{/index/assets/css/font-awesome.css}" href="../../static/index/assets/css/font-awesome.css">
+    <link th:href="@{/assets/css/style.css}" href="../../static/assets/css/style.css" rel="stylesheet">
+
+    <link href="../../static/user/head/cropper.min.css" th:href="@{/user/head/cropper.min.css}" rel="stylesheet">
+    <link href="../../static/user/head/sitelogo.css" th:href="@{/user/head/sitelogo.css}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../../static/user/css/font-awesome.min.css" th:href="@{/user/css/font-awesome.min.css}">
+    <style>
+        a{
+            cursor: pointer;
+        }
+        .redBorder{
+            border: 1px solid red;
+        }
+        .successBorder{
+            border: 1px solid green;
+        }
+        .avatar-btns button {
+            height: 35px;
+        }
+    </style>
+
+</head>
+<body >
+<!--头部-->
+<header class="header-style-1">
+    <!-- ============================================== 导航头部 ============================================== -->
+    <div class="top-bar animate-dropdown">
+        <div class="container" style="padding-right:15px;">
+            <div class="header-top-inner">
+                <div class="cnt-account">
+                    <ul class="list-unstyled">
+                        <a style="position:absolute;left:50px;color: red" th:href="@{'/'}">首页</a>
+                        <li class="myaccount"><a href="#"><span>关于我们</span></a></li>
+                        <li class="wishlist"><a href="#"><span>站内地图</span></a></li>
+                        <li class="header_cart hidden-xs"><a href="#"><span>服务热线</span></a></li>
+                        <li class="check"><a href="#"><span>添加收藏</span></a></li>
+                        <li class="login ">
+                            <a th:unless="${session.userLogin}" href="/login" th:href="@{'/login'}"><span>登录</span></a>
+                            <div th:if="${session.userLogin}" class="dropdown">
+                                <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" th:if="${session.userLogin}"  th:href="@{'/user/index'}">欢迎您:<span th:text="${session.userLogin.phone}"></span></a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li style="text-align: center"><a th:href="@{'/user/index'}" style="color: black;display: block;width: 150px;">个人中心</a></li>
+                                    <li style="text-align: center"><a th:href="@{'/user/index'}"  style="color: black;display: block;width: 150px;">查询订单</a></li>
+                                    <li style="text-align: center"><a th:href="@{'/logout'}" style="color: black;display: block;width: 150px;">退出登录</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 说明 -->
+    <div class="main-header">
+        <div class="container" style="margin-bottom: 5px;">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-3 logo-holder">
+                        <div class="logo" style="background-color: #F5F5F5"><h3>惠玩旅游 <small>个人中心,欢迎您:(<span th:text="${session.userLogin.phone}" style="color:red">123</span>)</small></h3> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!--中间内容-->
+<div class="container" >
+    <div class="container-fluid" style="border: 1px solid darkgrey">
+        <div style="border-bottom: 2px solid darkgrey;background-color: #b4dbed" class="row">
+            <div class="col-lg-8 p-0">
+                <div class="page-header">
+                    <div class="page-title">
+                        <h1>基本信息</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="row">
+                <!--左边个人信息-->
+                <div class="col-lg-5">
+                    <div class="card alert">
+                        <div class="card-body">
+                            <div class="user-profile">
+                                <div class="row">
+                                    <!--头像-->
+                                    <div class="col-lg-4">
+                                        <div class="user-photo m-b-30">
+                                            <img class="img-responsive thumbnail" th:src="${session.userLogin.imgPath == null}? @{'/images/logo.jpg'}:${session.userLogin.imgPath}" style="width: 140px;height: 140px;"/>
+                                        </div>
+                                    </div>
+                                    <!--用户基本信息-->
+                                    <div class="col-lg-8">
+                                        <div class="user-profile-name" th:text="${session.userLogin.username}">John Doe</div>
+                                        <div class="ratings">
+                                            <h4>普通用户</h4>
+                                            <div class="rating-star" th:if="${session.userLogin.sex}" th:switch="${session.userLogin.sex}">
+                                                <span th:case="0">男</span>
+                                                <span th:case="1">女</span>
+                                                <span th:case="*">保密</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--信息-->
+                                    <div class="custom-tab user-profile-tab" style="margin-top: 160px">
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane active" id="1">
+                                                <div class="contact-information">
+                                                    <h4 style="font-size: 25px;margin-bottom: 0">User information(用户信息)</h4>
+                                                    <div class="phone-content">
+                                                        <span class="contact-title">Phone(手机号):</span>
+                                                        <span class="phone-number" th:text="${session.userLogin.phone}">1629599859</span>
+                                                    </div>
+                                                    <div class="address-content">
+                                                        <span class="contact-title">Address(地址):</span>
+                                                        <span class="mail-address" th:text="${session.userLogin.city}">123, Rajar Goli, South Mugda</span>
+                                                    </div>
+                                                    <div class="email-content">
+                                                        <span class="contact-title">Email(电子邮件):</span>
+                                                        <span class="contact-email" th:text="${session.userLogin.email}">hello@htmlcooker.com</span>
+                                                    </div>
+                                                    <div class="website-content">
+                                                        <span class="contact-title">Real(真实姓名):</span>
+                                                        <span class="contact-website" th:text="${session.userLogin.realName}">www.htmlcooker.com</span>
+                                                    </div>
+                                                    <div class="skype-content">
+                                                        <span class="contact-title" >birthday(生日):</span>
+                                                        <span class="contact-skype" th:text="${#dates.format(session.userLogin.birthday,'yyyy年MM月dd日')}">1231321</span>
+                                                    </div>
+                                                    <a class="btn btn-info btn-xs" style="float: right;" data-toggle="modal" data-target="#myModal">编辑个人信息</a>
+                                                    <a class="btn btn-info btn-xs" style="float: right;margin-right: 20px;" data-toggle="modal" data-target="#myContact">我的联系人</a>
+                                                </div>
+                                                <div class="basic-information">
+                                                    <h4 style="color: red">最新订单</h4>
+                                                    <div th:if="${!#lists.isEmpty(orderList)}">
+                                                    <div class="birthday-content" >
+                                                        <span class="contact-title" th:text="${orderList[0].orderNo}">名称:</span>
+                                                        <span class="contact-title" th:switch="${orderList[0].trip.type}">
+                                                            <span th:case="0" th:text="${'自行游'}"></span>
+                                                            <span th:case="1" th:text="${'国内游'}"></span>
+                                                            <span th:case="2" th:text="${'境外游'}"></span>
+                                                        </span>
+                                                        <span class="birth-date" th:text="${#dates.format(orderList[0].startDate,'yyyy-MM-dd')}">出游时间 </span>
+                                                    </div>
+                                                    <div class="gender-content">
+                                                        <span class="contact-title">状态:</span>
+                                                        <span class="contact-title">已下单</span>
+                                                        <span class="gender"><a th:name="${orderList[0].id}" data-toggle="modal" data-target="#orderDetail" class="orderDetail" style="color: #761c19">详情</a></span>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /# column -->
+                <!--右边-->
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="stat-widget-one">
+                                    <div class="profile-widget">
+                                        <div class="stat-text">年</div>
+                                        <div class="stat-digit">19</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="stat-widget-one">
+                                    <div class="profile-widget">
+                                        <div class="stat-text">月</div>
+                                        <div class="stat-digit">6</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="stat-widget-one">
+                                    <div class="profile-widget">
+                                        <div class="stat-text">日</div>
+                                        <div class="stat-digit">6</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="card">
+                                <div class="stat-widget-one">
+                                    <div class="profile-widget">
+                                        <div class="stat-text">周</div>
+                                        <div class="stat-digit">29</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--评论-->
+                    <div class="row">
+                            <div class="card alert">
+                                <div class="card-header">
+                                    <h4>最新评论</h4>
+                                </div>
+                                <div class="recent-comment">
+                                    <div class="media" th:each="comment:${commentList}">
+                                        <div class="media-left">
+                                            <a><img  src="/assets/images/avatar/1.jpg"  style="height: 50px;width: 50px;"></a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading" >出游项目：<small style="color: orange" th:text="${comment.trip.title}"></small></h4>
+                                            <p>评论内容：<span style="color: #761c19" th:text="${comment.content}"></span></p>
+                                            <div class="comment-action" th:switch="${comment.type}">
+                                                <div th:case="0" class="badge badge-success">好评</div>
+                                                <div th:case="1" class="badge badge-warning">一般</div>
+                                                <div th:case="2" class="badge badge-danger">差评</div>
+                                                <div class="badge badge-info">行程安排:<span th:text="${comment.service}" style="color: black"></span></div>
+                                                <div class="badge badge-info">餐饮住宿:<span th:text="${comment.hotel}" style="color: black"></span></div>
+                                                <div class="badge badge-info">交通旅行:<span th:text="${comment.traffic}" style="color: black"></span></div>
+                                                <div class="badge badge-info">景点:<span th:text="${comment.place}" style="color: black"></span></div>
+                                                <div class="badge badge-danger" style="position: absolute;right:5px"><a class="deleteComment" th:name="${comment.id}" style="color: white">删除评论</a></span></div>
+                                            </div>
+                                            <p class="comment-date" >评论时间：<small style="color: orange" th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm:ss')}"></small></p>
+                                        </div>
+                                    </div>
+                                    <!--分页-->
+                                </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--订单-->
+            <div class="row" style="border-top: 5px solid sandybrown;">
+                <div class="col-lg-12">
+                    <div class="card alert">
+                        <!--未下单序列-->
+                        <div th:if="${!#lists.isEmpty(sequenceList)}">
+                            <div class="card-header">
+                                <h4 style="color: red">未提交订单</h4>
+                            </div>
+                            <div class="card-body">
+                                <ul >
+                                    <li  th:each="sequence,seqStar:${sequenceList}">
+                                        <table class="table" style="table-layout: fixed;">
+                                            <tr class="tr">
+                                                <td th:text="${seqStar.index+1}" style="line-height:0;padding:15px;width: 100px;">January 22</td>
+                                                <td class="color-primary" style="text-overflow: ellipsis;overflow: hidden; white-space: nowrap;line-height:0;color: red;padding: 15px;width: 450px;" th:text="${sequence.value}">$21.56</td>
+                                                <td class="color-primary" style="line-height:0;color: red;padding: 15px;text-align: center" >
+                                                    <span style="color: black">(单价)￥</span> <span th:text="${sequence.price}">单价</span>
+                                                </td>
+                                                <td class="color-primary" style="line-height:0;color: red;padding: 15px;text-align: center" >
+                                                    <span th:text="${#dates.format(sequence.goPoint,'yyyy-MM-dd')}">出游日期</span>
+                                                </td>
+                                                <td class="color-primary" style="line-height:0;padding: 15px;text-align: center" >
+                                                    <span th:text="${sequence.number}+'人'">人数</span>
+                                                </td>
+                                                <td class="color-primary" style="line-height:0;padding: 15px;" >
+                                                    <a class="ordera btn btn-info btn-xs" data-toggle="modal" data-target="#order" style="color: orange" th:name="${sequence.id}">去结算</a>
+                                                    <a class="btn btn-danger btn-xs deleteOrder" onclick="return confirm('确定删除吗!')">删除订单</a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-header" style="margin-top:10px;border-top: 2px solid darkgrey ">
+                            <h4 style="margin-top: 10px;">近期订单</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-responsive table-hover ">
+                                <thead>
+                                <tr>
+                                    <th>订单编码</th>
+                                    <th>状态</th>
+                                    <th>日期</th>
+                                    <th >价格</th>
+                                    <th style="text-align: center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr style="border-bottom: 1px dashed darkgrey" th:if="${!#lists.isEmpty(orderList)}" th:each="order:${orderList}">
+                                    <td th:text="${order.orderNo}">Kolor Tea Shirt For Man</td>
+                                    <td><span class="badge badge-success" >已付款</span></td>
+                                    <td th:text="${#dates.format(order.createDate,'yyyy-MM-dd HH:mm:ss')}">January 22</td>
+                                    <td class="color-primary" style="color: red" th:text="${order.totalPrice}+'￥'">$21.56</td>
+                                    <td class="color-primary" ><a th:name="${order.id}" data-toggle="modal" data-target="#orderDetail" class="orderDetail" style="color: #761c19">详情</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- /# column -->
+            </div>
+                </div>
+    </div><!-- /# container-fluid -->
+</div><!-- /# main -->
+<!-- 底部 -->
+<footer style="clear: left;" id="footer" class="footer color-bg">
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="address-block">
+                        <!-- /.module-heading -->
+                        <div class="module-body">
+                            <ul class="toggle-footer" style="">
+                                <li class="media">
+                                    <div class="pull-left"> <span class="icon fa-stack fa-lg">   </span> </div>
+                                    <div class="media-body">
+                                        <p>ThemesGround, 789 Main rd, Anytown, CA 12345 USA</p>
+                                    </div>
+                                </li>
+                                <li class="media">
+                                    <div class="pull-left"> <span class="icon fa-stack fa-lg"> </span> </div>
+                                    <div class="media-body">
+                                        <p> + (888) 123-4567 / + (888) 456-7890</p>
+                                    </div>
+                                </li>
+                                <li class="media">
+                                    <div class="pull-left"> <span class="icon fa-stack fa-lg">  </span> </div>
+                                    <div class="media-body"> <span><a href="#">marazzo@themesground.com</a></span> </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="module-heading">
+                        <h4 class="module-title">Customer Service</h4>
+                    </div>
+                    <!-- /.module-heading -->
+
+                    <div class="module-body">
+                        <ul class='list-unstyled'>
+                            <li class="first"><a href="#" title="Contact us">My Account</a></li>
+                            <li><a href="#" title="About us">Order History</a></li>
+                            <li><a href="#" title="faq">FAQ</a></li>
+                            <li><a href="#" title="Popular Searches">Specials</a></li>
+                            <li class="last"><a href="#" title="Where is my order?">Help Center</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="module-heading">
+                        <h4 class="module-title">Corporation</h4>
+                    </div>
+                    <!-- /.module-heading -->
+
+                    <div class="module-body">
+                        <ul class='list-unstyled'>
+                            <li class="first"><a title="Your Account" href="#">About us</a></li>
+                            <li><a title="Information" href="#">Customer Service</a></li>
+                            <li><a title="Addresses" href="#">Company</a></li>
+                            <li><a title="Addresses" href="#">Investor Relations</a></li>
+                            <li class="last"><a title="Orders History" href="#">Advanced Search</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="module-heading">
+                        <h4 class="module-title">Why Choose Us</h4>
+                    </div>
+                    <!-- /.module-heading -->
+                    <div class="module-body">
+                        <ul class='list-unstyled'>
+                            <li class="first"><a href="#" title="About us">Shopping Guide</a></li>
+                            <li><a href="#" title="Blog">Blog</a></li>
+                            <li><a href="#" title="Company">Company</a></li>
+                            <li><a href="#" title="Investor Relations">Investor Relations</a></li>
+                            <li class=" last"><a  title="Suppliers">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--修改用户信息弹出框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >更改用户信息</h4>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">用户头像</h4>
+                <!--头像-->
+                <center>
+                    <img class="thumbnail" th:src="${session.userLogin.imgPath ==null}?@{'/images/logo.jpg'}:${session.userLogin.imgPath}" style="width: 200px;height: 200px;">
+                    <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#avatar-modal" style="margin: 10px;">修改头像</button>
+                </center>
+                <div class="user_pic" style="margin: 10px;">
+                    <img src="">
+                </div>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title" >基本信息：</h4>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td style="padding: 8px;">用户名:&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${session.userLogin.username}" contenteditable="true"></span></td>
+                        <td style="padding: 8px;">手机号码:&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${session.userLogin.phone}"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;">地址:&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${session.userLogin.city}" contenteditable="true"></span></td>
+                        <td style="padding: 8px;">真实姓名:&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${session.userLogin.realName}" contenteditable="true"></span></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;">生日:&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${#dates.format(session.userLogin.birthday,'yyyy-MM-dd')}" contenteditable="true"></span></td>
+                        <td style="padding: 8px;" th:switch="${session.userLogin.sex}">性别:&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span th:case="0">男</span>
+                            <span th:case="1">女</span>
+                            <span th:case="2">中性</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- --------END-------------->
+<!--修改用户联系人-->
+<div class="modal fade" id="myContact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">我的联系人 <i class="glyphicon glyphicon-user" style="color: #b4dbed"></i></h4>
+            </div>
+            <div class="modal-body">
+                <!--遍历当前的所用有的联系人-->
+                <div style="margin-bottom: 10px;">
+                    <h4 style="background-color: gainsboro"><a style="display: block">所有联系人</a></h4>
+                    <div th:if="${!#lists.isEmpty(contactList)}" th:each="contact:${contactList}"  style="padding: 10px;border: 1px solid darkgrey;height:130px;margin-bottom: 5px;margin-right: 5px;border-radius: 5px;width: 260px;float: left;position: relative;" class="contactBox">
+                        <table>
+                            <tr><td style="text-align: center">姓名：</td><td th:text="${contact.name}" th:name="${contact.id}" contenteditable="true" class="td">fsad</td></tr>
+                            <tr><td style="text-align: center">性别：</td><td th:switch="${contact.sex}">
+                                <span th:case="0">男</span>
+                                <span th:case="1" >女</span>
+                                <span th:case="2">中性</span>
+                            </td></tr>
+                            <tr><td style="text-align: center">手机号码：</td><td class="td" contenteditable="true" th:text="${contact.phone}">12</td></tr>
+                            <tr><td style="text-align: center">身份证号码：</td><td class="td" contenteditable="true" th:text="${contact.cardno}">1</td></tr>
+                            <tr><td style="text-align: center">电子邮件：</td><td class="td" contenteditable="true" th:text="${contact.email}">21</td></tr>
+                            <tr><td style="text-align: center">生日：</td><td th:text="${#dates.format(contact.birthday,'yyyy-MM-dd')}">12</td></tr>
+                        </table>
+                        <a style="position: absolute;bottom: 0;right: 0" class="btn btn-danger btn-xs contactDelete" th:name="${contact.id}">删除</a>
+                    </div>
+                    <div style="padding: 10px;border: 1px solid darkgrey;height:130px;margin-bottom: 5px;margin-right: 5px;border-radius: 5px;width: 260px;float: left;position: relative;" class="contactBox" hidden>
+                        <table>
+                            <tr><td style="text-align: center">姓名：</td><td  contenteditable="true" class="td">fsad</td></tr>
+                            <tr>
+                                <td style="text-align: center">性别：</td><td >
+                                </td>
+                            </tr>
+                            <tr><td style="text-align: center">手机号码：</td><td class="td" contenteditable="true" >12</td></tr>
+                            <tr><td style="text-align: center">身份证号码：</td><td class="td" contenteditable="true" >1</td></tr>
+                            <tr><td style="text-align: center">电子邮件：</td><td class="td" contenteditable="true" >21</td></tr>
+                            <tr><td style="text-align: center">生日：</td><td >12</td></tr>
+                        </table>
+                        <a style="position: absolute;bottom: 0;right: 0" class="btn btn-danger btn-xs contactDelete">删除</a>
+                    </div>
+                </div>
+                <div style="clear: left;">
+                    <!--添加联系人-->
+                    <h4 style="background-color: darkseagreen;"><a style="display: block">添加联系人</a></h4>
+                    <div class="row" style="padding-left: 20px;">
+                        <form id="contact">
+                            <table>
+                                <tr>
+                                    <td style="padding: 10px;">
+                                        <label >真实姓名:</label>
+                                        <input type="text" name="name" autocomplete="off" class="form-control" required>
+                                    </td>
+                                    <td style="padding: 10px;">
+                                        <label >电话号码:</label>
+                                        <input type="text" name="phone" autocomplete="off" class="form-control" required>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px;">
+                                        <label >电子邮件:</label>
+                                        <input type="email" name="email" autocomplete="off" class="form-control">
+                                    </td>
+                                    <td style="padding: 10px;">
+                                        <label >身份证号码:</label>
+                                        <input type="text" name="cardno" autocomplete="off" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px;">
+                                        <label >性别:</label>
+                                        <input type="radio" name="sex" value="0" checked>男
+                                        <input type="radio" name="sex" value="1" >女
+                                        <input type="radio" name="sex" value="2" >中性
+                                    </td>
+                                    <td style="padding: 10px;">
+                                        <label >生日:</label>
+                                        <input id="birthday" type="text" autocomplete="off" name="birthday" class="form-control">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align: center">
+                                        <a class="btn btn-success contactSave">保存</a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- --------END-------------->
+
+<!--订单模拟框弹出-->
+<div class="modal fade" id="order" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">订单操作 <i class="glyphicon glyphicon-check" style="color:sandybrown;"></i></h2>
+            </div>
+            <form id="orderForm">
+                <!--标题-->
+            <div class="modal-header">
+                <h4 class="modal-title">标题</h4>
+            </div>
+            <div>
+                <div class="modal-body">
+                    出游人: <span id="orderContact">
+                    </span>
+                    <a class="btn btn-info btn-xs addContact" data-toggle="modal" data-target="#myContact">添加联系人</a>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-header" style="position: relative">
+                    <h5 class="modal-title">订单信息:</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>价格/(人)</th>
+                                <th>出游日期</th>
+                                <th style="text-align: left">出行人数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="color: red"></td>
+                                <td></td>
+                                <td class="quantity">
+                                    成人:
+                                    <div class="cart-plus-minus">
+                                        <input class="cart-plus-minus-box" name="adult" value="0" autocomplete="off" type="text">
+                                        <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                        <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                    </div>
+
+                                    儿童:
+                                    <div class="cart-plus-minus">
+                                        <input class="cart-plus-minus-box" name="child" value="0" autocomplete="off" type="text">
+                                        <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                        <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>
+                        <input  type="radio" value="0" name="zf" checked id="weixin"><label for="weixin"> <img th:src="@{/images/weixin.jpg}" style="width: 100px;height: 50px;"></label>
+                        <input  type="radio" value="1" name="zf" id="zhifb"><label for="zhifb"><img th:src="@{/images/zhifb.jpg}" style="width: 100px;height: 50px;"></label>
+                    </div>
+                    <div style="text-align: right">
+                        <h3>总价:￥<span id="total" style="color: red">112313</span>(元)</h3>
+                        <a class="btn btn-success fkm" >结算</a>
+                    </div>
+
+                </div>
+            </div>
+            </form>
+            <!--付款码-->
+            <div style="width: 350px;height: 450px;background-color: gainsboro;position:absolute;top: 180px;left:360px;padding: 10px;" hidden>
+                <img id="fkmImg" th:src="@{/images/zfbfkm.png}" style="height: 420px;">
+                <a id="saveOrder" style="float: right" >继续>></a>
+            </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-default" data-dismiss="modal">关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!------------------END------------------>
+<!--订单详情查询-->
+<div class="modal fade" id="orderDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" >订单详情</h4>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title" >景点名称</h5>
+            </div>
+            <div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>出游人</th>
+                        <th>出游人数</th>
+                        <th>出游类型</th>
+                        <th>出游时间</th>
+                        <th>发车地点</th>
+                        <th style="text-align: left">总价钱</th>
+                        <th style="text-align: left">付款时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            安抚
+                        </td>
+                        <td>
+                            <p>成人:</p>
+                            <p>儿童:</p>
+                        </td>
+                        <td>国内游</td>
+                        <td>打算范德萨</td>
+                        <td>答复</td>
+                        <td style="color: red">16516</td>
+                        <td >16516</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a data-toggle="modal" data-target="#comment" class="btn btn-success btn-xs comment" style="margin-left:20px;display: none">我要评论</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--提交评论操作-->
+<div class="modal fade" id="comment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">我要评论</h4>
+            </div>
+            <div class="modal-header">
+                <h4 class="modal-title">总体评分</h4>
+                <div style="margin-top: 5px;">
+                    <ul >
+                        <li class="commentA" style="float: left;margin-right: 10px;">
+                                <input type="radio" name="type" value="0" id="type" checked><label for="type">满意</label>
+                        </li>
+                        <li style="float: left;margin-right: 10px;">
+                                <input type="radio" name="type" value="1" id="type1"><label for="type1">一般</label>
+                        </li>
+                        <li style="float: left">
+                                <input type="radio" name="type" value="2" id="type2"><label for="type2">差</label>
+                        </li>
+                    </ul>
+                    <ul style="margin-top: 10px;clear: left">
+                        <li style="float: left;margin-right: 10px;">行程安排:
+                            <select name="service">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5" selected>5</option>
+                        </select></li>
+                        <li style="float: left;margin-right: 10px;">餐饮住宿:
+                            <select name="hotel">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5" selected>5</option>
+                            </select>
+                        </li>
+                        <li style="float: left;margin-right: 10px;">旅行交通:
+                            <select name="traffic">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5" selected>5</option>
+                            </select>
+                        </li>
+                        <li style="float: left">景点:<select name="place">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5" selected>5</option>
+                        </select></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-body">
+                输入评论内容：
+                <textarea class="form-control" name="content" rows="3" placeholder="请输入评论内容...."></textarea>
+                <a class="btn btn-success commentSave" style="margin-top: 5px;">发表</a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ------>
+<!--用于检测用户是否存在未提交的订单，存在则提示用户-->
+<div id="prompt" class="row col-lg-12" style="height: 1000px;background-color: gainsboro;opacity: 0.7;position: fixed;z-index: 5;top: 0" hidden>
+</div>
+<div style="position: fixed;top: 0;width: 600px;height:200px;background-color: #6f6f6f;z-index: 6;margin: 250px 400px;border-radius: 10px;" hidden>
+    <h2 style="background-color: red;margin: 0;padding-left: 20px;"><span style="color: white;font-size: 15px;">系统提示:</span><a class="close" style="color: black;font-size: 15px;float: right"><i class="glyphicon glyphicon-remove" style="color: black"></i></a></h2>
+    <div style="padding: 20px;">
+        <h3 id="ShowH3" style="color: white">当前系统检测到您用</h3>
+    </div>
+    <a class="btn btn-info close" style="position: absolute;bottom: 10px;right: 10px">关闭</a>
+</div>
+<!--用户头像弹窗-->
+<div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!--<form class="avatar-form" action="upload-logo.php" enctype="multipart/form-order" method="post">-->
+            <form class="avatar-form">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    <h4 class="modal-title" id="avatar-modal-label">上传图片</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="avatar-body">
+                        <div class="avatar-upload">
+                            <input class="avatar-src" name="avatar_src" type="hidden">
+                            <input class="avatar-data" name="avatar_data" type="hidden">
+                            <label for="avatarInput" style="line-height: 35px;">图片上传</label>
+                            <button class="btn btn-danger"  type="button" style="height: 35px;" onClick="$('input[id=avatarInput]').click();">请选择图片</button>
+                            <span id="avatar-name"></span>
+                            <input class="avatar-input hide" id="avatarInput" name="avatar_file" type="file"></div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="avatar-wrapper"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="avatar-preview preview-lg" id="imageHead"></div>
+                                <!--<div class="avatar-preview preview-md"></div>
+                        <div class="avatar-preview preview-sm"></div>-->
+                            </div>
+                        </div>
+                        <div class="row avatar-btns">
+                            <div class="col-md-4">
+                                <div class="btn-group">
+                                    <button class="btn btn-danger fa fa-undo" data-method="rotate" data-option="-90" type="button" title="Rotate -90 degrees"> 向左旋转</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn  btn-danger fa fa-repeat" data-method="rotate" data-option="90" type="button" title="Rotate 90 degrees"> 向右旋转</button>
+                                </div>
+                            </div>
+                            <div class="col-md-5" style="text-align: right;">
+                                <button class="btn btn-danger fa fa-arrows" data-method="setDragMode" data-option="move" type="button" title="移动">
+								<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;setDragMode&quot;, &quot;move&quot;)">
+								</span>
+                                </button>
+                                <button type="button" class="btn btn-danger fa fa-search-plus" data-method="zoom" data-option="0.1" title="放大图片">
+								<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;zoom&quot;, 0.1)">
+								  <!--<span class="fa fa-search-plus"></span>-->
+								</span>
+                                </button>
+                                <button type="button" class="btn btn-danger fa fa-search-minus" data-method="zoom" data-option="-0.1" title="缩小图片">
+								<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;zoom&quot;, -0.1)">
+								  <!--<span class="fa fa-search-minus"></span>-->
+								</span>
+                                </button>
+                                <button type="button" class="btn btn-danger fa fa-refresh" data-method="reset" title="重置图片">
+									<span class="docs-tooltip" data-toggle="tooltip" title="" data-original-title="$().cropper(&quot;reset&quot;)" aria-describedby="tooltip866214">
+                                </button>
+                            </div>
+                            <div class="col-md-3">
+                                <button class="btn btn-danger btn-block avatar-save fa fa-save" type="button" data-dismiss="modal"> 保存修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
+</body>
+<!-- END -->
+<!-- jQuery JS -->
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}" src="../../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script th:src="@{/laydate/laydate.js}" src="../../static/laydate/laydate.js"></script>
+<script th:src="@{/js/user/user_index.js}" src="../../static/js/user/user_index.js"></script>
+<script th:src="@{/user/head/jquery.min.js}" src="../../static/user/head/jquery.min.js"></script>
+<script th:src="@{/user/head/bootstrap.min.js}" src="../../static/user/head/bootstrap.min.js"></script>
+<script th:src="@{/user/head/cropper.js}" src="../../static/user/head/cropper.js"></script>
+<script th:src="@{/user/head/sitelogo.js}" src="../../static/user/head/sitelogo.js"></script>
+<script th:src="@{/user/head/html2canvas.min.js}" src="../../static/user/head/html2canvas.min.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        $("#dropdownMenu1").click(function(){
+            $(".dropdown-menu").css("display","block");
+        })
+        $("#dropdownMenu1").mouseover(function(){
+            $(".dropdown-menu").css("display","none");
+        })
+        findAllDate();//获取系统日期
+        ajaxSequence(); //页面加载监控是否存在未提交订单
+        SequenceOnClickEdit();//序列订单操作详情
+        contactCssShow();//添加联系人效果样式提示和正则表达式验证
+        userAddOrDeleteContact();//Ajax请求添加修改删除联系人
+        orderEdit();/*对序列订单操作，成功下单订单*/
+        numberPopulation();//修改订单下的出行人数
+        commentSave();//发表评论
+        //日历控件
+        laydate.render({
+            elem: '#birthday'
+        });
+        //做个下简易的验证  大小 格式
+        $('#avatarInput').on('change', function(e) {
+            var filemaxsize = 1024 * 5;//5M
+            var target = $(e.target);
+            var Size = target[0].files[0].size / 1024;
+            if(Size > filemaxsize) {
+                alert('图片过大，请重新选择!');
+                $(".avatar-wrapper").childre().remove;
+                return false;
+            }
+            if(!this.files[0].type.match(/image.*/)) {
+                alert('请选择正确的图片!')
+            } else {
+                var filename = document.querySelector("#avatar-name");
+                var texts = document.querySelector("#avatarInput").value;
+                var teststr = texts; //你这里的路径写错了
+                testend = teststr.match(/[^\\]+\.[^\(]+/i); //直接完整文件名的
+                filename.innerHTML = testend;
+            }
+
+        });
+
+        $(".avatar-save").on("click", function() {
+            var img_lg = document.getElementById('imageHead');
+            // 截图小的显示框内的内容
+            html2canvas(img_lg, {
+                allowTaint: true,
+                taintTest: false,
+                onrendered: function(canvas) {
+                    canvas.id = "mycanvas";
+                    //生成base64图片数据
+                    var dataUrl = canvas.toDataURL("image/jpeg");
+                    var newImg = document.createElement("img");
+                    newImg.src = dataUrl;
+                    var url = "/user/user?act=img"
+                   $.post(url,{base64:dataUrl},function(data){
+                       if(data.ok){
+                           alert("头像修改成功!")
+                           window.location.reload();//刷新当前页面
+                       }
+                   })
+                }
+            });
+        })
+
+    })
+    function commentSave(){//发表评论保存
+        /*发表评论*/
+        $(".commentSave").on("click",function(){
+            $("textarea").next("p").remove();
+           var orderId = $(".comment").attr("name");//获取订单id
+            var content = $("textarea[name='content']").val().trim();//获取文本框的值，判断是否为空
+            if(content != ""){
+                var type =$("input[name='type']:checked").val();
+                var service = $("select[name='service'] >option:selected").val()
+                var hotel = $("select[name='hotel'] >option:selected").val()
+                var traffic = $("select[name='traffic'] >option:selected").val()
+                var place = $("select[name='place'] >option:selected").val()
+                var url = "/user/comment?act=save";
+                $.post(url,{orderId:orderId,type:type,service:service,hotel:hotel,traffic:traffic,place:place,content:content},function(data){
+                    if(data.ok){
+                        alert("发表成功!");
+                        window.location.reload();//刷新当前页面
+                    }
+                })
+            }else{
+                $("textarea").after("<p style='color: red'>评论内容不能为空!</p>")
+            }
+        })
+        /*删除评论*/
+        $(".deleteComment").on("click",function(){
+            if(confirm("确定删除此评论吗")){
+                var id = $(this).attr("name");
+                var div = $(this).parents(".media");
+                var url= "/user/comment?act=delete";
+                $.post(url,{id:id},function(data){
+                    if(data.ok){
+                        $(div).parent(".recent-comment").prev(".card-header").find("h4").html("相关评论&nbsp;&nbsp;<smali style='color: green;font-size: 10px;'>删除评论成功!</smali>")
+                        $(div).remove();//删除当前评论
+                    }
+                })
+            }
+        })
+    }
+    /*对序列订单操作，成功下单订单*/
+    function orderEdit(){
+        /*查询订单详情*/
+        $(".orderDetail").on("click",function(){
+            $(".comment").css("display","block");
+            $("textarea").next("p").remove();
+            var orderId = $(this).attr("name");
+            var url="/user/order?act=query";
+            $.post(url,{orderId:orderId},function(data){
+                /*一个订单景点详情只能评论一次*/
+                if( typeof (data.comment) != "undefined" && data.comment){
+                    $(".comment").css("display","block");
+                    $(".comment").attr("name",data.order.id);
+                }else{
+                    $(".comment").css("display","none");
+                }
+
+                $("#orderDetail").find("h5").next("h4").remove();
+                $("#orderDetail").find("h5").after("<h4>"+data.order.trip.title+"&nbsp;&nbsp;&nbsp;&nbsp;<span style='color: red;font-size: 15px;'>国家："+data.order.trip.place.city.name+"</span></h4>");
+                var a="";
+                $.each(data.order.contacts,function(i,v){
+                    a= a +"<a class='btn btn-default btn-xs' style='margin-right: 2px;border-bottom: 2px;'>"+v.name+"</a>"
+                })
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(0)").html(a);
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(1)").find("p:first").text("成人:"+data.order.adultNum);
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(1)").find("p:last").text("儿童:"+data.order.childNum);
+                var type ;
+                if(data.order.trip.type == 0){
+                    type ="自行游"
+                }else if(data.order.trip.type == 1){
+                    type = "国内游"
+                }else{
+                    type ="境外游"
+                }
+
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(2)").text(type);
+
+                var date = new Date(data.order.startDate).Format("yyyy-MM-dd")
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(3)").text(date);
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(4)").text(data.order.goPoint);
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(5)").text(data.order.totalPrice+"￥");
+                var date = new Date(data.order.createDate).Format("yyyy-MM-dd HH:mm:ss")
+                $("#orderDetail").find("tbody").children("tr").find("td:eq(6)").text(date);
+            })
+        })
+        //保存
+        $("#saveOrder").on("click",function(){
+            var contactId = new Array();
+            $("input[name='contaceId']:checked").each(function(i){
+                contactId.push(i,$(this).val())
+            })
+            if(contactId.length==0){
+                alert("请选择出行游玩人!")
+            }else{
+                var adult =$("input[name='adult']").val();
+                var child =$("input[name='child']").val();
+                var total =$("#total").text();
+                var url = "/user/order?act=save";
+                var sequenceId = $("#order").find("h4").children("span").text();
+                $.post(url,{adult:adult,child:child,total:total,sequenceId:sequenceId,contactId:contactId.toString()},function(data){
+                    if(data.ok){
+                        alert("支付成功!")
+                        window.location.reload();//刷新当前页面
+                    }
+                })
+            }
+        })
+        /*出现弹窗*/
+        $(".ordera").on("click",function(){
+            $("#fkmImg").parent("div").attr("hidden",true);
+           var id =  $(this).attr("name");//获取序列id
+            var title =$(this).parent("td").siblings("td:eq(1)").text();//获取标题
+            $("#order").find("h4").html(title+"<span hidden>"+id+"</span>");
+            /*查询所有的当前用户的联系人*/
+            var url="/user/contact?act=list";
+            $.post(url,{},function(data){
+                $("#orderContact").empty();
+                $.each(data.list,function(i,v){
+                    $("#orderContact").append("<input style='width: 20px;height: 20px;' type='checkbox' name='contaceId' value='"+v.id+"' id='"+v.id+"'><label for='"+v.id+"' class='btn btn-danger btn-xs'>"+v.name+"</label>&nbsp;&nbsp;&nbsp;&nbsp;")
+                })
+            })
+            /*查询信息*/
+            url="/user/order?act=querySequence";
+            $.post(url,{sequenceId:id},function(data){
+                $("#orderForm").find("tbody").children("tr").find("td:eq(0)").text(data.sequence.price)
+                var date = new Date(data.sequence.startDate);
+                $("#orderForm").find("tbody").children("tr").find("td:eq(1)").text(date.getFullYear()+"年"+(date.getMonth()+1)+"月"+date.getDate()+"日");
+                $("input[name='adult']").val(data.adult);
+                $("input[name='child']").val(data.child);
+                var total = data.sequence.price*(data.adult+data.child);
+                if(total.toString().indexOf(".")>0){
+                    $("#total").text(total.substring(0,total.indexOf(".")+2));
+                }else{
+                    $("#total").text(total);
+                }
+            })
+        })
+        $(".addContact").on("click",function(){
+            $("#order").hide();
+            $(".in").hide();
+        })
+        /*付款码*/
+        $(".fkm").on("click",function(){
+            var fkm = $("input[name='zf']:checked").val();
+            $("#fkmImg").parent("div").attr("hidden",false);
+            if(fkm == 0){//微信
+                $("#fkmImg").attr("src","/images/wxfkm.png");
+            }else{
+                $("#fkmImg").attr("src","/images/zfbfkm.png");
+            }
+        })
+    }
+    //修改出行人数
+    function numberPopulation(){
+        /*添加*/
+        $(".inc").on("click",function(){
+            var price =$(this).parents("tr").find("td:first").text();//获取价格
+            var num = $("#total").text();
+            var total = parseInt(num)+parseInt(price)
+            $("#total").text(total);
+            var index = $(".inc").index($(this));//获取下标 0 成人 1 儿童
+            if(index == 0){ //成人
+                var value = $(this).siblings("input[name='adult']").val();//
+                if(value == 0){
+                    value =1
+                } else {
+                    value= (parseInt(value)+1);
+                }
+                $(this).siblings("input[name='adult']").val(value);
+            }else if(index == 1){//儿童
+                var value = $(this).siblings("input[name='child']").val();//
+                if(value == 0){
+                    value =1
+                } else {
+                    value= (parseInt(value)+1);
+                }
+                $(this).siblings("input[name='child']").val(value);
+            }
+        })
+
+        /*删除*/
+        $(".dec").on("click",function(){
+            var price =$(this).parents("tr").find("td:first").text();//获取价格
+            var num = $("#total").text();
+            var total = parseInt(num)-parseInt(price)
+            $("#total").text(total);
+            var index = $(".dec").index($(this));//获取下标 0 成人 1 儿童
+            if(index == 0){ //成人减
+                var value = $(this).siblings("input[name='adult']").val();//
+                if( value == 0 ){
+                    value = 0
+                } else {
+                    value= (parseInt(value)-1);
+                }
+                $(this).siblings("input[name='adult']").val(value);
+            }else if(index == 1){//儿童
+                var value = $(this).siblings("input[name='child']").val();//
+                if(value == 0){
+                    value =0
+                } else {
+                    value= (parseInt(value)-1);
+                }
+                $(this).siblings("input[name='child']").val(value);
+            }
+        })
+    }
+
+
+</script>
+</html>
+

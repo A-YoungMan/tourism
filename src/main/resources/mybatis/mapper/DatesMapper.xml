@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.DatesMapper">
+    <insert id="create" keyProperty="id" parameterType="Dates" useGeneratedKeys="true" >
+        INSERT INTO t_dates(trip_id,title,num,detail,hotel,meal,traffic,prompt) VALUES
+        (#{tripId},#{title},#{num},#{detail},#{hotel},#{meal},#{traffic},#{prompt})
+    </insert>
+    <update id="update" parameterType="Dates">
+        UPDATE t_dates <set>
+        <if test="title != null">, title =#{title}</if>
+        <if test="detail != null">, detail = #{detail}</if>
+        <if test="hotel != null">, hotel =#{hotel}</if>
+        <if test="meal != null">, meal =#{meal}</if>
+        <if test="traffic != null">,traffic =#{traffic}</if>
+        <if test="prompt != null">,prompt =#{prompt}</if>
+    </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="findById" parameterType="int" resultType="Dates">
+         SELECT id,title,num,detail,hotel,meal,traffic,prompt FROM t_dates WHERE id=#{id}
+    </select>
+    <select id="findByTripId" parameterType="int" resultType="Dates">
+        SELECT d.id,d.title,d.num,d.detail,d.hotel,d.meal,d.traffic,d.prompt FROM t_dates d
+        LEFT JOIN t_trip t on t.id = d.trip_id
+        WHERE t.id=#{tripId} ORDER BY d.num ASC;
+    </select>
+</mapper>

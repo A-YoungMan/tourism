@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- Styles -->
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>用户管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a href="/admin/user/list">用户列表</a></li>
+                            <li><a href="#">用户编辑/新增</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card alert">
+                            <div class="card-header">
+                                <h4>新增/修改用户</h4><br/>
+                                <a href="javascript:history.go(-1)" class="btn btn-success">返回上一页</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="menu-upload-form">
+                                    <!--表单-->
+                                    <form class="form-horizontal" action="/admin/user/save" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="id" th:if="${user}" th:value="${user.id}" >
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>手机号码</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="phone" autocomplete="off" class="form-control"
+                                                       placeholder="请输入手机号码.." th:if="${user}" th:value="${user.phone}" readonly>
+                                                <input type="text" name="phone" autocomplete="off" class="form-control"
+                                                       placeholder="请输入手机号码.." th:unless="${user}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>用户名</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="username" autocomplete="off" class="form-control"
+                                                       placeholder="用户名....." th:if="${user}"  th:value="${user.username}">
+                                                <input type="text" name="username" autocomplete="off" class="form-control"
+                                                       placeholder="用户名....." th:unless="${user}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group" th:unless="${user}" >
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>密码</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password" autocomplete="off" class="form-control"
+                                                       placeholder="输入密码...." >
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>性别</label>
+                                            <div class="col-sm-10" style="padding-top: 10px">
+                                                <input type="radio" name="sex" value="1" checked>男
+                                                <input type="radio" name="sex" value="0">女
+                                                <input type="radio" name="sex" value="2">保密
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>电子邮件</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" name="email" autocomplete="off" class="form-control"
+                                                       placeholder="输入邮件...." th:if="${user}" th:value="${user.email}">
+                                                <input type="email" name="email" autocomplete="off" class="form-control"
+                                                       placeholder="输入邮件...." th:unless="${user}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>真实姓名</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="realName" autocomplete="off" class="form-control"
+                                                       placeholder="真实姓名...." th:if="${user}" th:value="${user.realName}">
+                                                <input type="text" name="realName" autocomplete="off" class="form-control"
+                                                       placeholder="真实姓名...." th:unless="${user}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>生日</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="birthday" autocomplete="off" class="form-control birthday"
+                                                       placeholder="生日...." th:if="${user}" th:value="${#dates.format(user.birthday,'yyyy-MM-dd')}">
+                                                <input type="text" name="birthday" autocomplete="off" class="form-control birthday"
+                                                       placeholder="生日...." th:unless="${user}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>地区</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="city" autocomplete="off" class="form-control city"
+                                                       placeholder="地区...." th:if="${user}" th:value="${user.city}">
+                                                <input type="text" name="city" autocomplete="off" class="form-control city"
+                                                       placeholder="地区...." th:unless="${user}">
+                                                省份：<select id="province" hidden></select>
+                                                城市：<select id="city" hidden></select>
+                                                地区：<select id="area" hidden></select>
+                                            </div>
+                                        </div>
+                                        <h3>头像上传</h3>
+                                        <!--头像上传-->
+                                        <div class="container">
+                                            <div class="imageBox">
+                                                <div class="thumbBox"></div>
+                                                <div class="spinner" style="display: none">Loading...</div>
+                                            </div>
+                                            <div class="action">
+                                                <div class="new-contentarea tc">
+                                                    <a href="javascript:void(0)" class="upload-img">
+                                                        <label for="upload-file">选择图像</label>
+                                                    </a>
+                                                    <input type="file" name="upload-file" id="upload-file" />
+                                                </div>
+                                                <input type="button" id="btnCrop"  class="Btnsty_peyton" value="裁切">
+                                                <input type="button" id="btnZoomIn" class="Btnsty_peyton" value="+"  >
+                                                <input type="button" id="btnZoomOut" class="Btnsty_peyton" value="-" >
+                                            </div>
+                                            <div class="cropped">
+                                                <img  th:if="${user}" th:src="@{${user.imgPath}}" style="width:180px;margin-top:4px;border-radius:180px;box-shadow:0px 0px 12px #7E7E7E;"><p th:if="${user}">180px*180px</p>'
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-lg btn-primary">保存</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+                </div><!-- /# row -->     </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div><!-- /# content wrap -->
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/laydate/laydate.js}" src="../../../static/laydate/laydate.js"></script>
+<script th:src="@{/js/cropbox.js}" src="../../../static/js/cropbox.js"></script>
+
+<script>
+    laydate.render({
+        elem: '.birthday'
+    });
+    $(function(){
+        var options =
+            {
+                thumbBox: '.thumbBox',
+                spinner: '.spinner',
+            }
+        var cropper = $('.imageBox').cropbox(options);
+        $('#upload-file').on('change', function(){
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                options.imgSrc = e.target.result;
+                cropper = $('.imageBox').cropbox(options);
+            }
+            reader.readAsDataURL(this.files[0]);
+            this.files = [];
+        })
+        $('#btnCrop').on('click', function(){
+            var img = cropper.getDataURL();
+            $('.cropped').html('');
+            $('.cropped').append('<img src="'+img+'" align="absmiddle" style="width:64px;margin-top:4px;border-radius:64px;box-shadow:0px 0px 12px #7E7E7E;" ><p>64px*64px</p>');
+            $('.cropped').append('<img src="'+img+'" align="absmiddle" style="width:128px;margin-top:4px;border-radius:128px;box-shadow:0px 0px 12px #7E7E7E;"><p>128px*128px</p>');
+            $('.cropped').append('<img src="'+img+'" align="absmiddle" style="width:180px;margin-top:4px;border-radius:180px;box-shadow:0px 0px 12px #7E7E7E;"><p>180px*180px</p>');
+        })
+        $('#btnZoomIn').on('click', function(){
+            cropper.zoomIn();
+        })
+        $('#btnZoomOut').on('click', function(){
+            cropper.zoomOut();
+        })
+    })
+    var test; //
+    var indexneo;//记录第一个下标
+    var indextwe;//记录第二个下标
+    $(".city").click(function(){
+        //初始化加载省份列表
+        init();
+    })
+    //绑定省份下拉框的change事件
+    $("#province").change(function () {
+        //获取选中的省份id
+        $("#city").attr("hidden",false);
+        var provinceId = $(this).val();
+        test=$(this).find('option:selected').text();//获取被选中的值
+        indexneo = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+
+        $.getJSON("/ajax/region", {"pid": provinceId}, function (json) {
+            $("#city").empty();
+            $.each(json, function (i, v) {
+                $("#city").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+
+    })
+    //绑定城市下拉框的change事件
+    $("#city").change(loadArea);
+    $("#area").change(function(){
+        test = test.substring(0,indextwe);
+        test=test+$("#area").find('option:selected').text();//获取被选中的值
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+    })
+    function init() {
+        $("#province").attr("hidden",false);
+        $.getJSON("/ajax/region",{}, function (data) {
+            $("#province").empty();
+            $.each(data, function (i, v) {
+                $("#province").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+    //读取地区列表
+    function loadArea() {
+        $("#area").attr("hidden",false);
+        //获取选中的城市id
+        var cityId = $("#city").val();
+        test = test.substring(0,indexneo);
+        test=test+$("#city").find('option:selected').text();//获取被选中的值
+        indextwe = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+
+        $.getJSON("/ajax/region", {"pid": cityId}, function (json) {
+            $("#area").empty();
+            $.each(json, function (i, v) {
+                $("#area").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+</script>
+</html>

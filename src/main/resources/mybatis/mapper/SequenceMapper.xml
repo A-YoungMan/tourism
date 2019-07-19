@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.SequenceMapper">
+    <insert id="create" parameterType="Sequence" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_sequence(value,keying,type,descing) VALUES(#{value},#{keying},#{type},#{descing})
+    </insert>
+    <update id="update" parameterType="Sequence" >
+        UPDATE t_sequence SET type =#{type},descing=#{descing} WHERE id=${id}
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE  FROM t_sequence WHERE id = #{id}
+    </delete>
+    <select id="findByKeying" parameterType="string" resultType="Sequence">
+        SELECT id,value,keying,type,descing FROM t_sequence WHERE keying=#{keying} AND type=0
+    </select>
+    <select id="findById" parameterType="int" resultType="Sequence">
+        SELECT id,value,keying,type,descing FROM t_sequence WHERE  id=#{id}
+    </select>
+    <select id="findAll" parameterType="int" resultType="Sequence">
+        SELECT id,value,keying,type,descing FROM t_sequence WHERE type=#{type}
+    </select>
+
+</mapper>

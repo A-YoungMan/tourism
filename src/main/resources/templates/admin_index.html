@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>管理中心</title>
+    <link th:href="@{assets/css/lib/themify-icons.css}" href="../static/assets/css/lib/themify-icons.css"
+          rel="stylesheet">
+    <link th:href="@{assets/css/lib/mmc-chat.css}" href="../static/assets/css/lib/mmc-chat.css" rel="stylesheet"/>
+    <link th:href="@{assets/css/lib/sidebar.css}" href="../static/assets/css/lib/sidebar.css" rel="stylesheet">
+    <link th:href="@{assets/css/lib/bootstrap.min.css}" href="../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{assets/css/style.css}" href="../static/assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+    <!--左菜单栏-->
+    <div class="nano">
+        <div class="nano-content">
+            <ul>
+                <li class="active">
+                    <a class="sidebar-sub-toggle" href="/admin/test/list"><i class="ti-home"></i> 首页</a>
+                </li>
+
+                <!--景点菜单-->
+                <li>
+                    <a class="sidebar-sub-toggle"><i class="ti-gallery"></i> 景点管理 <span
+                            class="sidebar-collapse-icon ti-angle-down"></span></a>
+                    <ul>
+                        <li><a href="/admin/place/list" target="iframe"><i class="ti-search"></i> 查看所有景点</a></li>
+                        <li><a href="/admin/place/edit" target="iframe"><i class="ti-cloud-up"></i> 新增景点</a></li>
+                        <li><a href="/admin/place/recycleList" target="iframe"><i class="ti-trash"></i> 回收站</a></li>
+                    </ul>
+                </li>
+                <!--主题菜单-->
+                <li>
+                    <a class="sidebar-sub-toggle"><i class="ti-video-camera"></i> 主题管理 <span
+                            class="sidebar-collapse-icon ti-angle-down"></span></a>
+                    <ul>
+                        <li><a href="/admin/theme/list" target="iframe"><i class="ti-search"></i> 所有主题</a></li>
+                        <li><a href="/admin/theme/edit" target="iframe"><i class="ti-cloud-up"></i> 新增主题</a></li>
+                        <li><a href="/admin/theme/recycle?act=list" target="iframe"><i class="ti-trash"></i> 回收站</a></li>
+                    </ul>
+                </li>
+                <!--旅游项目-->
+                <li>
+                    <a class="sidebar-sub-toggle"><i class="ti-layers-alt"></i> 旅游项目管理 <span
+                            class="sidebar-collapse-icon ti-angle-down"></span></a>
+                    <ul>
+                        <li><a href="/admin/trip/list" target="iframe"><i class="ti-search"></i> 查询所有项目</a></li>
+                        <li><a href="/admin/trip/edit" target="iframe"><i class="ti-cloud-up"></i> 新增项目</a></li>
+                        <li><a href="/admin/trip/traffic" target="iframe"><i class="ti-direction-alt"></i> 往返交通</a></li>
+                        <li><a href="/admin/trip/notShelf" target="iframe"><i class="ti-write"></i> 未上架项目</a></li>
+                        <li><a href="/admin/trip/recycle" target="iframe"><i class="ti-trash"></i> 回收站</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="sidebar-sub-toggle"><i class="ti-comments"></i> 评论管理 <span
+                            class="sidebar-collapse-icon ti-angle-down"></span></a>
+                    <ul>
+                        <li><a href="/admin/trip/comment/list" target="iframe"><i class="ti-search"></i> 所有评论</a></li>
+                    </ul>
+                </li>
+                <li>
+                </li>
+                <li><a class="sidebar-sub-toggle"><i class="ti-check-box"></i> 订单管理 <span
+                        class="sidebar-collapse-icon ti-angle-down"></span></a>
+                    <ul>
+                        <li><a  href="/admin/order/list"target="iframe"><i class="ti-search"></i> 所有订单</a></li>
+                    </ul>
+                </li>
+                <!--用户管理-->
+                <li><a class="sidebar-sub-toggle"><i class="ti-user"></i>用户管理 <span
+                        class="sidebar-collapse-icon ti-angle-down"></span></a>
+                    <ul>
+                        <li><a class="sidebar-sub-toggle">管理员 <span class="sidebar-collapse-icon ti-angle-down"></span></a>
+                            <ul>
+                                <li><a href="/admin/manager/list" target="iframe"><i class="ti-search"></i> 查看所有管理员</a></li>
+                                <li><a href="/admin/manager/edit" target="iframe"><i class="ti-cloud-up"></i> 添加管理员</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="sidebar-sub-toggle">普通用户 <span class="sidebar-collapse-icon ti-angle-down"></span></a>
+                            <ul>
+                                <li><a href="/admin/user/list" target="iframe"><i class="ti-search"></i> 查看所有用户</a></li>
+                                <li><a href="/admin/user/edit" target="iframe"><i class="ti-cloud-up"></i> 添加用户</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="sidebar-sub-toggle">权限管理 <span class="sidebar-collapse-icon ti-angle-down"></span></a>
+                            <ul>
+                                <li><a href="#"> 修改权限</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="/adminOut"><i class="ti-close"></i> 退出登录</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /# 头部 -->
+<div class="header">
+    <div class="pull-left">
+        <div class="logo" style="position: relative;height: 50px">
+            <p style="position: absolute;color:whitesmoke;top:15px;left: 10px">惠玩旅游在线后端</p>
+        </div>
+        <div class="hamburger sidebar-toggle">
+            <span class="ti-menu"></span>
+        </div>
+    </div>
+    <div class="pull-right p-r-15">
+        <ul>
+            <li class="header-icon dib">
+                <i class="ti-bell"></i>
+                <div class="note-count">2</div>
+                <div class="drop-down">
+                    <div class="dropdown-content-heading">
+                        <span class="text-left">Recent Notifications</span>
+                    </div>
+                    <div class="dropdown-content-body">
+                        <ul>
+                            <li>
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/3.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Mr. Jane</div>
+                                        <div class="notification-text">5 members joined today</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/3.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Mariam</div>
+                                        <div class="notification-text">likes a photo of you</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/3.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Tasnim</div>
+                                        <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/3.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Jane Roe</div>
+                                        <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="text-center">
+                                <a href="#" class="more-link">See All</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li class="header-icon dib">
+                <i class="ti-email"></i>
+                <div class="note-count">21</div>
+                <div class="drop-down">
+                    <div class="dropdown-content-heading">
+                        <span class="text-left">2 New Messages</span>
+                        <a href="app-email.html"><i class="ti-pencil-alt pull-right"></i></a>
+                    </div>
+                    <div class="dropdown-content-body">
+                        <ul>
+                            <li class="notification-unread">
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/1.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Jane Doe</div>
+                                        <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="notification-unread">
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/2.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Jane Roe</div>
+                                        <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/3.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Jane Doe</div>
+                                        <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <img class="pull-left m-r-10 avatar-img" src="assets/images/avatar/2.jpg" alt=""/>
+                                    <div class="notification-content">
+                                        <small class="notification-timestamp pull-right">02:34 PM</small>
+                                        <div class="notification-heading">Jane Roe</div>
+                                        <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="text-center">
+                                <a href="#" class="more-link">See All</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li class="header-icon dib chat-sidebar-icon"><i class="ti-comments"></i></li>
+            <li class="header-icon dib">
+                <img class="avatar-img" src="assets/images/avatar/1.jpg" alt=""/> <span class="user-avatar" th:if="${manager}" th:text="${manager.username}">Jane <i
+                    class="ti-angle-down f-s-10"></i></span>
+                <div class="drop-down dropdown-profile">
+                    <div class="dropdown-content-body">
+                        <ul>
+                            <li><a href="/adminOut"><i class="ti-power-off"></i> <span>退出登录</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="chat-sidebar">
+    <!-- BEGIN chat -->
+    <div id="mmc-chat" class="color-default">
+        <!-- BEGIN CHAT BOX -->
+        <div class="chat-box">
+            <!-- BEGIN CHAT BOXS -->
+            <ul class="boxs"></ul>
+            <!-- END CHAT BOXS -->
+            <div class="icons-set">
+                <div class="stickers">
+                    <div class="had-container">
+                        <div class="row">
+                            <div class="s12">
+                                <ul class="tabs" style="width: 100%;height: 60px;">
+                                    <li class="tab col s3">
+                                        <a href="#tab1" class="active">
+                                            <img src="assets/images/1.png" alt=""/>
+                                        </a>
+                                    </li>
+                                    <li class="tab col s3"><a href="#tab2">Test 2</a></li>
+                                </ul>
+                            </div>
+                            <div id="tab1" class="s12 tab-content">
+                                <ul>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                    <li><img src="assets/images/1.png" alt=""/></li>
+                                </ul>
+                            </div>
+                            <div id="tab2" class="s12 tab-content">Test 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END CHAT BOX -->
+        <!-- BEGIN SIDEBAR -->
+        <div id="sidebar" class="right scroll">
+            <div class="had-container">
+                <!-- BEGIN USERS -->
+                <div class="users">
+                    <ul class="user-list">
+                        <!-- BEGIN USER-->
+                        <li class="user-tooltip" data-id="1" data-status="online" data-username="Rufat Askerov"
+                            data-position="left" data-filter-item data-filter-name="rufat askerov">
+                            <!-- BEGIN USER IMAGE-->
+                            <div class="user-image">
+                                <img src="assets/images/avatar/1.jpg" class="avatar" alt="Rufat Askerov"/>
+                            </div>
+                            <!-- END USER IMAGE-->
+                            <!-- BEGIN USERNAME-->
+                            <span class="user-name">Rufat Askerov</span>
+                            <span class="user-show"></span>
+                            <!-- END USERNAME-->
+                        </li>
+                        <!-- END USER-->
+                        <!-- BEGIN USER-->
+                        <li class="user-tooltip" data-id="3" data-status="online" data-username="Alice"
+                            data-position="left" data-filter-item data-filter-name="alice">
+                            <div class="user-image">
+                                <img src="assets/images/avatar/1.jpg" class="avatar" alt="Alice"/>
+                            </div>
+                            <span class="user-name">Alice</span>
+                            <span class="user-show"></span>
+                        </li>
+                        <!-- BEGIN USER-->
+                        <li class="user-tooltip" data-id="7" data-status="offline" data-username="Michael Scofield"
+                            data-position="left" data-filter-item data-filter-name="michael scofield">
+                            <div class="user-image">
+                                <img src="assets/images/avatar/1.jpg" class="avatar" alt="Michael Scofield"/>
+                            </div>
+                            <span class="user-name">Michael Scofield</span>
+                            <span class="user-show"></span>
+                        </li>
+                        <!-- BEGIN USER-->
+                        <li class="user-tooltip" data-id="5" data-status="online" data-username="Irina Shayk"
+                            data-position="left" data-filter-item data-filter-name="irina shayk">
+                            <div class="user-image">
+                                <img src="assets/images/avatar/1.jpg" class="avatar" alt="Irina Shayk"/>
+                            </div>
+                            <span class="user-name">Irina Shayk</span>
+                            <span class="user-show"></span>
+                        </li>
+                        <!-- BEGIN USER-->
+                        <li class="user-tooltip" data-id="6" data-status="offline" data-username="Sara Tancredi"
+                            data-position="left" data-filter-item data-filter-name="sara tancredi">
+                            <div class="user-image">
+                                <img src="assets/images/avatar/1.jpg" class="avatar" alt="Sara Tancredi"/>
+                            </div>
+                            <span class="user-name">Sara Tancredi</span>
+                            <span class="user-show"></span>
+                        </li>
+                        <!-- BEGIN USER-->
+                        <li class="user-tooltip" data-id="7" data-status="offline" data-username="Jane"
+                            data-position="left" data-filter-item data-filter-name="Jane">
+                            <div class="user-image">
+                                <img src="assets/images/avatar/1.jpg" class="avatar" alt="Jane"/>
+                            </div>
+                            <span class="user-name">Jane</span>
+                            <span class="user-show"></span>
+                        </li>
+                    </ul>
+                    <div class="chat-user-search">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="ti-search"></i></span>
+                            <input type="text" class="form-control" placeholder="Search" data-search/>
+                        </div>
+                    </div>
+                </div>
+                <!-- END USERS -->
+            </div>
+        </div>
+        <!-- END SIDEBAR -->
+    </div>
+    <!-- END chat -->
+</div>
+<!-- 中间内容-->
+<div class="content-wrap">
+    <div class="main"><!-- main -->
+        <div class="container-fluid" ><!-- /# row -->
+            <iframe id="iframe" name="iframe"  width="100%" height="100%" frameborder="0"  scrolling="on"  ></iframe>
+        </div><!-- end row -->
+    </div><!-- end main -->
+</div>
+<!-- /# main -->
+<!-- /# content wrap -->
+<script th:src="@{/assets/js/lib/jquery.min.js}" src="../static/assets/js/lib/jquery.min.js"></script>
+<!-- jquery vendor -->
+<script th:src="@{/assets/js/lib/jquery.nanoscroller.min.js}"
+        src="../static/assets/js/lib/jquery.nanoscroller.min.js"></script>
+<!-- nano scroller -->
+<script th:src="@{/assets/js/lib/sidebar.js}" src="../static/assets/js/lib/sidebar.js"></script>
+<!-- scripit init-->
+<script th:src="@{/assets/js/scripts.js}" src="../static/assets/js/scripts.js"></script>
+<script>
+    $(function(){
+        $("#iframe").attr("src","/admin/test/list");
+        iframeF();
+    })
+    /*iframe框架*/
+    function iframeF(){
+        var iframes = document.getElementsByTagName('iframe');
+        for (var i = 0, j = iframes.length; i < j; ++i) {
+            // 放在闭包中，防止iframe触发load事件的时候下标不匹配
+            (function(_i) {
+                iframes[_i].onload = function() {
+                    // 提前还原高度
+                    this.setAttribute('height', 'auto'); // 或设为''
+                    // 再在下一轮事件循环中设置新高度
+                    setTimeout(function() {
+                        iframes[_i].setAttribute('height', iframes[_i].contentWindow.document.body.scrollHeight);
+                    }, 0);
+                }
+            })(i);
+        }
+    }
+</script>
+</body>
+</html>

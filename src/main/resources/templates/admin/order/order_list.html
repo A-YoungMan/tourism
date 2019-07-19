@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>数据管理</title>
+    <!-- Styles -->
+    <style>
+        a {
+            cursor: pointer;
+        }
+    </style>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+    <link th:href="@{/layui/css/layui.css}" href="../../../static/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>数据管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a>列表</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <p style="color: green" th:text="${success}"></p>
+                    <p style="color: red" th:text="${error}"></p>
+                    <div class="col-lg-12">
+                        <div class="card alert" style="background:#F5F5F5">
+                            <!--图表-->
+                            <div class="col-md-6" id="main" style="width: 600px;height:400px;"></div>
+                            <!--年月日查询-->
+                            <div  class="col-md-6" style="position: relative">
+                                <div id="yearOrMonth" style="width: 600px;height:400px;">
+                                </div>
+                                <div id="date" style="position: absolute;width: 600px;height: 35px;display: block;background-color: gainsboro">
+                                        <a style="display: block;height: 35px;padding-top:10px;text-align: center" class="dateQuery"></a><span style="position: absolute;top: 7px;right:200px;">点击修改</span>
+                                </div>
+                            </div>
+                            <!--订单详情-->
+                            <div class="col-md-6"  style="right: 0px;width: 600px;height:400px;background-color: white;">
+
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+
+                </div><!-- /# row -->
+            </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div>
+
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/js/echarts.min.js}" src="../../../static/js/echarts.min.js"></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"
+        src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script th:src="@{/laydate/laydate.js}" src="../../../static/laydate/laydate.js"></script>
+<script th:src="@{/layui/layui.js}" src="../../../static/layui/layui.js"></script>
+<script type="text/javascript">
+    $(function(){
+
+
+        /*年销量*/
+        var url = "/admin/order/ajax";
+        $.post(url,{act:"list"},function(data){
+            var date = new Date().Format("yyyy")
+            mainChart('main',data.placeName,data.price,date+"年成交量!");
+        })
+        yearOrmonthOrday();
+    })
+    function yearOrmonthOrday(){
+        /*选择*/
+        var url = "/admin/order/ajax";
+        var date = new Date().Format("yyyy-MM-dd")
+        $(".dateQuery").text(date);
+        $.post(url,{act:"time",date:date},function(data){
+            mainChart('yearOrMonth',data.placeName,data.price,date+"日成交量!");
+            timeDateAjax();
+        })
+    }
+    function timeDateAjax(){
+        var d =$(".dateQuery").text().trim();
+        setInterval(function() {
+            var date = $(".dateQuery").text().trim();
+            if (d != date) {
+                var url = "/admin/order/ajax";
+                $.post(url,{act:"time",date:date},function(data){
+                    mainChart('yearOrMonth',data.placeName,data.price,date+"日成交量!");
+                })
+                d = date;
+            }
+        })
+    }
+    //自定义格式
+    laydate.render({
+        elem: '.dateQuery'
+        ,format: 'yyyy-MM-dd'
+    });
+
+    // 基于准备好的dom，初始化echarts实例
+    function mainChart(object,name,value,date){
+        var myChart = echarts.init(document.getElementById(object));
+        myChart.setOption({
+            title: {
+                text: date
+            },
+            tooltip: {},
+            xAxis: {
+                data: []
+            },
+            yAxis: {},
+            series: [{
+                name: '成交金额(元)',
+                type: 'bar',
+                data: []
+            }]
+        });
+        // 填入数据
+        myChart.setOption({
+            xAxis: {
+                data: name
+            },
+            series: [{
+                // 根据名字对应到相应的系列
+                name: '成交金额(元)',
+                data: value
+            }]
+        });
+    }
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+</script>
+</html>

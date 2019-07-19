@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body >
+
+
+        <div id="app3">
+            <p>{{ foo }}</p>
+            <!-- 这里的 `foo` 不会更新！ -->
+            <button v-on:click="foo = 'baz'">Change it</button>
+        </div>
+
+        <div id="ttt">
+            <span>Message: {{ msg }}</span>
+            <span v-once>这个将不会改变: {{ msg }}</span>
+            <p>Using mustaches: {{ rawHtml }}</p>
+            <p  v-bind:id='id'>Using v-html directive: <span v-html="rawHtml"></span></p>
+            <button :[type]="1" @[click]="aa">aa</button>
+            <button :class="classObject">111</button>
+            <button :class="[aa ? classObject : '']">object</button>
+            <my-component class="baz boo"></my-component>
+            <button :style="{color:color,fontSize:size+'px'}">发放</button>
+            <button v-if="color === 'redss'">123</button>
+            <button v-else-if="color === 'reds'">153122</button>
+            <button v-else>11321</button>
+
+            <template v-if="loginType === 'username'">
+                <label>Username</label>
+                <input placeholder="Enter your username"  key="username-input">
+            </template>
+            <template v-else>
+                <label>Email</label>
+                <input placeholder="Enter your email address" key="email-input">
+            </template>
+
+            <a v:show="ok">
+                kjjj
+            </a>
+        </div>
+</body>
+<script src="../static/js/vue.min.js"></script>
+<script>
+    Vue.component('my-component',{
+        template: '<p class="foo bar">Hi</p>'
+    })
+
+    var vm =  new Vue({
+        el:"#ttt",
+        data:{
+            color:'red',
+            loginType:'username',
+            size:18,
+            msg: 'Hello Vue!',
+            rawHtml:"<a>fadsfdsafdsa</a>",
+            id:111,
+            type:"id",
+            click:"click",
+            question:"",
+            classObject:{
+                actice:true,
+                'text-danger':false
+            }
+        },
+        methods:{
+            aa : function(){
+
+                if(this.loginType  === "username"){
+                    this.loginType=""
+                }else{
+                    this.loginType  = "username";
+                }
+            }
+        },watch:{
+            question:function(newQuestion, oldQuestion){
+               return this.msg = "aaaaaaaaaaaaa"+new Date();
+            }
+        },
+        computed:{//计算属性
+            reversedMessage : function(){
+            },
+            fullName:{
+                get:function(){
+                    return "getter"
+                },
+                set:function(val){
+                    return "setter";
+                }
+            }
+        }
+    })
+</script>
+</html>

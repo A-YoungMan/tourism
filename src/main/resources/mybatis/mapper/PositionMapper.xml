@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.PositionMapper" >
+    <insert id="create" parameterType="Position" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_position(place_id,p1,p2) VALUES (#{place.id},#{p1},#{p2})
+    </insert>
+    <update id="update" parameterType="Position" >
+        UPDATE t_position SET p1=#{p1},p2=#{p2} WHERE place_id=#{place.id}
+    </update>
+    <delete id="deletePlaceId" parameterType="int">
+        DELETE FROM t_position WHERE place_id=#{place.id}
+    </delete>
+    <select id="findByPlaceId" parameterType="int" resultType="Position">
+        SELECT id,p1,p2 FROM t_position WHERE place_id=#{id}
+    </select>
+    <select id="findById" parameterType="int" resultType="Position">
+         SELECT id,p1,p2 FROM t_position WHERE id=#{id}
+    </select>
+</mapper>

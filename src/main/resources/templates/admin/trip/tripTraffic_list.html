@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>旅游项目管理</title>
+    <!-- Styles -->
+    <style>
+        a{
+            cursor: pointer;
+        }
+    </style>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+    <link th:href="@{/layui/css/layui.css}" href="../../../static/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>旅游往返路线管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a >行程列表</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card alert">
+                            <div class="card-header">
+                                <h4>新增/修改</h4><br/>
+                                <a href="javascript:history.go(-1)" class="btn btn-success">返回上一页</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="menu-upload-form">
+                                    <div class="row" style="margin-left: 10px;">
+                                        <h4 style="margin-top: 10px;" class="traffic">当前已有的往返行程..</h4>
+                                        <p th:if="${success}" th:text="${success}" style="color: green"></p>
+                                        <p th:if="${error}" th:text="${error}" style="color: red"></p>
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align: center" class="col-md-3">发车地点</th>
+                                                    <th style="text-align: center" class="col-md-2">发车时间</th>
+                                                    <th style="text-align: center" class="col-md-3">返回地点</th>
+                                                    <th style="text-align: center" class="col-md-2">返回时间</th>
+                                                    <th style="text-align: center" class="col-md-2">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbody">
+                                                <tr th:each="traffic:${trafficList}">
+                                                    <td th:attr="class='titleTd '+${traffic.id}" class="titleTd" align="center" style="vertical-align: middle;" th:text="${traffic.goPoint}" contenteditable="true">1</td>
+                                                    <td align="center" style="vertical-align: middle;" th:text="${#dates.format(traffic.goTime,'yyyy-MM-dd HH:mm:ss')}" contenteditable="true">1</td>
+                                                    <td class="titleTd" align="center" style="vertical-align: middle;" th:text="${traffic.returnPoint}" contenteditable="true">2</td>
+                                                    <td class="returnTd" align="center" style="vertical-align: middle;" th:text="${#dates.format(traffic.returnTime,'yyyy-MM-dd HH:mm:ss')}" contenteditable="true">2</td>
+                                                    <td align="center" style="vertical-align: middle;"><a class="btn btn-danger delete">删除</a></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!--表单-->
+                                    <form class="form-horizontal" action="/admin/trip/traffic/add" method="post" enctype="multipart/form-data">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="col-md-4">
+                                                        <div class="form-group" style="margin-bottom: 0">
+                                                            <div>
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>出行地点</label>
+                                                                <input type="text" name="goPoint" autocomplete="off" class="form-control"
+                                                                       placeholder="出行地点...." required>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-4">
+                                                        <div class="col-md-5 form-group" style="margin-bottom: 0">
+                                                            <div >
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>出行时间</label>
+                                                                <input  type="text" name="goTime" autocomplete="off" class="form-control goTime"
+                                                                       placeholder="出行时间...." required>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">
+                                                        <div class="form-group" style="margin-bottom: 0">
+                                                            <div>
+                                                                <label class="control-label" style="text-align: left">返回地点<small style="color: red">*<span>可暂时不填写!</span></small></label>
+                                                                <input type="text" name="returnPoint" autocomplete="off" class="form-control"
+                                                                       placeholder="返回地点...." >
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-4">
+                                                        <div class="col-md-5 form-group" style="margin-bottom: 0">
+                                                            <div >
+                                                                <label class="control-label" style="text-align: left">返回时间<small style="color: red">*<span>可暂时不填写!</span></small></label>
+                                                                <input type="text" name="returnTime" autocomplete="off" class="form-control returnTime"
+                                                                       placeholder="返回时间...." >
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="form-group">
+                                            <div style="text-align: center">
+                                                <button type="submit" class="btn btn-lg btn-primary" style="width: 200px;" disabled="disabled">保存</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+                </div><!-- /# row -->
+            </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div><!-- /# content wrap -->
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/layDate-v5.0.9/laydate/laydate.js}" src="../../../static/layDate-v5.0.9/laydate/laydate.js"></script>
+<script th:src="@{/js/cropbox.js}" src="../../../static/js/cropbox.js"></script>
+<script th:src="@{/layui/layui.js}" src="../../../static/layui/layui.js"  type="text/javascript"></script>
+
+<script>
+    $(function(){
+        goPointOrReturnPointKeyup();//修改返回或出行地点
+        goPointAndretrunPoint(); //内容超出隐藏
+        detailFocus();//详情
+        deleteTraffic();//删除
+        checkNull();//验证input是否为空
+        goTime();//验证发车时间是否正确
+        returnTime();//验证回来时间是否正确
+        //判断是否可以提交
+        setInterval(function(){//button type="submit"
+            var t = $(".has-error").index();
+            if(t == -1){ //当前下标不存在则可以提交
+                $("button[type='submit']").removeAttr("disabled");
+            }else{
+                $("button[type='submit']").attr("disabled","disabled");
+            }
+        },200)
+    })
+    //下拉
+    layui.use('form', function(){
+        var form = layui.form;
+    });
+    //时间选择器
+    laydate.render({
+        elem: '.goTime'
+        ,min: new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()
+        ,max: (new Date().getFullYear()+1)+"-12-31"
+        ,type: 'datetime'
+        ,theme: '#FF9A3E'
+    });
+
+    laydate.render({
+        elem: '.returnTime'
+        ,min: new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()
+        ,max: (new Date().getFullYear()+1)+"-12-31"
+        ,type: 'datetime'
+        ,theme: '#FF9A3E'
+    });
+    laydate.render({
+        elem: '.returnTd'
+        ,min: new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()
+        ,max: (new Date().getFullYear()+1)+"-12-31"
+        ,type: 'datetime'
+        ,theme: '#FF9A3E'
+    });
+    /*修改发出地点或返回地点*/
+    function goPointOrReturnPointKeyup(){
+        $(".titleTd").on("keyup",function(){
+            var clazz = $(this).parents("tr").children("td").attr("class");//获取Class名称
+            var id = clazz.substring(clazz.indexOf("d")+1,clazz.length).trim();//获取id 截取
+            var index = $(this).index();//获取当前是否出行还是返回路程
+            var goPoint = "";
+            var returnPoint = "";
+            if(index == 0 ){//发车地点
+                goPoint = $(this).text();
+            }else{//返回地点
+                returnPoint = $(this).text();
+            }
+            var url ="/admin/trip/traffic/ajax?act=update";
+            $.post(url,{id:id,goPoint:goPoint,returnPoint:returnPoint},function(data){
+                if(data.ok){
+                    $(".traffic").next("p").remove();
+                    $(".traffic").after("<p style='color: green'>修改成功!</p>");
+                }
+            })
+        })
+    }
+    /*删除往返行程*/
+    function deleteTraffic(){
+        $(".delete").on("click",function(){
+            var id =$(this).parents("tr").children("td").attr("class");//
+            id = id.substring(id.indexOf("d")+1,id.length).trim();//获取id
+            var tr =$(this).parents("tr");
+            var url ="/admin/trip/traffic/ajax?act=delete";
+            $.post(url,{id:id},function(data){
+                if(data.ok){
+                    $(".traffic").next("p").remove();
+                    $(".traffic").after("<p style='color: green'>删除行程成功!</p>");
+                    tr.remove();
+                }
+            })
+        })
+    }
+    /*判断值是否超出，超出隐藏*/
+    function goPointAndretrunPoint(){
+        $(".titleTd").each(function(){
+            var text = $(this).text();
+            if(text.length >=10){
+                $(this).html(text.substring(0,10)+".....");
+            }
+        })
+    }
+    /*详情被点击时展开*/
+    function detailFocus(){
+        $(".titleTd").on("focus",function(){
+            var text = $(this).text();
+            var index = $(this).index();
+            text = text.substring(0,text.indexOf("."));
+            if(text.length == 10){
+                var id =  $(this).parents("tr").children("td").attr("class");
+                var td =  $(this);
+                id = id.substring(id.indexOf("d")+1,id.length).trim();//获取id
+                var url ="/admin/trip/traffic/ajax?act=query";
+                $.post(url,{id:id},function(data){
+                    if(data.ok){
+                        if(index == 0){
+                            td.text(data.traffic.goPoint);
+                        }else{
+                            td.text(data.traffic.returnPoint);
+                        }
+                    }
+                })
+            }
+        })
+        /*失去焦点*/
+        $(".titleTd").on("blur",function(){
+            goPointAndretrunPoint();
+        })
+    }
+    /*input元素提示输入*/
+    function checkNull(){
+        $("input[type$='text']:lt(2)").each(function(n){
+            if($(this).val()==""){
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }else{
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }
+        });
+        $("input[name='goPoint']").bind('input propertychange',function(){
+            var text = $(this).val();
+            if(text.trim() != ""){
+                $(this).parent("div").removeClass("has-error");
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }else{
+                $(this).parent("div").removeClass("has-success");
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }
+        })
+    }
+
+    /*发车文本框验证提示*/
+    function goTime(){
+        setInterval(function(){
+            $(".goTime").next("span").remove();
+            var value =$(".goTime").val();
+            if(value.trim()!=""){
+                var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
+                var regExp = new RegExp(reg);
+                if(!regExp.test(value)){
+                    $(".goTime").parent("div").removeClass("has-success").removeClass("has-feedback");
+                    $(".goTime").parent("div").addClass("has-error").addClass("has-feedback");
+                    $(".goTime").after("<span style='color: red'>时间格式不正确,正确格式为: yyyy-MM-dd HH:dd:ss</span>")
+                }else{
+                    $(".goTime").parent("div").removeClass("has-error").removeClass("has-feedback");
+                    $(".goTime").parent("div").addClass("has-success").addClass("has-feedback");
+                }
+            }else{
+                $(".goTime").next("span").remove();
+                $(".goTime").parent("div").removeClass("has-success").removeClass("has-feedback");
+                $(".goTime").parent("div").addClass("has-error").addClass("has-feedback");
+            }
+        },500)
+    }
+    /*返回时间验证*/
+    function returnTime(){
+        setInterval(function(){
+            $(".returnTime").next("span").remove();
+            var value =$(".returnTime").val();
+            if(value.trim()!=""){
+                var reg = /^[1-9]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s+(20|21|22|23|[0-1]\d):[0-5]\d:[0-5]\d$/;
+                var regExp = new RegExp(reg);
+                if(!regExp.test(value)){
+                    $(".returnTime").parent("div").removeClass("has-success").removeClass("has-feedback");
+                    $(".returnTime").parent("div").addClass("has-error").addClass("has-feedback");
+                    $(".returnTime").after("<span style='color: red'>时间格式不正确,正确格式为: yyyy-MM-dd HH:dd:ss</span>")
+                }else{
+                    $(".returnTime").parent("div").removeClass("has-error").removeClass("has-feedback");
+                    $(".returnTime").parent("div").addClass("has-success").addClass("has-feedback");
+                }
+            }
+        },500)
+    }
+</script>
+</html>

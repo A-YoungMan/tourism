@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.TripMapper" >
+    <insert id="create" parameterType="Trip" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_trip(num,title,s_title,city_id,type,traffic,hotel,time,good_rate,place_score,hotel_score,service_score,traffic_score,is_ok,d_type,create_time)
+        VALUES (#{num},#{title},#{sTitle},#{city.id},#{type},#{traffic},#{hotel},#{time},#{goodRate},#{placeScore},#{hotelScore},#{serviceScore},#{trafficScore},#{isOk},#{dType},#{createTime})
+    </insert>
+    <!--插入桥表-->
+    <insert id="addTripOnPlace" parameterType="map">
+        INSERT INTO t_place_trip(place_id,tripe) values(${placeId},#{tripId})
+    </insert>
+    <update id="update" parameterType="Trip" useGeneratedKeys="true" >
+        UPDATE t_trip 
+        <set>
+            <if test="num != null">num=#{num}</if>
+            <if test="title != null">,title=#{title}</if>
+            <if test="sTitle != null">,s_title=#{sTitle}</if>
+            <if test="city != null">,city_id=#{city.id}</if>
+            <if test="type != null">,type=#{type}</if>
+            <if test="traffic != null">,traffic=#{traffic}</if>
+            <if test="hotel != null">,hotel=#{hotel}</if>
+            <if test="time != null">,time=#{time}</if>
+            <if test="goodRate != null">,good_rate=#{goodRate}</if>
+            <if test="placeScore != null">,place_score=#{placeScore}</if>
+            <if test="hotelScore != null">,hotel_score=#{hotelScore}</if>
+            <if test="serviceScore != null">,service_score=#{serviceScore}</if>
+            <if test="trafficScore != null">,traffic_score=#{trafficScore}</if>
+            <if test="isOk != null">,is_ok=#{isOk}</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <!--修改是否上架-->
+    <update id="updateIsOk">
+        UPDATE t_trip SET is_ok=#{is} WHERE id=#{id}
+    </update>
+    <!--查询所有Trip表的字段-->
+    <sql id="tripSql">
+       t.id tripId,t.id,t.num,t.title,t.s_title,t.city_id,t.type,t.traffic,t.hotel,t.time,t.good_rate,t.place_score,t.hotel_score,t.service_score,t.traffic_score,t.is_ok,t.d_type,t.create_time,p.id place_id
+    </sql>
+    <resultMap id="returnTrip" type="Trip">
+        <id column="id" property="id" javaType="int" />
+        <result column="num" property="num" />
+        <result column="title" property="title" />
+        <result column="s_title" property="sTitle" />
+        <result column="type" property="type" />
+        <result column="traffic" property="traffic" />
+        <result column="hotel" property="hotel" />
+        <result column="time" property="time" />
+        <result column="good_rate" property="goodRate" />
+        <result column="place_score" property="placeScore" />
+        <result column="hotel_score" property="hotelScore" />
+        <result column="service_score" property="serviceScore" />
+        <result column="traffic_score" property="trafficScore" />
+        <result column="is_ok" property="isOk" />
+        <result column="d_type" property="dType" />
+        <result column="create_time" property="createTime" />
+        <association property="city" javaType="City" column="city_id" select="com.oaec.tourism.mapper.CityMapper.findById" />
+        <association property="place" javaType="Place" column="place_id" select="com.oaec.tourism.mapper.PlaceMapper.findById" />
+        <collection property="tripPictures" column="id" select="com.oaec.tourism.mapper.TripPictureMapper.findByAllTripId" />
+        <collection property="prices" column="id" select="com.oaec.tourism.mapper.PriceMapper.findByAllTripId" />
+        <collection property="themes" column="id" select="com.oaec.tourism.mapper.ThemeMapper.findByTripId" />
+    </resultMap>
+    <select id="findById" resultMap="returnTrip" parameterType="int">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id WHERE t.id=#{id}  GROUP BY t.id
+    </select>
+    <select id="findByIdAndNum" resultMap="returnTrip">
+      SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id
+        <where>
+            <if test="id !=null" >t.id =#{id} </if>
+            <if test="num !=null" >AND t.num =#{num}</if>
+            <if test="is !=null" > AND t.is_ok=#{is}</if>
+            AND t.d_type=0
+        </where>
+        GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+    <!--按景点，是否上架，出游的类型查找-->
+    <select id="findAllPlaceById" resultMap="returnTrip">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id WHERE pt.place_id=#{placeId} AND t.d_type=0
+        <if test="is !=null ">AND t.is_ok=#{is}</if>
+        <if test="typeId !=null ">AND p.type=#{typeId}</if>
+        GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+    <!--按景点名称是否上架，出游的类型查找-->
+    <select id="findAllPlaceByName" resultMap="returnTrip">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id WHERE p.name=#{placeName} AND p.type=0 AND t.d_type=0
+        <if test="is !=null ">AND t.is_ok=#{is}</if>
+        <if test="type !=null ">AND t.type=#{type}</if>
+        GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+    <!--地址id查询-->
+    <select id="findAllCityById" parameterType="int" resultMap="returnTrip">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id WHERE t.city_id=#{cityId} AND t.is_ok=#{is}  GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+    <!--查询所有-->
+    <select id="findAll"  resultMap="returnTrip">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id WHERE t.d_type=#{dType}
+        <if test="is != null">AND t.is_ok=#{is}</if>  GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+    <select id="findAllType" resultMap="returnTrip" parameterType="int">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id WHERE t.d_type=0
+        AND t.is_ok=0 AND t.type=#{type}  GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+    <!--根据主题id查询-->
+    <select id="findAllThemeId" resultMap="returnTrip" parameterType="int">
+        SELECT <include refid="tripSql" /> FROM t_trip t
+        LEFT JOIN t_place_trip pt on pt.tripe =t.id
+        LEFT JOIN t_place p on p.id = pt.place_id
+        LEFT JOIN t_theme_trip tt on tt.trip_id= t.id
+        LEFT JOIN t_theme th on th.id = tt.theme_id
+        WHERE t.d_type=0
+        AND t.is_ok=0 AND th.id=#{themeId}  GROUP BY t.id ORDER BY t.create_time DESC
+    </select>
+
+    <!--删除进入回收站 -->
+    <update id="addRecovery" parameterType="int">
+        UPDATE t_trip SET d_type=1 WHERE id=#{id}
+    </update>
+    <!--删除单个或清空回收站-->
+    <delete id="closeRecovery">
+        DELETE FROM t_trip WHERE
+        <choose>
+            <when test="id != null "> id=#{id}</when>
+            <otherwise>d_type=1</otherwise>
+        </choose>
+    </delete>
+    <!--从回收站恢复所有或者单个-->
+    <update id="returnList">
+        UPDATE t_trip SET d_type=0 WHERE d_type=1
+            <if test="id != null">AND  id=#{id}</if>
+    </update>
+</mapper>

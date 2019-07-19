@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.OrderMapper">
+    <insert id="create" parameterType="Order" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO t_order(orderNo,trip_id,user_id,adult_num,child_num,start_time,create_time,go_point,go_time,total_price)
+        VALUES (#{orderNo},#{trip.id},#{user.id},#{adultNum},#{childNum},#{startDate},#{createDate},#{goPoint},#{goTime},#{totalPrice})
+    </insert>
+    <!--创建桥表-->
+    <insert id="createOrderAndContact" parameterType="map" >
+        INSERT INTO t_order_contact(order_id,contact_id,type) VALUES(#{orderId},#{contactId},#{type})
+    </insert>
+    <resultMap id="mapOrder" type="Order">
+        <id column="id" property="id" />
+        <result column="orderNo" property="orderNo" />
+        <result column="adult_num" property="adultNum" />
+        <result column="child_num" property="childNum" />
+        <result column="start_time" property="startDate" />
+        <result column="create_time" property="createDate" />
+        <result column="go_point" property="goPoint" />
+        <result column="go_time" property="goTime" />
+        <result column="total_price" property="totalPrice" />
+        <association property="user" column="user_id" select="com.oaec.tourism.mapper.UserMapper.findById" />
+        <association property="trip" column="trip_id" select="com.oaec.tourism.mapper.TripMapper.findById" />
+        <collection property="contacts" column="id" select="findAllContactsAndOrderById" />
+    </resultMap>
+    <!--查询多表中的订单出游的个人信息-->
+    <select id="findAllContactsAndOrderById" parameterType="int" resultType="Contact">
+        SELECT c.id,c.name,c.phone,c.sex,c.email,c.cardno,c.birthday FROM t_contact c
+        LEFT JOIN t_order_contact oc on oc.contact_id = c.id WHERE oc.order_id=#{id}
+    </select>
+    <!--啊的撒范德萨-->
+    <select id="findById" parameterType="int" resultMap="mapOrder">
+          SELECT id,orderNo,trip_id,user_id,adult_num ,child_num ,start_time ,create_time ,go_point ,go_time ,total_price
+          FROM t_order  WHERE id=#{id}
+    </select>
+    <select id="findByUserId" parameterType="int" resultMap="mapOrder">
+        SELECT id,orderNo,trip_id,user_id,adult_num ,child_num ,start_time ,create_time ,go_point ,go_time ,total_price
+          FROM t_order  WHERE user_id=#{id} ORDER BY create_time DESC
+    </select>
+    <select id="findAll" resultMap="mapOrder">
+         SELECT id,orderNo,trip_id,user_id,adult_num ,child_num ,start_time ,create_time ,go_point ,go_time ,total_price
+          FROM t_order  ORDER BY create_time DESC
+    </select>
+    <!--根据景点id查询-->
+    <select id="findByTripId" parameterType="int" resultMap="mapOrder">
+        SELECT id,orderNo,trip_id,user_id,adult_num ,child_num ,start_time ,create_time ,go_point ,go_time ,total_price
+          FROM t_order  WHERE trip_id=#{id} ORDER BY create_time DESC
+    </select>
+    <select id="findByCreateTime" parameterType="string" resultMap="mapOrder">
+        SELECT id,orderNo,trip_id,user_id,adult_num ,child_num ,start_time ,create_time ,go_point ,go_time ,total_price
+          FROM t_order  WHERE  DATE_FORMAT(create_time,'%Y-%m-%d') = #{date} ORDER BY create_time DESC
+    </select>
+    <!--按景区id查询当前的所有订单-->
+    <select id="findByPlaceId" parameterType="int" resultMap="mapOrder" >
+        SELECT o.id,o.orderNo,o.trip_id,o.user_id,o.adult_num ,o.child_num ,o.start_time ,o.create_time ,o.go_point ,o.go_time ,o.total_price FROM t_order o
+            LEFT JOIN t_place_trip pt on pt.tripe = o.trip_id
+            WHERE pt.place_id = #{id}
+    </select>
+</mapper>

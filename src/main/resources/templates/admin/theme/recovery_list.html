@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主题列表</title>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .table tbody tr td, thead tr th {
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid" style="margin-bottom: 20px;">
+    <div class="row">
+        <div class="col-lg-12 p-0">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>回收管理</h1>
+                </div>
+                <ol class="breadcrumb text-right">
+                    <li><a>回收列表</a></li>
+                </ol>
+            </div>
+            <form class="form-inline" style="float: right" action="/admin/theme/recycle?act=key" method="post">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" autocomplete="off" name="key" class="form-control" id="exampleInputAmount" placeholder="主题名称或关键字....">
+                    </div>
+                </div>
+                <button id="submit" type="submit" class="btn btn-primary">搜索</button>
+            </form>
+        </div><!-- /# column -->
+    </div><!-- /# row -->
+    <p th:if="${error}" th:text="${error}" style="color: red"></p>
+    <p th:if="${success}" th:text="${success}" style="color: green"></p>
+    <div class="row">
+        <div class="main-content">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>主题名称</th>
+                        <th>主题概述</th>
+                        <th style="text-align: center">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr th:each="theme:${themeList}">
+                    <td th:text="${theme.name}">名称</td>
+                    <td th:text="${theme.detail}">概述</td>
+                    <td>
+                        <a th:href="@{'/admin/theme/recycle?act=return&id='+${theme.id}}" class="btn btn-success btn-xs">恢复</a>
+                        <a th:href="@{'/admin/theme/recycle?act=delete&id='+${theme.id}}" class="btn btn-danger btn-xs" onclick="return confirm('删除后将无法恢复!确定删除吗?')">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div><!-- /# row -->
+    <a th:href="@{'/admin/theme/recycle?act=list'}" class="btn btn-primary">查询所有</a>
+    <a th:href="@{'/admin/theme/recycle?act=return'}" class="btn btn-success">全部恢复</a>
+    <a th:href="@{'/admin/theme/recycle?act=delete'}" class="btn btn-info">清空回收站</a>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"
+        src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $("#submit").attr('disabled',true);
+        $("input[name]").bind("input propertychange",function(){
+            var value = $(this).val().trim();
+            if(value == ""){
+                $("#submit").attr('disabled',true);
+            }else{
+                $("#submit").attr('disabled',false);
+            }
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.DetailMapper" >
+    <insert id="create" parameterType="Detail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_detail(trip_id,place,hotel,food) VALUES(#{trip.id},#{place},#{hotel},#{food})
+    </insert>
+    <update id="update" useGeneratedKeys="true" parameterType="Detail">
+        UPDATE t_detail
+        <set>
+            <if test="place !=null" >place=#{place}</if>
+            <if test="hotel !=null" >,hotel=#{hotel}</if>
+            <if test="food !=null" >,food=#{food}</if>
+        </set>
+        WHERE  id =#{id}
+    </update>
+
+    <resultMap id="returnDetail" type="detail">
+        <id column="id" property="id" />
+        <id column="place" property="place" />
+        <id column="hotel" property="hotel" />
+        <id column="food" property="food" />
+        <association property="trip" javaType="Trip" column="trip_id" select="com.oaec.tourism.mapper.TripMapper.findById"/>
+    </resultMap>
+    <!--//按id删除或按Tripid删除-->
+    <delete id="deleteByIdOrTripId">
+        DELETE FROM t_detail
+        <choose>
+            <when test="id !=null"> WHERE id=#{id}</when>
+            <when test="tripId !=null"> WHERE trip_id=#{tripId}</when>
+            <otherwise></otherwise>
+        </choose>
+    </delete>
+    <!--按id查询或景区id查询-->
+    <select id="findByIdOrTripId"  resultMap="returnDetail" >
+        SELECT id,trip_id,place,hotel,food FROM t_detail
+            <if test="id != null"> WHERE id=#{id}</if>
+            <if test="tripId != null">WHERE trip_id=#{tripId}</if>
+    </select>
+    <!--//查询所有或按 TripId查询-->
+    <select id="findByAllOrTripId" resultMap="returnDetail">
+        SELECT d.id,d.trip_id,d.place,t.hotel,d.food from t_detail d
+        LEFT JOIN t_trip t ON t.id =d.trip_id
+        LEFT JOIN t_place_trip pt ON pt.tripe = t.id
+        LEFT JOIN t_place p ON p.id = pt.place_id
+        <if test="id != null"> WHERE p.id=#{id} </if>
+    </select>
+</mapper>

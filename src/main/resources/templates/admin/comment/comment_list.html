@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>评论管理</title>
+    <!-- Styles -->
+    <style>
+        a {
+            cursor: pointer;
+        }
+    </style>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+    <link th:href="@{/layui/css/layui.css}" href="../../../static/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>评论管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a>列表</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <p style="color: green" th:text="${success}"></p>
+                    <p style="color: red" th:text="${error}"></p>
+                    <div class="col-lg-12">
+                        <div class="card alert">
+                            <div class="order-list-item">
+                                <table class="table comment">
+                                    <thead style="background-color: #b4dbed">
+                                    <th style="color: black;width: 230px;">
+                                        <select name="place" class="form-control">
+                                            <option value="-1">全部</option>
+                                            <option value="0" th:each="place:${placeList}" th:value="${place.id}"
+                                                    th:text="${place.name}">北京
+                                            </option>
+                                        </select>
+                                    </th>
+                                    <th style="color: black;width: 155px;">
+                                        <select name="type" class="form-control">
+                                            <option value="-1">全部</option>
+                                            <option value="0" style="color: green">满意</option>
+                                            <option value="1" style="color: blue">一般</option>
+                                            <option value="2" style="color: red">不满意</option>
+                                        </select>
+                                    </th>
+                                    <th style="width: 240px;">出游天数</th>
+                                    <th style="width: 155px;">
+                                        <select name="tripType" class="form-control">
+                                            <option value="-1">全部</option>
+                                            <option value="0">自行游</option>
+                                            <option value="1">国内游</option>
+                                            <option value="2" >境外游</option>
+                                        </select>
+                                    </th>
+                                    <th>发布时间</th>
+                                    <th style="text-align: left">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="comment:${commentList}">
+                                        <td th:text="${comment.trip.place.name}">John Doe</td>
+                                        <td th:switch="${comment.type}">
+                                            <span th:case="0" th:text="满意" style="color: green"></span>
+                                            <span th:case="1" th:text="一般" style="color: blue"></span>
+                                            <span th:case="2" th:text="不满意" style="color: red"></span>
+                                        </td>
+                                        <td th:text="${comment.trip.time}">$29</td>
+                                        <td th:switch="${comment.trip.type}">
+                                            <div class="full-stars-only" th:case="0" th:text="自驾游">aaa</div>
+                                            <div class="full-stars-only" th:case="1" th:text="国内游">aaa</div>
+                                            <div class="full-stars-only" th:case="2" th:text="境外游">aaa</div>
+                                        </td>
+                                        <td th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:dd:ss')}">100
+                                        </td>
+                                        <td><a class="btn btn-info btn-xs commentDetail" th:name="${comment.id}"
+                                               data-toggle="modal" data-target="#commentDetail">详情</a>&nbsp;&nbsp;<a
+                                                class="btn btn-danger btn-xs"
+                                                th:href="@{'/admin/trip/comment/delete?id='+${comment.id}}"
+                                                onclick="return confirm('确定删除吗!')">删除</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+
+                </div><!-- /# row -->
+            </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div>
+
+<!-- /# 评论详情弹窗 -->
+<div class="modal fade" id="commentDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">评论详情</h4>
+            </div>
+            <div class="modal-header">
+                <h5 class="modal-title">旅游产品名称：</h5>
+            </div>
+            <div>
+                <table class="table" style="margin-bottom: 0">
+                    <thead>
+                    <tr>
+                        <th>出游人</th>
+                        <th>出游人数</th>
+                        <th>出游类型</th>
+                        <th>出游时间</th>
+                        <th>评分</th>
+                        <th style="text-align: left">总价</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <p>成人:</p>
+                            <p>儿童:</p>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td style="color: red"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            评论内容:
+                            <p style="text-align: right">评论时间:<span style="font-size: 10px;color: orange">2015</span>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"
+        src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script th:src="@{/js/cropbox.js}" src="../../../static/js/cropbox.js"></script>
+
+<script>
+    $(function () {
+        commentDetailOrDelete();
+        ajaxFindAll($("select[name='place']"));
+        ajaxFindAll($("select[name='type']"));
+        ajaxFindAll($("select[name='tripType']"));
+        //selected
+    })
+
+    function ajaxFindAll(object){//Ajax多条件查询
+        $(object).on("change",function(){
+            var placeId= $("select[name='place']").find("option:selected").val();
+            var type= $("select[name='type']").find("option:selected").val();
+            var tripType= $("select[name='tripType']").find("option:selected").val();
+            var url="/admin/trip/comment/ajax?act=type";
+            $.post(url,{placeId:placeId,type:type,tripType:tripType},function(data){
+                $(".comment").find("tbody").find("tr").attr("hidden",true);//所有隐藏
+                var tbody =$(".comment").find("tbody");
+                if(data.list.length >10){
+                    $(".paging").attr("hidden",false);
+                }else{
+                    $(".paging").attr("hidden",true);
+                }
+                $.each(data.list,function(i,v){
+                    tbody.find("tr:eq("+i+")").attr("hidden",false);//显示当前条数
+                    tbody.find("tr:eq("+i+")").find("td:eq(0)").text(v.trip.place.name)
+                    var span;
+                    if(v.type == 0){
+                        span = "<span style='color: green'>满意</span>"
+                    }else if(v.type == 1){
+                        span = "<span style='color: blue'>一般</span>"
+                    }else{
+                        span = "<span style='color: red'>不满意</span>"
+                    }
+                    tbody.find("tr:eq("+i+")").find("td:eq(1)").html(span);
+                    tbody.find("tr:eq("+i+")").find("td:eq(2)").text(v.trip.time);
+                    var type;
+                    if(v.trip.type == 0){
+                        type = "自行游"
+                    }else if(v.trip.type == 1){
+                        type = "国内游"
+                    }else{
+                        type = "境外游"
+                    }
+                    tbody.find("tr:eq("+i+")").find("td:eq(3)").children("div").text(type);
+                    var date = new Date(v.createTime).Format("yyyy-MM-dd HH:mm:ss")
+                    tbody.find("tr:eq("+i+")").find("td:eq(4)").text(date);
+                    tbody.find("tr:eq("+i+")").find("td:eq(5)").find("a:first").attr("name",v.id)
+                    tbody.find("tr:eq("+i+")").find("td:eq(5)").find("a:last").attr("name",v.id)
+                })
+            })
+        })
+    }
+
+    //查询评论详情或删除
+    function commentDetailOrDelete() {
+        $(".commentDetail").on("click", function () {
+            var id = $(this).attr("name");
+            var url = "/admin/trip/comment/ajax?act=query";
+            $.post(url, {id: id}, function (data) {
+                if (data != "" && data != null) {
+                    $("#commentDetail").find("h5").text("旅游产品名称：" + data.comment.trip.title);
+                    var tr = $("#commentDetail").find("tbody").find("tr:first");
+                    var tr2 = $("#commentDetail").find("tbody").find("tr:last");
+                    $(tr).find("td:eq(0)").empty();
+                    $.each(data.comment.order.contacts, function (i, v) {
+                        $(tr).find("td:eq(0)").append("<p style='text-align: center'>" + v.name + "</p>")
+                    })
+                    $(tr).find("td:eq(1)").find("p:eq(0)").text("成人：" + data.comment.order.adultNum)
+                    $(tr).find("td:eq(1)").find("p:eq(1)").text("儿童：" + data.comment.order.childNum)
+                    var name;
+                    if (data.comment.trip.type == 0) {
+                        name = "自行游"
+                    } else if (data.comment.trip.type == 1) {
+                        name = "国内游"
+                    } else {
+                        name = "境外游";
+                    }
+                    $(tr).find("td:eq(2)").text(name)
+                    var date = new Date(data.comment.order.startDate).Format("yyyy-MM-dd")
+                    $(tr).find("td:eq(3)").text(date);
+                    var place = "<p>景点：" + data.comment.place + "</p>";
+                    var hotel = "<p>餐饮住宿：" + data.comment.hotel + "</p>";
+                    var service = "<p>行程服务：" + data.comment.service + "</p>";
+                    var traffic = "<p>交通旅行：" + data.comment.traffic + "</p>";
+                    $(tr).find("td:eq(4)").empty();
+                    $(tr).find("td:eq(4)").append(place + hotel + service + traffic);
+                    $(tr).find("td:eq(5)").text(data.comment.order.totalPrice+"￥")
+                    var date = new Date(data.comment.createTime).Format("yyyy-MM-dd HH:mm:ss")
+                    $(tr2).find("td").html("评论内容：" + data.comment.content + "<p style='color: orange;text-align: right'>评论时间:" + date + "</p>");
+                }
+            })
+        })
+    }
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "H+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+</script>
+</html>

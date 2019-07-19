@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.ThemeMapper" >
+    <insert id="create" parameterType="Theme" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_theme(name,detail,type) VALUES(#{name},#{detail},#{type})
+    </insert>
+    <update id="update" parameterType="Theme">
+        UPDATE t_theme <set>
+        <if test="name != null">name =#{name}</if>
+        <if test="detail != null">,detail =#{detail}</if>
+        <if test="type != type">,type =#{type}</if>
+    </set>
+        WHERE id = #{id}
+    </update>
+    <select id="findByName" parameterType="java.lang.String" resultType="Theme">
+        SELECT id,name,detail,type FROM t_theme WHERE name=#{name}
+    </select>
+    <!--按id查询-->
+    <select id="findById" parameterType="int" resultType="Theme">
+        SELECT id,name,detail,type FROM t_theme WHERE id =#{id}
+    </select>
+    <!--查询所有，已加入回收站，或者列表-->
+    <select id="findAll" resultType="Theme">
+         SELECT id,name,detail,type FROM t_theme
+          <if test="type != null"> WHERE type = #{type} </if>
+    </select>
+    <!--关键字查询-->
+    <select id="findAllKey"  resultType="Theme">
+          SELECT id,name,detail,type FROM t_theme WHERE name LIKE ${key} AND type=#{type}
+    </select>
+    <!--加入回收站-->
+    <update id="addRecovery" parameterType="int" >
+        UPDATE t_theme SET type = 1   WHERE id=#{id}
+    </update>
+    <!--返回列表-->
+    <update id="returnList">
+        UPDATE t_theme SET type=0 WHERE type=1
+        <if test="id != null">AND id=#{id}</if>
+    </update>
+    <!--删除单条或删除所有-->
+    <delete id="closeRecovery" >
+        DELETE FROM t_theme WHERE type=1
+        <if test="id != null">AND id=#{id} </if>
+    </delete>
+    <!--桥表插入操作-->
+    <insert id="createThemeOrTrip" parameterType="map" keyProperty="id">
+        INSERT INTO t_theme_trip(theme_id,trip_id) VALUES(#{themeId},#{tripId})
+    </insert>
+    <!--删除桥表-->
+    <delete id="deleteThemeOrTrip" parameterType="map">
+        DELETE FROM t_theme_trip WHERE theme_id=#{themeId} AND trip_id=#{tripId}
+    </delete>
+    <!--按主题查找或景区id查找-->
+    <select id="findByThemeIdOrTripId" resultType="Theme" >
+        SELECT t.* FROM t_theme t
+        LEFT JOIN t_theme_trip tt on tt.theme_id = t.id
+        LEFT JOIN t_trip tr on tr.id = tt.trip_id WHERE t.type=0
+        <if test="themeId != null"> AND t.id=#{themeId}</if>
+        <if test="tripId != null">AND tr.id=#{tripId}</if>
+    </select>
+    <!--按主题查找或景区id查找-->
+    <select id="findByTripId" resultType="Theme" >
+        SELECT t.* FROM t_theme t
+        LEFT JOIN t_theme_trip tt on tt.theme_id = t.id
+        LEFT JOIN t_trip tr on tr.id = tt.trip_id WHERE t.type=0 AND tr.id=#{id}
+    </select>
+
+</mapper>

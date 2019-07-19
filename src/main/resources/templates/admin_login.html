@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>管理员-登录</title>
+	<!-- Styles -->
+    <link th:href="@{assets/css/lib/bootstrap.min.css}" href="../static/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{assets/css/style.css}" href="../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+	a:hover{
+		cursor: pointer;
+	}
+</style>
+<body class="bg-primary">
+<!--标题-->
+<div class="header">
+	<div class="pull-left">
+		<div class="logo">
+			<p style="color: whitesmoke;padding-top: 10px;margin: 0">
+				惠玩旅游管理登录页面
+			</p>
+		</div>
+
+	</div>
+</div>
+<!--登录-->
+<div class="Nixon-login">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-lg-offset-3">
+					<div class="login-content">
+						<div class="login-logo">
+							<a ><span style="color: red">欢迎您的登录!</span></a>
+						</div>
+						<div class="login-form">
+							<h4>Administratior 管理员登录界面</h4>
+							<p th:text="${error}" style="color: red"></p>
+							<form action="/adminlogin" method="post">
+								<div class="form-group">
+									<label>账号:</label>
+									<input type="text" name="account" class="form-control" placeholder="请输入账号...">
+								</div>
+								<div class="form-group">
+									<label>密码:</label>
+									<input type="password" name="password" class="form-control" placeholder="请输入密码....">
+								</div>
+								<button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">登录</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

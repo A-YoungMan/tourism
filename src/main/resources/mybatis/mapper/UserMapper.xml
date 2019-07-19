@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.UserMapper" >
+
+    <sql id="sqlColumn">
+        id,phone,password,salt,city,username,sex,img_path imgPath,email,real_name realName,birthday,create_time createTime
+    </sql>
+    <!--新增-->
+    <insert id="create" keyProperty="id" parameterType="User" >
+        INSERT INTO t_user (phone,password,salt,city,username,sex,img_path,email,real_name,birthday,create_time)
+        VALUES (#{phone},#{password},#{salt},#{city},#{username},#{sex},#{imgPath},#{email},#{realName},#{birthday},#{createTime})
+    </insert>
+    <!--修改-->
+    <update id="update" parameterType="User" >
+        UPDATE t_user
+        <set>
+            <if test="password !=null ">password =#{password},</if>
+            <if test="city !=null ">city =#{city},</if>
+            <if test="username !=null ">username =#{username},</if>
+            <if test="sex !=null ">sex =#{sex},</if>
+            <if test="imgPath !=null ">img_path =#{imgPath},</if>
+            <if test="email !=null ">email =#{email},</if>
+            <if test="realName !=null ">real_name =#{realName},</if>
+            <if test="birthday !=null ">birthday =#{birthday},</if>
+      </set> WHERE id = #{id}
+    </update>
+    <!--手机号码查-->
+    <select id="findByUserPhone" parameterType="string" resultType="User">
+        SELECT <include refid="sqlColumn"/> FROM t_user WHERE phone=#{phone}
+    </select>
+    <!--查询全部-->
+    <select id="findAll" resultType="User">
+        SELECT <include refid="sqlColumn" /> FROM t_user ORDER BY create_time DESC
+    </select>
+    <!--按id查询-->
+    <select id="findById" parameterType="int" resultType="User">
+        SELECT <include refid="sqlColumn" /> FROM t_user WHERE id=#{id}
+    </select>
+    <select id="findByCommentUserId" parameterType="int" resultType="User">
+        SELECT id,phone,username,sex,img_path imgPath,email,create_time createTime FROM t_user WHERE id=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,1128 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title th:text="${trip.title}">Single Product</title>
+    <!-- Slick CSS -->
+    <link rel="stylesheet" th:href="@{details/assets/css/style.css}" href="../static/details/assets/css/style.css">
+    <link rel="stylesheet" th:href="@{bootstrap-3.3.7-dist/css/bootstrap.css}" href="../static/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" th:href="@{index/assets/css/bootstrap.min.css}" href="../static/index/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{index/assets/css/font-awesome.css}" href="../static/index/assets/css/font-awesome.css">
+    <link rel="stylesheet" th:href="@{index/assets/css/main.css}" href="../static/index/assets/css/main.css">
+    <link rel="stylesheet" th:href="@{index/assets/css/blue.css}" href="../static/index/assets/css/blue.css">
+    <style>
+        a{
+            cursor: pointer;
+        }
+        .ctiyUl{
+            margin-left: 30px;
+        }
+        .ctiyUl li{
+            float: left;
+            border: 1px solid silver;
+            height: 30px;
+            width: 100px;
+            text-align: center;
+            padding-top:5px;
+            margin-right: 10px;
+        }
+        .ctiyUl li a{
+            display: block;
+        }
+        #ctiy{
+            position: absolute;
+            width: 200px;
+            height: 480px;
+            background-color: beige;
+            right:65px;
+            top:55px;
+            border: 1px solid orange;
+            border-top: 0;
+            padding: 0 10px;
+            overflow:auto;
+            display: none;
+        }
+        #ctiy li {
+            display: block;
+            width: 180px;
+            height: 30px;
+            text-align: center;
+            border-bottom: 1px dashed #b4dbed;
+            padding: 0 10px;
+            font-size: 15px;
+            padding-top: 5px;
+        }
+        #ctiy li:hover{
+            background-color: #b4dbed;
+            color: white;
+        }
+        #ctiy a{
+            display: block;
+        }
+    </style>
+</head>
+<body >
+<!--头部-->
+<header class="header-style-1">
+    <!-- ============================================== TOP MENU ============================================== -->
+    <div class="top-bar animate-dropdown">
+        <div class="container" style="padding-right:15px;">
+            <div class="header-top-inner">
+                <div class="cnt-account">
+                    <ul class="list-unstyled">
+                        <li class="myaccount"><a href="#"><span>关于我们</span></a></li>
+                        <li class="wishlist"><a href="#"><span>站内地图</span></a></li>
+                        <li class="header_cart hidden-xs"><a href="#"><span>服务热线</span></a></li>
+                        <li class="check"><a href="#"><span>添加收藏</span></a></li>
+                        <li class="login">
+                            <a th:unless="${session.userLogin}" href="/login" th:href="@{'/login'}"><span>登录</span></a>
+                            <div th:if="${session.userLogin}" class="dropdown">
+                                <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" th:if="${session.userLogin}"  th:href="@{'/user/index'}">欢迎您:<span th:text="${session.userLogin.phone}"></span></a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li style="text-align: center"><a th:href="@{'/user/index'}" style="color: black;display: block;width: 150px;">个人中心</a></li>
+                                    <li style="text-align: center"><a th:href="@{'/user/index'}" style="color: black;display: block;width: 150px;">查询订单</a></li>
+                                    <li style="text-align: center"><a th:href="@{'/logout'}" style="color: black;display: block;width: 150px;">退出登录</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.header-top -->
+    <!-- ============================================== TOP MENU : END ============================================== -->
+    <div class="main-header">
+        <div class="container" style="margin-bottom: 5px;">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-3 logo-holder">
+                    <!-- ============================================================= LOGO ============================================================= -->
+                    <div class="logo"><h3>惠玩旅游网</h3> </div>
+                    <!-- /.logo -->
+                    <!-- ============================================================= LOGO : END ============================================================= --> </div>
+                <!-- /.logo-holder -->
+
+                <div class="col-lg-7 col-md-6 col-sm-8 col-xs-12 top-search-holder">
+                    <!-- /.contact-row -->
+                    <!-- ============================================================= SEARCH AREA ============================================================= -->
+                    <div class="search-area">
+                        <form action="/" method="post">
+                            <input type="hidden" name="act" value="key">
+                            <div class="control-group">
+                                <select name="type" class="categories-filter animate-dropdown" style="height: 56px;">
+                                    <option value="0">- 国家</option>
+                                    <option value="1">- 景点名称</option>
+                                    <option value="2">- 主题</option>
+                                </select>
+                                <input name="key" class="search-field" style="width: 70%" placeholder="请输入完整词汇或关键字...." />
+                                <button class="search-button"></button> </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /.main-header -->
+
+        <!-- ============================================== NAVBAR ============================================== -->
+        <div class="header-nav animate-dropdown">
+            <div class="container">
+                <div class="yamm navbar navbar-default" role="navigation">
+                    <div class="nav-bg-class">
+                        <div class="navbar-collapse collapse" id="mc-horizontal-menu-collapse">
+                            <div class="nav-outer">
+                                <ul class="nav navbar-nav">
+                                    <li class="dropdown" style="float: left"> <a href="/" th:href="@{/}">首页</a> </li>
+                                    <!--自行游-->
+                                    <li class="dropdown yamm mega-menu"> <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">自行游</a>
+                                        <ul class="dropdown-menu container">
+                                            <li>
+                                                <div class="yamm-content ">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-6 col-md-12 col-menu">
+                                                            <ul class="links">
+                                                                <li th:each="since:${sinceTripList}">
+                                                                    <a th:href="@{'/?act=tirp&id='+${since.id}}" th:text="${since.title}" target='_blank'>Dresses</a>
+                                                                    <span class='menu-label hot-menu hidden-xs'>new</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--国内游-->
+                                    <li class="dropdown yamm mega-menu" style="float: left"> <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">国内游</a>
+                                        <ul class="dropdown-menu container">
+                                            <li>
+                                                <div class="yamm-content ">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-6 col-md-12 col-menu">
+                                                            <ul class="links">
+                                                                <li th:each="domestic:${domesticTripList}">
+                                                                    <a target='_blank' th:href="@{'/?act=trip&id='+${domestic.id}}" th:text="${domestic.title}">Dresses</a>
+                                                                    <span class='menu-label hot-menu hidden-xs'>new</span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <!-- /.col -->
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--境外游-->
+                                    <li class="dropdown mega-menu" style="float: left">
+                                        <a data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">境外游 </a>
+                                        <ul class="dropdown-menu container">
+                                            <li>
+                                                <div class="yamm-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-12 col-menu">
+                                                            <ul class="links">
+                                                                <li th:each="foreign,iterStat:${foreignTripList}">
+                                                                    <a target='_blank' th:href="@{'/?act=trip&id='+${foreign.id}}" th:text="${foreign.title}">Gaming
+                                                                    </a><span class='menu-label hot-menu hidden-xs'>new</span></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--主题游-->
+                                    <li class="dropdown" style="float: left"> <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown">主题</a>
+                                        <ul class="dropdown-menu pages">
+                                            <li>
+                                                <div class="yamm-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-menu">
+                                                            <ul class="links">
+                                                                <li th:each="theme:${themeList}"><a target='_blank' th:text="${theme.name}" th:href="@{'/?act=theme&id='+${theme.id}}">Home</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--特推-->
+                                    <li class="dropdown mega-menu" id="pushNew" style="float: left">
+                                        <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">特推旅游 <span class="menu-label hot-menu hidden-xs">new</span> </a>
+                                        <ul class="dropdown-menu container">
+                                            <li>
+                                                <div class="yamm-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-2 col-menu" th:each="place:${placeList}">
+                                                            <h2 class="title" th:text="${place.name}" th:attr="id=${place.id}">Laptops</h2>
+                                                            <ul class="links">
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!--热门-->
+                                    <li class="dropdown mega-menu" style="float: left">
+                                        <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">热门 <span class="menu-label hot-menu hidden-xs">热门</span> </a>
+                                        <ul class="dropdown-menu container">
+                                            <li>
+                                                <div class="yamm-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-12 col-menu">
+                                                            <ul class="links">
+                                                                <li th:each="hot:${hotList}"><i class='glyphicon glyphicon-fire' style='color:red;float: right;margin-top: 5px;' ></i><a th:href="@{'/?act=trip&id='+${hot.id}}" th:text="${hot.title}" target='_blank'> </a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.row -->
+                                                </div>
+                                                <!-- /.yamm-content --> </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- /.nav-outer -->
+                        </div>
+                        <!-- /.navbar-collapse -->
+
+                    </div>
+                    <!-- /.nav-bg-class -->
+                </div>
+                <!-- /.navbar-default -->
+            </div>
+            <!-- /.container-class -->
+
+        </div>
+        <!-- /.header-nav -->
+        <!-- ============================================== NAVBAR : END ============================================== -->
+    </div>
+</header>
+<!--中间内容-->
+<div class="main-wrapper">
+    <!-- 分页路劲导航条-->
+    <div class="breadcrumb-area" style="padding: 0">
+        <div class="container">
+            <div >
+                <ol class="breadcrumb">
+                    <li><a th:href="@{'/'}">首页</a></li>
+                    <li class="active" th:if="${trip.place}" th:text="${trip.place.name}">Single Product</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- 中间内容图片 -->
+    <div class="sp-area" style="padding-top: 0">
+        <div class="container">
+            <div class="sp-nav">
+                <div class="row">
+                    <!--图片展示-->
+                    <div class="col-lg-6" style="padding-left:50px;">
+                            <div class="zoompro-border" style="width:600px;height: 436px;">
+                                <img id="img"  th:src="${!#lists.isEmpty(trip.tripPictures)}?${trip.tripPictures[0].base64}:'images/notImage.jpg'" class="zoompro thumbnail" src="../static/details/assets/images/product/large-size/1.jpg" style="width: 600px;height: 435px;padding-left: 5px;"/>
+                            </div>
+                        <!--多图片-->
+                            <div style="margin-bottom: 10px;width: 600px;height: 74px;margin-left: auto;margin-left: auto;margin-top: 20px;">
+                                <a th:if="${!#lists.isEmpty(trip.tripPictures)}" th:each="pictures:${trip.tripPictures}" class="thumbnail img" style="float:left;margin-right: 10px;">
+                                    <img th:src="${pictures !=null}?${pictures.base64}:'images/notImage.jpg'"  style="width: 115px;height: 65px;"  >
+                                </a>
+                                <a th:unless="${!#lists.isEmpty(trip.tripPictures)}"  class="thumbnail img" style="float:left;margin-right: 10px;">
+                                    <img th:src="'images/notImage.jpg'"  style="width: 115px;height: 65px;"  >
+                                </a>
+                            </div>
+                        <!--时间日期价格-->
+                        <div id="dateBox" style="width: 600px;height: 320px;background-color: #b4dbed;margin-bottom: 10px;border: 1px solid silver;position: relative">
+                                    <!--年月份-->
+                                    <div style="position: absolute;top: 0;width: 600px;">
+                                        <button class="btn btn-info" style="float: left;height: 45px;width: 36px;"><a><</a></button>
+                                            <div class="year" style="width: 132px;height: 45px;background-color: #45829b;font-size:15px;padding-top: 10px;padding-left: 20px;float: left">
+                                                <a style="color: white;">2019年07月</a>
+                                            </div>
+                                            <div class="year" style="width: 132px;height: 45px;background-color: white;font-size:15px;padding-top: 10px;padding-left: 20px;float: left">
+                                                <a style="color: black">2019年07月</a>
+                                            </div>
+                                            <div class="year" style="width: 132px;height: 45px;background-color: white;font-size:15px;padding-top: 10px;padding-left: 20px;float: left">
+                                                <a style="color: black;">2019年07月</a>
+                                            </div>
+                                        <div class="year" style="width: 132px;height: 45px;background-color: white;font-size:15px;padding-top: 10px;padding-left: 20px;float: left">
+                                            <a style="color: black;">2019年07月</a>
+                                        </div>
+                                        <button class="btn btn-info" style="float: right;height: 45px;width: 36px;"><a>></a></button>
+                                    </div>
+                                    <!--日期-->
+                                    <div style="margin-top:45px; ">
+                                        <table class="table table-bordered" style="margin: 0;">
+                                            <thead>
+                                            <tr style="background-color: #45829b;color: #ffffff;">
+                                                <th style="text-align: center">日</th>
+                                                <th style="text-align: center">一</th>
+                                                <th style="text-align: center">二</th>
+                                                <th style="text-align: center">三</th>
+                                                <th style="text-align: center">四</th>
+                                                <th style="text-align: center">五</th>
+                                                <th style="text-align: center">六</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="priceDay">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                        </div>
+                    </div>
+                    <!--右边信息展示-->
+                    <div class="col-lg-6">
+                        <div class="sp-content" style="padding-right:20px;">
+                            <form action="/user/save" method="post" >
+                                <input type="hidden" name="tripId" th:value="${trip.id}">
+                                <p th:if="${error}" th:text="${error}" style="color: red"></p>
+                            <!--标题-->
+                            <div class="sp-heading">
+                                <h2 style="padding: 0"><a th:text="${trip.title}">Faucibus A Lobortis Vitae</a></h2>
+                            </div>
+                            <!--好评率等-->
+                            <div class="rating-box" style="padding: 0px;">
+                                <h3 style="color: red"><span style="font-size: 10px;color: black">促销价：￥</span><span id="price" th:text="${!#lists.isEmpty(trip.prices)}?${trip.prices[0].price}:'为定价'">14561</span>&nbsp;&nbsp;<span style="font-size: 15px;color: black">起</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 15px;color: black">出行天数：<span style="color: red" th:text="${trip.time}"></span></span></h3>
+                            </div>
+                            <!--满意度-->
+                            <div class="rating-box" style="margin-top: 10px;padding: 0;">
+                                <table class="tab-content">
+                                    <tr style="height: 45px;">
+                                        <td  style="border-top: 1px dashed silver;border-bottom: 1px dashed silver;border-right:1px dashed silver;text-align: center; ">满意度：<span th:text="${number==null}?0:${number}+'%'">123</span></td>
+                                        <td style="border-top: 1px dashed silver;border-bottom: 1px dashed silver;border-right:1px dashed silver;text-align: center;">点评数：<span th:text="${count}">123</span></td>
+                                        <td style="border-top: 1px dashed silver;border-bottom: 1px dashed silver;text-align: center;">关注度：<span th:text="${count}">123</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <!--旅游类型-->
+                            <div class="product-desc" style="margin-top: 10px;">
+                                <p style="margin-top: 10px;margin-bottom: 10px;">旅游类型:</p>
+                                <span  style="margin-right: 10px;margin-bottom: 10px;" class="btn btn-info" th:if="${!#lists.isEmpty(trip.themes)}" th:each="theme:${trip.themes}" th:text="${theme.name}"></span>
+                            </div>
+                            <!--发车地址-->
+                            <div style="position: relative">
+                                <input type="hidden" name="city">
+                                <p style="margin-top: 10px;margin-bottom: 0">发车地址:</p>
+                                <ul class="ctiyUl">
+                                    <li style="background-color: orange;width: 110px;"><a style="color: white">北京</a></li>
+                                    <li><a>上海</a></li>
+                                    <li><a>123</a></li>
+                                    <li><a>123</a></li>
+                                    <li><a>更多<span>(99)</span>∨</a></li>
+                                </ul>
+                                <div id="ctiy" >
+                                    <h5 style="border-bottom: 1px dashed rosybrown;margin-bottom: 0">选择城市:</h5>
+                                    <ul>
+                                        <li><a>北京</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--出游日期-->
+                            <div style="clear: left">
+                                <p style="margin-top: 10px;margin-bottom: 10px;">出游日期:</p>
+                                <select class="form-control dateOfTrip" name="dateShow">
+                                </select>
+                            </div>
+                            <!--出游人数操作-->
+                            <div class="quantity">
+                                <label>出游人数:</label>
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" name="adult" value="0" type="text">
+                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                </div>
+                                <span> 成人</span>
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" name="child" value="0" type="text">
+                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                </div>
+                                <span>儿童</span>
+                            </div>
+                            <div class="quantity">
+                                <div class="additional-btn_area" style="margin-left: 250px">
+                                    <button th:if="${session.userLogin}" class="additional_btn" id="btn" style="border-radius: 0px;" >立即预定</button>
+                                    <a th:unless="${session.userLogin}" th:href="@{'/login'}" class="additional_btn" style="border-radius: 0px;" >立即预定</a>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Umino's Single Product Area End Here -->
+    <!-- 产品详情 -->
+    <div class="sp-tab_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sp-product-tab_nav" >
+                        <div class="product-tab" id="fixed" style="width: 1343px;z-index: 999">
+                            <ul class="nav nav-tabs" style="background-color: #b4dbed">
+                                <li class="active"><a href="#detail"><span><h3>产品详情</h3></span></a></li>
+                                <li><a href="#dates"><span><h3>行程详情</h3></span></a></li>
+                                <li><a href="#user"><span><h3>用户点评</h3></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content umino-tab_content" >
+                            <a name="detail"></a>
+                            <div  class="tab-pane active show" role="tabpanel">
+                                <div style="border: 3px solid darkgray;background-color: white;padding: 10px 30px;margin-top: 20px;">
+                                    <h3 style="background-color: beige">景区介绍:</h3>
+                                    <div class="product-description" th:if="${detail}" th:utext="${detail.place}"></div>
+                                    <div class="product-description" th:unless="${detail}">暂无说明</div>
+                                </div>
+                                <div style="border: 3px solid darkgray;background-color: white;padding: 10px 30px;margin-top: 20px;">
+                                    <h3 style="background-color: beige">酒店介绍:</h3>
+                                    <div class="product-description" th:if="${detail}" th:utext="${detail.hotel}"></div>
+                                    <div class="product-description" th:unless="${detail}">暂无说明</div>
+                                </div>
+
+                                <div style="border: 3px solid darkgray;background-color: white;padding: 10px 30px;margin-top: 20px;">
+                                    <h3 style="background-color: beige">美食介绍:</h3>
+                                    <div class="product-description" th:if="${detail}" th:utext="${detail.food}"></div>
+                                    <div class="product-description" th:unless="${detail}">暂无说明</div>
+                                </div>
+
+                            </div>
+                            <!--日程详情-->
+                            <div style="border: 3px solid darkgray;background-color: white;padding: 10px 30px;margin-top: 20px;" name="dates">
+                                <a name="dates"></a>
+                                <div class="row" style="padding: 20px;">
+                                    <h1 class="breadcrumb" style="background-color: beige"><span style="color: green;font-weight: bold">丨</span>行程概览</h1>
+                                    <!--时间线-->
+                                    <ul class="layui-timeline ul">
+                                        <li class="layui-timeline-item li" th:if="${!#lists.isEmpty(datesList)}" th:each="dates:${datesList}">
+                                            <div class="layui-timeline-content layui-text">
+                                                <h3 class="layui-timeline-title num"><span th:text="'第'+${dates.num}+'天'">第1天</span>&nbsp;&nbsp;&nbsp;&nbsp;<span   th:text="${dates.title}">标题</span></h3>
+                                                <!--提示-->
+                                                <div>
+                                                    <p style="color: orange"><svg t="1562549533328" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="901" width="20" height="20"><path d="M848.32 879.14H178.71a72 72 0 0 1-62.36-108l334.81-579.91a72 72 0 0 1 124.71 0l334.81 579.91a72 72 0 0 1-62.36 108z m-628-96h586.44L513.52 275.23z m314-543.91z" fill="#2C77E5" p-id="902"></path><path d="M463.79 391.86m48 0l0 0q48 0 48 48l0 141.22q0 48-48 48l0 0q-48 0-48-48l0-141.22q0-48 48-48Z" fill="#1AD8E2" p-id="903"></path><path d="M463.79 656.12m48 0l0 0q48 0 48 48l0 0q0 48-48 48l0 0q-48 0-48-48l0 0q0-48 48-48Z" fill="#1AD8E2" p-id="904"></path></svg>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;温馨提示：<span  class="prompt" th:text="${dates.prompt}"></span>
+                                                    </p>
+                                                </div>
+                                                <p><svg t="1562311174359" class="icon" viewBox="0 0 1122 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1126" width="20" height="20"><path d="M595.5922 479.094474s-136.201409-61.612658-170.430135-142.922531l-0.123673 0.218805C403.995051 286.322437 356.956714 230.898157 292.247488 185.900416c-113.436167-78.888747-232.618346-110.753426-272.921291-52.798619-40.312459 57.959565-21.233607 243.729839 92.197804 322.609073 71.358998 49.635458 160.897844 51.014881 227.543019 30.784924l-0.48042 0.83241s77.637752-33.077621 155.575173 44.869313c67.135108 67.135108 295.610427 400.898483 590.659572 351.52464 205.077445-34.319102-495.198719-407.705224-489.229145-404.627683z" fill="#D9D0D0" p-id="1127"></path><path d="M537.551773 441.683561c23.0221 13.275761 32.30229 57.950051-106.938608-9.779636-72.705125-35.370318-162.243971 30.009593-290.62072-45.002498C28.244883 321.616649-10.264812 175.197993 19.326197 127.888528c29.586253-47.309465 140.430055-26.565791 252.263237 38.609585 137.961363 80.406112 168.698721 219.142807 265.962339 275.185448z" fill="#EBE2E2" p-id="1128"></path><path d="M389.577698 352.491949c-23.607166 37.753391-137.538023 60.447283-230.706179 2.178537-93.158644-58.268746-130.265132-175.424599-106.65321-213.177989 23.616679-37.753391 118.278419-21.124204 211.441819 37.144541s149.529493 136.10152 125.91757 173.854911z" fill="#D9D0D0" p-id="1129"></path><path d="M1084.826101 847.205491c-295.049145 49.373843-523.52922-284.394288-590.659572-351.529397-77.93742-77.946933-155.575173-44.864556-155.575172-44.864556l0.48042-0.83241c-66.645175 20.225201-156.184021 18.850534-227.54302-30.784925C39.332592 368.992706 5.413048 275.520125 0.637389 199.233256c-5.531963 80.358546 26.627628 197.890173 110.886612 256.477614 71.358998 49.635458 160.897844 51.014881 227.543019 30.784924l-0.48042 0.83241s77.637752-33.077621 155.575173 44.869313c67.135108 67.135108 346.144889 451.432945 590.659572 351.52464 39.846309-16.286709 41.97728-26.147208 28.111697-52.303929-6.568909 7.277647-9.527534 12.681182-28.106941 15.787263z" fill="#C2B9B9" p-id="1130"></path><path d="M1081.948339 813.095681c-15.249763 20.087258-185.304124-19.554515-298.91153-105.806529-113.593136-86.247257-378.061892-298.450137-362.812129-318.527882 15.24025-20.077745 195.459534 106.58186 418.031873 230.163924 128.091351 71.121166 258.932036 174.092742 243.691786 194.170487z" fill="#EBE2E2" p-id="1131"></path><path d="M83.526463 211.058244c23.611923-37.753391 118.278419-21.128961 211.446576 37.144542 42.210355 26.399309 76.819612 56.817973 99.908304 85.705 1.312831-41.135356-51.438222-105.368919-131.211702-155.270748-93.168157-58.268746-187.829896-74.893176-211.446575-37.144541-15.340139 24.520439-5.032517 82.52757 29.57674 136.149086-7.38705-28.306719-6.916143-52.774835 1.726657-66.583339z" fill="#BFB7B7" p-id="1132"></path><path d="M30.727845 260.474897s80.796156 195.235973 349.698093 160.165323c0 0.004757-252.363127 69.898712-349.698093-160.165323z" fill="#FFF5F5" opacity=".65" p-id="1133"></path><path d="M383.38932 629.08536s26.465902 3.091811 63.57239-50.986341l28.363799-30.07143c55.619301-76.619833 146.818212-166.049277 191.278454-211.075558C744.53187 258.029988 973.511392-32.676351 1013.842878 7.141417c40.326729 39.822526-173.916747 453.454513-251.844654 532.376557-49.031366 49.654485-119.496117 63.905355-175.067852 57.731246l0.49469 0.585066s-66.131459-14.697994-116.190257 58.263989c-43.123628 62.849383-174.401923 359.834477-414.511965 364.210578-166.895957 3.044245 330.923666-394.519839 326.66648-391.223493z" fill="#D9D0D0" p-id="1134"></path><path d="M51.357359 991.483662c240.110042-4.376102 371.388336-301.361196 414.511965-364.201065 50.058798-72.976253 116.190257-58.268746 116.190257-58.268746l-0.49469-0.589823c55.571735 6.169352 126.036486-8.072005 175.067852-57.726489 49.602162-50.234794 267.998177-407.690954 260.554047-468.599631 16.17255 62.606794-197.305108 438.804086-255.188566 497.420066-49.031366 49.654485-119.496117 63.905355-175.067852 57.731246l0.49469 0.585066s-66.131459-14.697994-116.190257 58.263989c-43.123628 62.849383-206.861182 407.139185-414.511965 364.210578-33.843439-7.001763-36.973303-14.464919-29.881164-37.144541 6.259728 4.770902 9.394349 8.590478 24.515683 8.31935z" fill="#C2B9B9" p-id="1135"></path><path d="M40.264892 963.600283c-3.172674 25.010373 149.453387-9.437158 287.547936-176.523381 90.865947-109.949556 317.072352-362.59808 298.407327-379.545961-18.665025-16.947881-160.793198 146.689783-352.92309 313.695143-121.046779 105.21195-226.163596 188.215183-233.032173 242.374199z" fill="#EBE2E2" p-id="1136"></path><path d="M1014.385134 16.297935s-198.37535 454.187035-362.793102 506.4101c-164.398725 52.237336-134.370106-2.35929-229.921336 136.895878l-1.241481-65.703362 501.253912-537.913276s96.802224-92.506985 92.702007-39.68934z" fill="#EBE2E2" p-id="1137"></path><path d="M977.706742 94.42562s-189.480448 384.954252-448.664585 458.487031c0 0 175.847939 14.997662 301.080555-200.920149 125.227858-215.91781 147.58403-257.566882 147.58403-257.566882z" fill="#FFF5F5" opacity=".65" p-id="1138"></path></svg>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;餐饮：<span th:text="${dates.meal}" class="dates" >layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。</span></p>
+                                                <p><svg t="1562311045358" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="848" width="20" height="20"><path d="M427 463.445c0-40.33 32.27-73.445 72.601-73.445H508V258h-67v-79h-57V62h-77v117h-46.717l-0.388 79H183v609h244V463.445z" fill="#BDCCD4" p-id="849"></path><path d="M832 867V463.445c0-40.33-32.63-73.445-72.961-73.445H499.601C459.27 390 427 423.115 427 463.445V867H64v105h897V867H832z m-233 0h-86V756h86v111z m0-160h-86v-85h86v85z m0-146h-86v-86h86v86z m146 306h-85V756h85v111z m0-160h-85v-85h85v85z m0-146h-85v-86h85v86z" fill="#F29440" p-id="850"></path></svg>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;住宿：<span  th:text="${dates.hotel}"  class="hotel">layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。</span></p>
+                                                <p><svg t="1562383186348" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1291" width="20" height="20"><path d="M511.3 704.7c-106.1 0-192.5-86.4-192.5-192.5s86.4-192.5 192.5-192.5 192.5 86.4 192.5 192.5-86.4 192.5-192.5 192.5z m0-384c-105.6 0-191.5 85.9-191.5 191.5s85.9 191.5 191.5 191.5 191.5-85.9 191.5-191.5-85.9-191.5-191.5-191.5z" fill="#CCCCCC" p-id="1292"></path><path d="M78 329.8h868v397.8H78V329.8" fill="#FB9761" p-id="1293"></path><path d="M946 737.6H78c-5.5 0-10-4.5-10-10V329.8c0-5.5 4.5-10 10-10h868c5.5 0 10 4.5 10 10v397.8c0 5.5-4.5 10-10 10z m-858-20h848V339.8H88v377.8z" fill="#5A3392" p-id="1294"></path><path d="M769.4 245.2h150.2c14.6 0 26.3 11.8 26.3 26.3v1.2c0 14.6-11.8 26.3-26.3 26.3H104.4c-14.6 0-26.3-11.8-26.3-26.3v-1.2c0-14.6 11.8-26.3 26.3-26.3H704" fill="#E2FBFF" p-id="1295"></path><path d="M919.6 309H104.4c-20 0-36.3-16.3-36.3-36.3v-1.2c0-20 16.3-36.3 36.3-36.3H704c5.5 0 10 4.5 10 10s-4.5 10-10 10H104.4c-9 0-16.3 7.3-16.3 16.3v1.2c0 9 7.3 16.3 16.3 16.3h815.2c9 0 16.3-7.3 16.3-16.3v-1.2c0-9-7.3-16.3-16.3-16.3H769.4c-5.5 0-10-4.5-10-10s4.5-10 10-10h150.2c20 0 36.3 16.3 36.3 36.3v1.2c0 20-16.3 36.3-36.3 36.3z" fill="#5A3392" p-id="1296"></path><path d="M230.2 382.5h715v149.4h-715z" fill="#E2FBFF" p-id="1297"></path><path d="M945.2 541.9h-715c-5.5 0-10-4.5-10-10V382.5c0-5.5 4.5-10 10-10h715c5.5 0 10 4.5 10 10v149.4c0 5.5-4.5 10-10 10z m-705-20h695V392.5h-695v129.4z" fill="#5A3392" p-id="1298"></path><path d="M135.2 716.2c7.3-61.6 59.7-109.3 123.3-109.3 63.5 0 115.9 47.7 123.3 109.3M646.1 717.2c7.3-61.6 59.7-109.3 123.3-109.3 63.5 0 115.9 47.7 123.3 109.3" fill="#EE746C" p-id="1299"></path><path d="M656.5 737.5H512c-5.5 0-10-4.5-10-10v-342c0-5.5 4.5-10 10-10h144.5c5.5 0 10 4.5 10 10v342c0 5.5-4.5 10-10 10z m-134.5-20h124.5v-322H522v322zM371.1 538.7c-5.5 0-10-4.5-10-10V385.2c0-5.5 4.5-10 10-10s10 4.5 10 10v143.5c0 5.5-4.5 10-10 10zM802.1 540c-5.5 0-10-4.5-10-10V386.5c0-5.5 4.5-10 10-10s10 4.5 10 10V530c0 5.5-4.5 10-10 10z" fill="#5A3392" p-id="1300"></path><path d="M117.9 417.2c-5.5 0-10-4.5-10-10v-39c0-5.5 4.5-10 10-10h39c5.5 0 10 4.5 10 10s-4.5 10-10 10h-29v29c0 5.5-4.5 10-10 10z" fill="#FFFFFF" p-id="1301"></path><path d="M118.2 437.7m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z" fill="#FFFFFF" p-id="1302"></path><path d="M736.8 245.2m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z" fill="#5A3392" p-id="1303"></path><path d="M259.1 730.5m-90.5 0a90.5 90.5 0 1 0 181 0 90.5 90.5 0 1 0-181 0Z" fill="#29A3EC" p-id="1304"></path><path d="M259.2 730.5m-60.9 0a60.9 60.9 0 1 0 121.8 0 60.9 60.9 0 1 0-121.8 0Z" fill="#3CDEF6" p-id="1305"></path><path d="M259.1 831c-29.4 0-57.3-12.8-76.4-35.2-3.6-4.2-3.1-10.5 1.1-14.1 4.2-3.6 10.5-3.1 14.1 1.1a80.41 80.41 0 0 0 61.2 28.2c44.4 0 80.5-36.1 80.5-80.5S303.5 650 259.1 650s-80.5 36.1-80.5 80.5c0 5.5-4.5 10-10 10s-10-4.5-10-10c0-55.4 45.1-100.5 100.5-100.5s100.5 45.1 100.5 100.5S314.5 831 259.1 831z" fill="#5A3392" p-id="1306"></path><path d="M259.2 781.9c-13.4 0-26.1-5.2-35.8-14.5-4-3.9-4-10.2-0.2-14.1s10.2-4 14.1-0.2c5.9 5.7 13.6 8.9 21.8 8.9 9 0 17.5-3.9 23.5-10.6 3.7-4.1 10-4.5 14.1-0.9 4.1 3.7 4.5 10 0.9 14.1-9.7 11-23.7 17.3-38.4 17.3z" fill="#FFFFFF" p-id="1307"></path><path d="M173.5 762.8m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z" fill="#5A3392" p-id="1308"></path><path d="M770.7 730.5m-90.5 0a90.5 90.5 0 1 0 181 0 90.5 90.5 0 1 0-181 0Z" fill="#29A3EC" p-id="1309"></path><path d="M770.8 730.5m-60.9 0a60.9 60.9 0 1 0 121.8 0 60.9 60.9 0 1 0-121.8 0Z" fill="#3CDEF6" p-id="1310"></path><path d="M770.7 831c-29.4 0-57.3-12.8-76.4-35.2-3.6-4.2-3.1-10.5 1.1-14.1 4.2-3.6 10.5-3.1 14.1 1.1a80.41 80.41 0 0 0 61.2 28.2c44.4 0 80.5-36.1 80.5-80.5S815.1 650 770.7 650s-80.5 36.1-80.5 80.5c0 5.5-4.5 10-10 10s-10-4.5-10-10c0-55.4 45.1-100.5 100.5-100.5s100.5 45.1 100.5 100.5S826.1 831 770.7 831z" fill="#5A3392" p-id="1311"></path><path d="M770.8 781.9c-13.4 0-26.1-5.2-35.8-14.5-4-3.9-4-10.2-0.2-14.1 3.9-4 10.2-4 14.1-0.2 5.9 5.7 13.6 8.9 21.8 8.9 9 0 17.5-3.9 23.5-10.6 3.7-4.1 10-4.5 14.1-0.9 4.1 3.7 4.5 10 0.9 14.1-9.7 11-23.7 17.3-38.4 17.3z" fill="#FFFFFF" p-id="1312"></path><path d="M685.1 762.8m-10 0a10 10 0 1 0 20 0 10 10 0 1 0-20 0Z" fill="#5A3392" p-id="1313"></path></svg>
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;交通：<span  th:text="${dates.traffic}"  class="traffic">layui 2.0 的一切准备工作似乎都已到位。发布之弦，一触即发。</span></p>
+                                                <!--详情-->
+                                                <div>
+                                                    <p ><svg t="1562383304231" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="915" width="17" height="17"><path d="M848.020811 0H284.814986C207.97712 0 150.42154 57.613835 150.42154 134.393446v19.22403C86.399694 166.375242 41.601879 223.989077 41.601879 294.418933a136.665377 136.665377 0 0 0 51.205825 108.761406 141.209239 141.209239 0 0 0 0 217.639322A136.665377 136.665377 0 0 0 41.601879 729.581067c0 70.429856 44.797815 121.635681 108.819661 140.801457v19.22403a135.150757 135.150757 0 0 0 134.393446 134.393446h563.205825a135.209011 135.209011 0 0 0 134.393447-134.393446V134.393446C976.006248 57.613835 918.392412 0 848.020811 0zM150.42154 582.546365a77.711685 77.711685 0 0 1 0-140.801457z m0-358.440778v140.684947c-25.63204-12.81602-44.739561-44.797815-44.739561-70.371601s19.107521-57.613835 44.739561-70.429856zM105.681979 729.581067a78.643759 78.643759 0 0 1 44.797815-70.371601v140.801457A78.643759 78.643759 0 0 1 105.681979 729.581067z m806.360678 160.025487a64.0801 64.0801 0 0 1-64.0801 64.0801H284.814986a64.0801 64.0801 0 0 1-64.0801-64.0801V134.393446a64.0801 64.0801 0 0 1 64.0801-64.0801h563.205825a64.0801 64.0801 0 0 1 64.080101 64.0801z" fill="#333333" p-id="916"></path><path d="M335.146992 491.552623h491.552623v68.216179H335.146992z m0 252.533849h491.552623v68.274434H335.146992z" fill="#333333" p-id="917"></path><path d="M335.146992 211.639094h491.552623v68.274434H335.146992z" fill="#00B65F" p-id="918"></path></svg>
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;日程详情：<span   class="datesDetail" th:text="${dates.detail}"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li th:unless="${!#lists.isEmpty(datesList)}">暂无行程</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--点评-->
+                            <div style="border: 3px solid darkgray;background-color: white;padding: 10px 30px;margin-top: 20px;" name="dates">
+                                <a id="user"></a>
+                                <div style="padding: 50px;margin-bottom: 10px;">
+                                    <div style="float: left;width: 70px;height: 75px;background-color: #76D14B;border-radius: 5px;">
+                                        <h2 style="color: white;margin: 0;padding-left: 2px;padding-top: 2px;">游客点评</h2>
+                                    </div>
+                                    <div style="float: left;margin-left: 30px;border: 1px solid darkgray;height: 140px;width: 800px;">
+                                        <table class="table">
+                                            <tr>
+                                                <td style="border-right: 1px dashed #b2b2b2;padding: 0;text-align: center;height: 140px;width: 265px;">
+                                                    满意度<br/>
+                                                    <h1 style="margin: 0;color: red" th:text="${number==null}?0:${number}+'%'"> 99%</h1>
+                                                    <span>来自<span th:text="${count}">23212</span>位游客评选</span>
+                                                </td>
+                                                <!--进度条-->
+                                                <td style="border-right: 1px dashed #b2b2b2;padding: 0;text-align: center;height: 140px;width: 265px;">
+                                                    <p style="float: left;margin: 0;margin-left: 5px;">满意(<span th:text="${satisfied}"></span>)</p>
+                                                    <div class="progress" style="margin: 0;width: 150px;float: left;margin-left: 15px;" >
+                                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+${satisfiedNum}+'%;color:black;'" style="width: 50%"  th:text="${satisfiedNum==null}?'0%':${satisfiedNum}+'%'" >
+                                                        </div>
+                                                    </div>
+                                                    <p style="clear: left"></p>
+                                                    <p style="float: left;margin: 0;margin-left: 5px;">一般(<span th:text="${general}"></span>)</p>
+                                                    <div class="progress" style="margin: 0;width: 150px;float: left;margin-left: 15px;" >
+                                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+${generalNum}+'%;color:black;'" th:text="${generalNum ==null}?'0%':${generalNum}+'%'">
+                                                        </div>
+                                                    </div>
+                                                    <p style="clear: left"></p>
+                                                    <p style="float: left;margin: 0;margin-left: 5px;">不满意(<span th:text="${difference}"></span>)</p>
+                                                    <div class="progress" style="margin: 0;width: 150px;float: left" >
+                                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" th:style="'width:'+${differenceNum}+'%;color:black;'" th:text="${differenceNum ==null}?'0%':${differenceNum}+'%'">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 0;text-align: center;height: 140px;width:300px;">
+                                                    <dl style="float: left;margin-left: 20px;">
+                                                        <dt>行程安排</dt>
+                                                        <dd style="color: red">
+                                                            <i th:text="${service ==null}?'0/':${service}+'/'">4.7</i>5
+                                                        </dd>
+                                                    </dl>
+                                                    <dl style="float: left;margin-left: 20px;">
+                                                        <dt>旅游交通</dt>
+                                                        <dd style="color: red">
+                                                            <i th:text="${traffic ==null}?'0/':${traffic}+'/'">4.7/</i>5
+                                                        </dd>
+                                                    </dl>
+                                                    <dl style="float: left;margin-left: 20px;">
+                                                        <dt>餐饮住宿</dt>
+                                                        <dd style="color: red">
+                                                            <i th:text="${hotel ==null }?'0/':${hotel}+'/'">4.7/</i>5
+                                                        </dd>
+                                                    </dl>
+                                                    <dl style="float: left;margin-left: 20px;">
+                                                        <dt>景点</dt>
+                                                        <dd style="color: red">
+                                                            <i th:text="${place==null}?'0/':${place}+'/'">4.7/</i>5
+                                                        </dd>
+                                                    </dl>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!--用户评论-->
+                                    <div class="row" style="clear: left;" >
+                                        <ul class="nav nav-tabs">
+                                            <li  class="active comment" style="width: 150px;text-align: center;"><a style="background-color: greenyellow" >全部</a></li>
+                                            <li  class="comment" style="width: 150px;text-align: center;"><a >满意</a></li>
+                                            <li class="comment" style="width: 150px;text-align: center"><a >一般</a></li>
+                                            <li class="comment" style="width: 150px;text-align: center"><a>不满意</a></li>
+                                        </ul>
+                                        <!--用户评论-->
+                                        <div class="row userComment" style="border-bottom: 1px dashed #b2b2b2;height:120px;margin: 0;" th:if="${!#lists.isEmpty(commentList)}" th:each="comment:${commentList}">
+                                            <ul>
+                                                <!--头像-->
+                                                <li style="height: 120px;;float: left;width: 150px;padding:0 30px;">
+                                                    <img class="img-responsive thumbnail" th:src="${comment.user.imgPath == null}? @{'/images/logo.jpg'}:${comment.user.imgPath}" style="margin-bottom: 0;width: 90px;height: 90px;margin-top: 5px;"/>
+                                                    <h5 th:text="${comment.user.phone}" style="text-align: center;margin: 0">手机号码</h5>
+                                                </li>
+                                                <!--评论-->
+                                                <li class="commentNum" style="height: 120px;;float: left;width: 900px;">
+                                                   <ul>
+                                                       <li th:switch="${comment.type}" style="margin: 5px 0 5px 10px;">
+                                                           <span class="btn btn-success btn-xs" th:case="0">满意</span>
+                                                           <span class="btn btn-warning btn-xs" th:case="1">一般</span>
+                                                           <span class="btn btn-danger btn-xs" th:case="2">不满意</span>
+                                                       </li>
+                                                       <li class="badge badge-info">行程安排：<span th:text="${comment.service}"></span></li>
+                                                       <li class="badge badge-info">餐饮住宿：<span th:text="${comment.hotel}"></span></li>
+                                                       <li class="badge badge-info">交通旅行：<span th:text="${comment.traffic}"></span></li>
+                                                       <li class="badge badge-info">景点：<span th:text="${comment.place}"></span></li>
+                                                   </ul>
+                                                    <p style="clear: left" >内容：<span th:text="${comment.content}" style="color: orange;font-size: 13px;"></span></p>
+                                                    <p style="margin:0">评论日期：<span th:text="${#dates.format(comment.createTime,'yyyy-MM-dd HH:mm:ss')}" style="color: orange;font-size: 10px;"></span></p>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div th:if="${#lists.isEmpty(commentList)}">
+                                            <h2 style="color: red">暂无评论</h2>
+                                        </div>
+                                    </div>
+                                    <!--分页-->
+                                    <nav aria-label="Page navigation" style="float: right">
+                                        <ul class="pagination">
+                                            <li>
+                                                <a id="left" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li><a >1</a></li>
+                                            <li>
+                                                <a id="rigth"  aria-label="Next">
+                                                     <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<a id="back" onclick="pageScroll()" class="btn btn-info" style="position: fixed;bottom:100px;right:50px;display: none">返回顶部</a>
+<!-- ============================================================= 底部 ============================================================= -->
+<footer id="footer" class="footer color-bg">
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="address-block">
+                        <!-- /.module-heading -->
+                        <div class="module-body">
+                            <ul class="toggle-footer" style="">
+                                <li class="media">
+                                    <div class="pull-left"> <span class="icon fa-stack fa-lg"> <i class="fa fa-map-marker fa-stack-1x fa-inverse"></i> </span> </div>
+                                    <div class="media-body">
+                                        <p>ThemesGround, 789 Main rd, Anytown, CA 12345 USA</p>
+                                    </div>
+                                </li>
+                                <li class="media">
+                                    <div class="pull-left"> <span class="icon fa-stack fa-lg"> <i class="fa fa-mobile fa-stack-1x fa-inverse"></i> </span> </div>
+                                    <div class="media-body">
+                                        <p> + (888) 123-4567 / + (888) 456-7890</p>
+                                    </div>
+                                </li>
+                                <li class="media">
+                                    <div class="pull-left"> <span class="icon fa-stack fa-lg"> <i class="fa fa-envelope fa-stack-1x fa-inverse"></i> </span> </div>
+                                    <div class="media-body"> <span><a href="#">marazzo@themesground.com</a></span> </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="module-heading">
+                        <h4 class="module-title">Customer Service</h4>
+                    </div>
+                    <!-- /.module-heading -->
+
+                    <div class="module-body">
+                        <ul class='list-unstyled'>
+                            <li class="first"><a href="#" title="Contact us">My Account</a></li>
+                            <li><a href="#" title="About us">Order History</a></li>
+                            <li><a href="#" title="faq">FAQ</a></li>
+                            <li><a href="#" title="Popular Searches">Specials</a></li>
+                            <li class="last"><a href="#" title="Where is my order?">Help Center</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="module-heading">
+                        <h4 class="module-title">Corporation</h4>
+                    </div>
+                    <!-- /.module-heading -->
+
+                    <div class="module-body">
+                        <ul class='list-unstyled'>
+                            <li class="first"><a title="Your Account" href="#">About us</a></li>
+                            <li><a title="Information" href="#">Customer Service</a></li>
+                            <li><a title="Addresses" href="#">Company</a></li>
+                            <li><a title="Addresses" href="#">Investor Relations</a></li>
+                            <li class="last"><a title="Orders History" href="#">Advanced Search</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+                <!-- /.col -->
+
+                <div class="col-xs-12 col-sm-6 col-md-3">
+                    <div class="module-heading">
+                        <h4 class="module-title">Why Choose Us</h4>
+                    </div>
+                    <!-- /.module-heading -->
+                    <div class="module-body">
+                        <ul class='list-unstyled'>
+                            <li class="first"><a href="#" title="About us">Shopping Guide</a></li>
+                            <li><a href="#" title="Blog">Blog</a></li>
+                            <li><a href="#" title="Company">Company</a></li>
+                            <li><a href="#" title="Investor Relations">Investor Relations</a></li>
+                            <li class=" last"><a  title="Suppliers">Contact Us</a></li>
+                        </ul>
+                    </div>
+                    <!-- /.module-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- jQuery JS -->
+<script th:src="@{/js/jquery-3.4.1.js}" src="../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}" src="../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<!--头部鼠标经过事件-->
+<script th:src="@{/index/assets/js/bootstrap-hover-dropdown.min.js}" src="../static/index/assets/js/bootstrap-hover-dropdown.min.js"></script>
+</body>
+<script>
+    $(function(){
+        /*判断人数为0则无法提交*/
+        setInterval(function(){
+            var adult = $("input[name='adult']").val();
+            var child = $("input[name='child']").val();
+            if(!(adult ==0 && child == 0)){
+                $("#btn").attr("disabled",false)
+            }else{
+                $("#btn").attr("disabled",true);
+            }
+        },300);
+        //判断向下滑动的距离
+        $(window).on("scroll",function(){
+            if($(window).scrollTop()>=1200){
+                $("#back").css("display","block");
+                //将顶部导航栏固定
+                $("#fixed").css({"position":"fixed","top":"0"});
+                if($(window).scrollTop()>=6725){
+                    $("#fixed").find("li").removeClass("active")
+                    $("#fixed").find("li:eq(1)").addClass("active");
+                }else if($(window).scrollTop()<6725 &&$(window).scrollTop()>=1200){
+                    $("#fixed").find("li").removeClass("active")
+                    $("#fixed").find("li:first").addClass("active");
+                }
+                if($(window).scrollTop()>=8229){
+                    $("#fixed").find("li").removeClass("active")
+                    $("#fixed").find("li:last").addClass("active");
+                }else if($(window).scrollTop()<8229 && $(window).scrollTop()>=6725){
+                    $("#fixed").find("li").removeClass("active")
+                    $("#fixed").find("li:eq(1)").addClass("active");
+                }
+            }else{
+                $("#fixed").css({"position":"","top":"0"});
+                $("#fixed").find("li").removeClass("active")
+                $("#fixed").find("li:first").addClass("active");
+                $("#back").css("display","none");
+            }
+
+        });
+
+        /*详情底部操作*/
+        $(".nav-tabs").find("li").on("click",function(){
+            $(".nav-tabs").find("li").removeClass("active");
+            $(this).addClass("active");
+        })
+        /*更换图片*/
+        $(".img").on("click",function(){
+            var src = $(this).children("img").attr("src");
+            $("#img").attr("src",src);
+        })
+        showHeadSpecialPush();//头部导航栏特推Ajax请求
+        yearDate();//修改年月份
+        dataButtonLeftOrRigth();//日期左右更新按钮
+        numberPopulation();//修改出行人数
+        findAllEditCity();
+        AjaxComment();//Ajax请求查询评论
+    })
+    function AjaxComment(){//Ajax请求操作更新评论
+        var url="/details/comment?act=query";
+        var uri =window.location.search;
+        var id = uri.substring(uri.indexOf("id=")+3,uri.length);//获取id
+        $(".comment").on("click",function(){
+            $(".comment").children("a").css("backgroundColor","");
+            $(this).children("a").css("backgroundColor","greenyellow");
+            var type = $(".comment").index($(this));
+            $(".userComment").attr("hidden",true);
+            $.post(url,{tripId:id,type:type},function(data){
+                if(typeof (data.list) != "undefined" &&data.list !=""){
+                    $.each(data.list,function(i,v){
+                        $(".userComment:eq("+i+")").attr("hidden",false);
+                        var img;
+                        if(typeof( v.user.imgPath) != "undefined" && v.user.imgPath !=null){
+                            img = v.user.imgPath;
+                        }else{
+                            img ="/images/logo.jpg";
+                        }
+                        $(".userComment:eq("+i+")").find(".thumbnail").attr("src",img);
+                        $(".userComment:eq("+i+")").find("img").next("h5").text(v.phone);
+                        var li =$(".userComment:eq("+i+")").find(".commentNum");
+                        var type;
+                        if(v.type ==0){
+                            type ="满意"
+                            $(li).find("ul").find("li:first").children("span").removeClass("btn-danger")
+                            $(li).find("ul").find("li:first").children("span").removeClass("btn-warning")
+                            $(li).find("ul").find("li:first").children("span").addClass("btn-success")
+                        }else if(v.type == 1){
+                            type ="一般"
+                            $(li).find("ul").find("li:first").children("span").removeClass("btn-success")
+                            $(li).find("ul").find("li:first").children("span").removeClass("btn-danger")
+                            $(li).find("ul").find("li:first").children("span").addClass("btn-warning")
+                        }else if(v.type == 2){
+                            type ="不满意"
+                            $(li).find("ul").find("li:first").children("span").removeClass("btn-success")
+                            $(li).find("ul").find("li:first").children("span").removeClass("btn-warning")
+                            $(li).find("ul").find("li:first").children("span").addClass("btn-danger")
+                        }
+                        $(li).find("ul").children("li").children("span").text(type);
+                        $(li).find("ul").find("li:eq(1)").children("span").text(v.service);
+                        $(li).find("ul").find("li:eq(2)").children("span").text(v.hotel);
+                        $(li).find("ul").find("li:eq(3)").children("span").text(v.traffic);
+                        $(li).find("ul").find("li:eq(4)").children("span").text(v.place);
+                        $(li).find("ul").find("p:eq(0)").children("span").text(v.content);
+                        $(li).find("ul").next("p:eq(1)").children("span").text(v.createTime);
+                    })
+                }
+                //$()
+            })
+        })
+    }
+    /*滚回顶部*/
+    function pageScroll(){
+        var scrolldelay=setInterval(function(){
+            window.scrollBy(0,-500);
+            if($(window).scrollTop()<=0){
+                clearTimeout(scrolldelay);
+            }
+        },100);
+    }
+    /*发车城市操作*/
+    function findAllEditCity(){//发车城市操作
+        var url = "/details/city"
+        $.post(url,{act:"list"},function(data){
+            var ul = $("#ctiy").find("ul");
+            ul.empty();//清空ul里面的li
+            $(".ctiyUl").find("li:eq(4)").children("a").children("span").text("("+(data.list.length-4)+")");
+            $.each(data.list,function(i,v){
+                if(i == 0){
+                    $("input[name='city']").val(v.id)
+                }
+                if(i >= 4){
+                    ul.append("<li><a name='"+v.id+"'>"+v.name+"</a></li>");
+                }else{
+                    $(".ctiyUl").find("li:eq("+i+")").children("a").attr("name",v.id);
+                    $(".ctiyUl").find("li:eq("+i+")").children("a").text(v.name);
+                }
+            })
+        })
+        $(".ctiyUl").find("li").on("click",function(){
+            $(".ctiyUl").find("li").css("backgroundColor","");
+            $(".ctiyUl").find("li").children("a").css("color","blue");
+            $(this).css("backgroundColor","orange");
+            $(this).children("a").css("color","white");
+            $("input[name='city']").val($(this).children("a").attr("name"))
+        })
+        //最后一条点击时出现选择城市框
+        $(".ctiyUl").find("li:last").on("click",function(){
+            $("#ctiy").css("display","block");
+            $("#ctiy").find("li").on("click",function(){
+               var name = $(this).children("a").text();
+               var id =  $(this).children("a").attr("name")
+                $("input[name='city']").val(id)
+                $(".ctiyUl").find("li:first").children("a").attr("name",id);
+                $(".ctiyUl").find("li:first").children("a").text(name);
+                $(".ctiyUl").find("li:first").css("backgroundColor","orange");
+                $(".ctiyUl").find("li:first").css("color","white");
+                /*当前元素*/
+                $(".ctiyUl").find("li:last").css("backgroundColor","");
+                $(".ctiyUl").find("li:last").children("a").css("color","blue");
+                $("#ctiy").css("display","none");
+                var arr = new Array();
+                $(".ctiyUl").find("li").each(function(i){
+                   var id =  $(this).children("a").attr("name");
+                   arr.push(i,id);
+                })
+                var url = "/details/city"
+                $.post(url,{act:"list"},function(data){
+                    var ul = $("#ctiy").find("ul");
+                    ul.empty();//清空ul里面的li
+                    $(".ctiyUl").find("li:eq(4)").children("a").children("span").text("("+(data.list.length-4)+")");
+                    $.each(data.list,function(i,v){
+                        var is = true; //用于判断是否存在当前id
+                        for(var i = 0;i<arr.length;i++){
+                            if(arr[i] ==v.id){
+                                is = false;
+                            }
+                        }
+                        if(is){
+                            ul.append("<li><a name='"+v.id+"'>"+v.name+"</a></li>");
+                        }
+                    })
+                })
+            })
+        })
+    }
+    //修改出行人数
+    function numberPopulation(){
+        /*添加*/
+        $(".inc").on("click",function(){
+           var index = $(".inc").index($(this));//获取下标 0 成人 1 儿童
+            if(index == 0){ //成人
+                var value = $(this).siblings("input[name='adult']").val();//
+                if(value == 0){
+                    value =1
+                } else {
+                    value= (parseInt(value)+1);
+                }
+                $(this).siblings("input[name='adult']").val(value);
+            }else if(index == 1){//儿童
+                var value = $(this).siblings("input[name='child']").val();//
+                if(value == 0){
+                    value =1
+                } else {
+                    value= (parseInt(value)+1);
+                }
+                $(this).siblings("input[name='child']").val(value);
+            }
+        })
+
+        /*删除*/
+        $(".dec").on("click",function(){
+            var index = $(".dec").index($(this));//获取下标 0 成人 1 儿童
+            if(index == 0){ //成人减
+                var value = $(this).siblings("input[name='adult']").val();//
+                if( value == 0 ){
+                    value = 0
+                } else {
+                    value= (parseInt(value)-1);
+                }
+                $(this).siblings("input[name='adult']").val(value);
+            }else if(index == 1){//儿童
+                var value = $(this).siblings("input[name='child']").val();//
+                if(value == 0){
+                    value =0
+                } else {
+                    value= (parseInt(value)-1);
+                }
+                $(this).siblings("input[name='child']").val(value);
+            }
+        })
+    }
+    //日期左右更新按钮
+    function dataButtonLeftOrRigth(){
+        $("#dateBox").find("button").on("click",function(){
+           var index = $("#dateBox").find("button").index($(this));//获取下标 0 向左 1向右
+            if(index == 0){//向左
+                var clazz =$(".year:first").children("a").css("color");
+                if(clazz != "rgb(255, 255, 255)"){//未被选中
+                    $(".year").each(function(){//遍历
+                        var css = $(this).children("a").css("color");
+                        if(css == "rgb(255, 255, 255)"){
+                            /*修改样式*/
+                            $(".year").css("backgroundColor","white");
+                            $(".year").children("a").css("color","black")
+                            $(this).prev(".year").css("backgroundColor","#45829b").css("color","white");
+                            $(this).prev(".year").children("a").css("color","white");
+                            //生成日期
+                            var text = $(this).prev(".year").children("a").text();
+                            text = text.replace(/[^0-9]/ig,"");//正则表达式获取数值
+                            var  year = text.substring(0,4); //获取年份
+                            var month = text.substring(4,text.length); //获取月份
+                            findDatePrice(year,month);
+                        }
+                    })
+                }
+            }else if(index == 1){//向右
+                var clazz =$(".year:last").children("a").css("color");
+                if(clazz != "rgb(255, 255, 255)"){//未被选中
+                    $(".year").each(function(){//遍历
+                        var css = $(this).children("a").css("color");
+                        if(css == "rgb(255, 255, 255)"){
+                            /*修改样式*/
+                            $(".year").css("backgroundColor","white");
+                            $(".year").children("a").css("color","black")
+                            $(this).next(".year").css("backgroundColor","#45829b").css("color","white");
+                            $(this).next(".year").children("a").css("color","white");
+                            //生成日期
+                            var text = $(this).next(".year").children("a").text();
+                            text = text.replace(/[^0-9]/ig,"");//正则表达式获取数值
+                            var  year = text.substring(0,4); //获取年份
+                            var month = text.substring(4,text.length); //获取月份
+                            findDatePrice(year,month);
+                        }
+                    })
+                }
+            }
+        })
+    }
+    /*修改年份月份 */
+    function yearDate(){
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth()+1;
+        findDatePrice(year,month);//页面加载刷新出价格
+        $(".year").each(function(i){
+            if((month+i)>=10){
+                month = (month+i);
+            }else{
+                month = "0"+(month+i);
+            }
+             $(this).children('a').text(year+"年"+month+"月" );
+            month = date.getMonth()+1;
+        })
+        //被点击时
+        $(".year").on("click",function(){
+            /*修改样式*/
+            $(".year").css("backgroundColor","white");
+            $(".year").children("a").css("color","black")
+            $(this).css("backgroundColor","#45829b").css("color","white");
+            $(this).children("a").css("color","white");
+            //生成日期
+            var text = $(this).children("a").text();
+            text = text.replace(/[^0-9]/ig,"");//正则表达式获取数值
+            var  year = text.substring(0,4); //获取年份
+            var month = text.substring(4,text.length); //获取月份
+            findDatePrice(year,month);
+        })
+    }
+    /*遍历日期价格方法*/
+    function findDatePrice(year,month){
+        //获取id
+        var url = "/details/price";
+        var id = window.location.search.substring(window.location.search.indexOf("id=")+3,window.location.search.length);
+        /*ajax请求*/
+        $.post(url,{id:id,year:year,month:month},function(data){
+            var date = new Date(year,(month-1));
+            var week = date.getDay();
+            var day = new Date(year,(month),0).getDate();
+            var index = 1;///用于记录j的循环次数
+            $("#priceDay").empty();
+            for(var i =0;i<6;i++){
+                var tr ="";
+                var td ="";
+                for(var j =0 ;j<7;j++){
+                    if(i ==0){ //第一行
+                        if(week ==j ){
+                            var money =AjaxListTr(data.list,index);
+                            td = td+"<td style='padding: 5px;border: 1px solid silver'>"+index+money+"</td>"
+                            index ++;
+                        }else if(j > week){
+                            var money =AjaxListTr(data.list,index);
+                            td = td+"<td style='padding: 5px;border: 1px solid silver'>"+index+money+"</td>"
+                            index ++;
+                        }else{
+                            td = td+"<td style='padding: 5px;border: 1px solid silver'></td>"
+                        }
+                    }else if(i == 4){//最后一行
+                        var money =AjaxListTr(data.list,index);
+                        var d =index > day ? "" : index;
+                        if(d == ""){
+                            td = td+"<td style='padding: 5px;border: 1px solid silver'></td>";
+                        }else{
+                            td = td+"<td style='padding: 5px;border: 1px solid silver'>"+d+money+"</td>";
+                        }
+                        index ++;
+                    }else if(i == 5){
+                        var money =AjaxListTr(data.list,index);
+                        var d =index > day ? "" : index;
+                        if(d == ""){
+                        }else{
+                            td = td+"<td style='padding: 5px;border: 1px solid silver'>"+d+money+"</td>";
+                        }
+                        index ++;
+                    }else{//中间行
+                        var money =AjaxListTr(data.list,index);
+                        td = td+"<td style='padding: 5px;border: 1px solid silver'>"+index+money+"</td>";
+                        index ++;
+                    }
+                }
+                tr ="<tr>"+ td+"</tr>";
+                $("#priceDay").append(tr);
+            }
+            //获取id
+            $(".datePrice").on("click",function(){
+                var id = $(this).attr("name");
+                $(".dateOfTrip").find("option").each(function(){
+                    var value  = $(this).val();
+                    if(id == value){
+                        $(".dateOfTrip").find("option").removeAttr("selected");
+                        $(this).attr("selected",true);
+                    }
+                })
+            })
+        })
+        /*ajxalist集合遍历*/
+        function AjaxListTr(list,num){
+            var str ="";
+            var select = $(".dateOfTrip");
+            select.empty();
+            for(var i=0;i<list.length;i++){
+                var date = new Date(list[i].date);
+                if( num == date.getDate()){
+                    str ="<a style='display: block' class='datePrice' name='"+list[i].id+"'><p style='color: red;margin: 0;font-size: 10px;' >¥"+list[i].price+"起</p></a>"
+                    break;
+                }
+                /*往出行日期中添加下拉列表*/
+                var d = new Date(list[i].date);
+                d.getMonth()+1
+                d.getDate();
+                var today = new Array('星期日','星期一','星期二','星期三','星期四','星期五','星期六');
+                var strs = d.getFullYear()+"年"+(d.getMonth()+1)+"月"+d.getDate()+"日/"+today[d.getDay()]+"/价格(￥"+list[i].price+")";
+                select.append("<option value='"+list[i].id+"'>"+strs+"</option>")
+            }
+            return str;
+        }
+    }
+    /*头部导航栏特推Ajax请求*/
+    function showHeadSpecialPush(){
+        $("#pushNew").hover(function(){
+            $(this).find("h2").each(function(){
+                var placeId = $(this).attr("id");//获取id
+                var ul = $(this).next(".links");//获取当前ul用于遍历
+                var url = "/ajax"
+                $.post(url,{placeId:placeId},function(data){
+                    ul.empty();//清空
+                    $.each(data.list,function(i,v){
+                        ul.append("<li><a href='/?act=trip&id="+v.id+"' target='_blank'>"+v.title+"</a></li>")
+                    })
+                })
+            })
+        })
+    }
+</script>
+</html>
+

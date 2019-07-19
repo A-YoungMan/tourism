@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>旅游项目管理</title>
+    <!-- Styles -->
+    <style>
+        h2{}/**/
+    </style>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+    <link th:href="@{/layui/css/layui.css}" href="../../../static/layui/css/layui.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>旅游管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a href="/admin/trip/list">列表</a></li>
+                            <li><a href="#">编辑/新增</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card alert">
+                            <div class="card-header">
+                                <h4>新增/修改</h4><br/>
+                                <a href="javascript:history.go(-1)" class="btn btn-success">返回上一页</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="menu-upload-form">
+                                    <!--表单-->
+                                    <form class="form-horizontal" action="/admin/trip/save" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="id" th:if="${trip}" th:value="${trip.id}" readonly>
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="col-md-2">
+                                                        <div class="form-group" style="margin-bottom: 0">
+                                                            <div class="col-sm-10">
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>编号</label>
+                                                                <input type="text" name="num" autocomplete="off" class="form-control"
+                                                                       placeholder="请输入编号.." th:if="${trip}" th:value="${trip.num}" required>
+                                                                <input type="text" name="num" autocomplete="off" class="form-control"
+                                                                       placeholder="请输入编号.." th:unless="${trip}" required>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-4">
+                                                        <div class="col-md-8 form-group" th:if="${trip}" style="margin-bottom: 0">
+                                                            <label class="control-label" style="text-align: left"><span style="color: red">*</span>景点名称</label>
+                                                            <h2 class=" control-label" th:text="${trip.place.name}">景点名称</h2>
+                                                            <label class="control-label"><span style="color: red">*</span>出游类型</label>
+                                                            <h2 class="control-label" th:switch="${trip.type}">
+                                                                <span style="color: red" th:case="0">自驾游</span>
+                                                                <span style="color: red" th:case="1">国内游</span>
+                                                                <span style="color: red" th:case="2">境外游</span>
+                                                            </h2>
+                                                            <input type="hidden" name="type" th:value="${trip.type}" />
+                                                            <input type="hidden" name="palceName" th:value="${trip.place.name}" />
+                                                        </div>
+                                                        <div class="form-group" th:if="${placeList}" style="margin-bottom: 0">
+                                                            <div class="layui-form">
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>景点名称</label>
+                                                                <select name="placeId" class="form-control" lay-verify="required" style="text-align: left">
+                                                                    <option  th:each="place:${placeList}" th:value="${place.id}" th:text="${place.name}"></option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-4">
+                                                        <div class="form-group " th:if="${placeList}" style="margin-bottom: 0">
+                                                            <label class="control-label" style="text-align: left"><span style="color: red">*</span>出游类型</label>
+                                                            <div style="margin-top: 12px;">
+                                                                <input type="radio" name="type" value="0" >自驾游 &nbsp;&nbsp;
+                                                                <input type="radio" name="type" value="1" checked >国内游 &nbsp;&nbsp;
+                                                                <input type="radio" name="type" value="2">境外游
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-12" colspan="3">
+                                                        <div class="form-group" style="margin-bottom: 0;padding-left: 15px;">
+                                                            <div>
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>标题</label>
+                                                                <input type="text" name="title" autocomplete="off" class="form-control"
+                                                                       placeholder="标题....." th:if="${trip}"  th:value="${trip.title}" required>
+                                                                <input type="text" name="title" autocomplete="off" class="form-control"
+                                                                       placeholder="标题....." th:unless="${trip}" required>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-12" colspan="3">
+                                                        <div class="form-group" style="margin-bottom: 0;padding-left: 15px;">
+                                                            <div th:if="${trip}">
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>小标题</label>
+                                                                <input type="text" name="sTitle" autocomplete="off" class="form-control"
+                                                                       placeholder="输入小标题...."  th:value="${trip.sTitle}" required>
+                                                            </div>
+                                                            <div th:unless="${trip}">
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>小标题</label>
+                                                                <input type="text" name="sTitle" autocomplete="off" class="form-control"
+                                                                       placeholder="输入小标题...." required >
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-4">
+                                                        <div class="form-group" style="margin-bottom: 0;padding-left: 15px;">
+                                                            <div >
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>出发城市</label>
+                                                                <input type="text" name="text" autocomplete="off" class="form-control city"
+                                                                       placeholder="地区...." th:if="${trip}" th:value="${trip.temporary}" required>
+                                                                <input type="text" name="text" autocomplete="off" class="form-control city"
+                                                                       placeholder="地区...." th:unless="${trip}" >
+                                                                省份：<select id="province" hidden name="province"  style="width: 100px;"></select>
+                                                                城市：<select id="city" hidden name="cityId"   style="width: 100px;"></select>
+                                                                地区：<select id="area" hidden name="area" style="width: 100px;"></select>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-md-2">
+                                                        <div class="form-group" style="margin-bottom: 0">
+                                                            <div class="col-sm-10">
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>出行天数</label>
+                                                                <input type="text" name="time" autocomplete="off" class="form-control"
+                                                                       placeholder="出行天数...." th:if="${trip}" th:value="${trip.time}" required>
+                                                                <input type="text" name="time" autocomplete="off" class="form-control"
+                                                                       placeholder="出行天数...." th:unless="${trip}" required>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <div class="form-group" style="margin-bottom: 0">
+                                                            <div class="layui-form">
+                                                                <label class="control-label" style="text-align: left"><span style="color: red">*</span>酒店规格</label>
+                                                                <select id="hotel" name="hotel" class="form-control" lay-verify="required" style="width: 200px;">
+                                                                    <option value="宾馆" >宾馆</option>
+                                                                    <option value="民宿">民宿</option>
+                                                                    <option value="三星级酒店">三星级酒店</option>
+                                                                    <option value="四星级酒店">四星级酒店</option>
+                                                                    <option value="五星级酒店">五星级酒店</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-6">
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <div class="form-group" >
+                                            <label class="col-sm-2 control-label"><span style="color: red">*</span>是否上架</label>
+                                            <div class="col-sm-10">
+                                                <input type="radio" id="is0"  name="isOk" value="0"  checked ><label for="is0">立马上架</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" id="is1" name="isOk" value="1" ><label for="is1">暂不上架</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-lg btn-primary" style="width: 200px;">保存</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+                </div><!-- /# row -->
+            </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div><!-- /# content wrap -->
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/layDate-v5.0.9/laydate/laydate.js}" src="../../../static/layDate-v5.0.9/laydate/laydate.js"></script>
+<script th:src="@{/js/cropbox.js}" src="../../../static/js/cropbox.js"></script>
+<script th:src="@{/layui/layui.js}" src="../../../static/layui/layui.js"  type="text/javascript"></script>
+
+<script th:if="${trip}" th:inline="JavaScript">
+    $(function(){
+        checkNull();
+    })
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+    });
+    var hotel = [[${trip.hotel}]]; //获取所选的景点
+    var isOk = [[${trip.isOk}]] //获取是否上架
+    if(hotel != null){
+        $("#hotel").find("option").each(function(){
+            var text = $(this).val();
+            if(hotel == text){
+                $(this).prop("selected",true);
+            }
+        });
+    }
+    if(isOk != null){
+        if(isOk ==0){
+            $("#is0").attr("checked",true);
+        }else{
+            $("#is1").attr("checked",true);
+        }
+    }
+    var test; //
+    var indexneo;//记录第一个下标
+    var indextwe;//记录第二个下标
+    $(".city").click(function(){
+        //初始化加载省份列表
+        init();
+    })
+    //绑定省份下拉框的change事件
+    $("#province").change(function () {
+        //获取选中的省份id
+        $("#city").attr("hidden",false);
+        var provinceId = $(this).val();
+        test=$(this).find('option:selected').text();//获取被选中的值
+        indexneo = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+        $.getJSON("/ajax/region", {"pid": provinceId}, function (json) {
+            $("#city").empty();
+            $.each(json, function (i, v) {
+                $("#city").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+
+    })
+    //绑定城市下拉框的change事件
+    $("#city").change(loadArea);
+    $("#area").change(function(){
+        test = test.substring(0,indextwe);
+        test=test+$("#area").find('option:selected').text();//获取被选中的值
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+    })
+    function init() {
+        $("#province").attr("hidden",false);
+        $.getJSON("/ajax/region",{}, function (data) {
+            $("#province").empty();
+            $.each(data, function (i, v) {
+                $("#province").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+    //读取地区列表
+    function loadArea() {
+        $("#area").attr("hidden",false);
+        //获取选中的城市id
+        var cityId = $("#city").val();
+        test = test.substring(0,indexneo);
+        test=test+$("#city").find('option:selected').text();//获取被选中的值
+        indextwe = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+
+        $.getJSON("/ajax/region", {"pid": cityId}, function (json) {
+            $("#area").empty();
+            $.each(json, function (i, v) {
+                $("#area").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+    function checkNull(){
+        $("input[type$='text']").each(function(n){
+            if($(this).val()==""){
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }else{
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }
+        });
+        $("input[type='text']").keyup(function(){
+            var text = $(this).val();
+            if(text.trim() != ""){
+                $(this).parent("div").removeClass("has-error");
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }else{
+                $(this).parent("div").removeClass("has-success");
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }
+        })
+        $("input[name='num']").keyup(function(){
+            var values = $(this).val();
+            var reg =/^[0-9]*$/;
+            if(!reg.test(values)){
+                $(this).parent("div").removeClass("has-success");
+                $(this).attr("placeholder","必须是数字....");
+                $(this).val("");
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }else{
+                $(this).parent("div").removeClass("has-error");
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }
+        })
+        setInterval(function(){
+           var value = $(".city").val();
+           if(value.trim() != ""){
+               $(".city").parent("div").removeClass("has-error");
+               $(".city").parent("div").addClass("has-success").addClass("has-feedback");
+           }else{
+               $(".city").parent("div").removeClass("has-success");
+               $(".city").parent("div").addClass("has-error").addClass("has-feedback");
+           }
+        },300)
+    }
+</script>
+<script >
+    $(function(){
+        checkNull();
+        setInterval(function(){
+            var value = $(".city").val();
+            if(value.trim() != ""){
+                $(".city").parent("div").removeClass("has-error");
+                $(".city").parent("div").addClass("has-success").addClass("has-feedback");
+            }else{
+                $(".city").parent("div").removeClass("has-success");
+                $(".city").parent("div").addClass("has-error").addClass("has-feedback");
+            }
+        },300)
+    })
+    function checkNull(){
+        $("input[type$='text']").each(function(n){
+            if($(this).val()==""){
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }else{
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }
+        });
+        $("input[type='text']").keyup(function(){
+            var text = $(this).val();
+            if(text.trim() != ""){
+                $(this).parent("div").removeClass("has-error");
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }else{
+                $(this).parent("div").removeClass("has-success");
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }
+        })
+        $("input[name='num']").keyup(function(){
+            var values = $(this).val();
+            var reg =/^[0-9]*$/;
+            if(!reg.test(values)){
+                $(this).parent("div").removeClass("has-success");
+                $(this).attr("placeholder","必须是数字....");
+                $(this).val("");
+                $(this).parent("div").addClass("has-error").addClass("has-feedback");
+            }else{
+                $(this).parent("div").removeClass("has-error");
+                $(this).parent("div").addClass("has-success").addClass("has-feedback");
+            }
+        })
+    }
+    //下拉效果
+    layui.use('form', function(){
+        var form = layui.form;
+    });
+    var test; //
+    var indexneo;//记录第一个下标
+    var indextwe;//记录第二个下标
+    $(".city").click(function(){
+        //初始化加载省份列表
+        init();
+    })
+    //绑定省份下拉框的change事件
+    $("#province").change(function () {
+        //获取选中的省份id
+        $("#city").attr("hidden",false);
+        var provinceId = $(this).val();
+        test=$(this).find('option:selected').text();//获取被选中的值
+        indexneo = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+        $.getJSON("/ajax/region", {"pid": provinceId}, function (json) {
+            $("#city").empty();
+            $.each(json, function (i, v) {
+                $("#city").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+
+    })
+    //绑定城市下拉框的change事件
+    $("#city").change(loadArea);
+    $("#area").change(function(){
+        test = test.substring(0,indextwe);
+        test=test+$("#area").find('option:selected').text();//获取被选中的值
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+    })
+    function init() {
+        $("#province").attr("hidden",false);
+        $.getJSON("/ajax/region",{}, function (data) {
+            $("#province").empty();
+            $.each(data, function (i, v) {
+                $("#province").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+    //读取地区列表
+    function loadArea() {
+        $("#area").attr("hidden",false);
+        //获取选中的城市id
+        var cityId = $("#city").val();
+        test = test.substring(0,indexneo);
+        test=test+$("#city").find('option:selected').text();//获取被选中的值
+        indextwe = test.toString().length;
+        $(".city").empty();
+        $(".city").val(test);//赋值给input
+
+        $.getJSON("/ajax/region", {"pid": cityId}, function (json) {
+            $("#area").empty();
+            $.each(json, function (i, v) {
+                $("#area").append("<option value='" + v.id + "''>" + v.name + "</option>");
+            })
+        })
+    }
+</script>
+</html>

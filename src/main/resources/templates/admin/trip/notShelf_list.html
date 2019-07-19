@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>未上架项目列表</title>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .table tbody tr td,thead tr th{
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 p-0">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>未上架项目管理 </h1>
+                </div>
+                <ol class="breadcrumb text-right">
+                    <li><a>列表</a></li>
+                </ol>
+            </div>
+        </div><!-- /# column -->
+    </div><!-- /# row -->
+    <p th:if="${error}" th:text="${error}" style="color: red"></p>
+    <p th:if="${success}" th:text="${success}" style="color: green"></p>
+    <div class="main-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card alert">
+                    <div class="order-list-item">
+                        <table class="table">
+                            <thead style="background-color: orange">
+                            <tr>
+                                <th>景点</th>
+                                <th>标题</th>
+                                <th>小标题</th>
+                                <th>出游天数</th>
+                                <th>出游类型</th>
+                                <th>发布时间</th>
+                                <th style="text-align: center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="trip:${tripList}">
+                                <td th:text="${trip.place.name}">John Doe</td>
+                                <td th:text="${trip.title}">#8546677</td>
+                                <td th:text="${trip.sTitle}">Hot Dog</td>
+                                <td th:text="${trip.time}">$29</td>
+                                <td th:switch="${trip.type}">
+                                    <div class="full-stars-only" th:case="0" th:text="自驾游">aaa</div>
+                                    <div class="full-stars-only" th:case="1" th:text="国内游">aaa</div>
+                                    <div class="full-stars-only" th:case="2" th:text="境外游">aaa</div>
+                                </td>
+                                <td th:text="${#dates.format(trip.createTime,'yyyy-MM-dd')}">100</td>
+                                <td><a class="btn btn-success btn-sm" th:href="@{'/admin/trip/notShelf/edit?act=return&id='+${trip.id}}">恢复</a>&nbsp;&nbsp;<a class="btn btn-danger btn-sm" th:href="@{'/admin/trip/notShelf/edit?act=delete&id='+${trip.id}}" onclick="return confirm('确定删除吗？删除后将无法恢复!')">删除</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--分页-->
+                        <nav th:if="${!#lists.isEmpty(tripList)}" aria-label="Page navigation" style="text-align: center;">
+                            <ul class="pagination" style="margin: 0;height:20px;">
+                                <li class="disabled" th:class="${this==1?'disabled':''}" th:switch="${this}">
+                                    <a th:case="1" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                    <a th:case="*" th:href="@{'/admin/trip/notShelf?pageNum='+${this-1}}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <li th:each="i:${#numbers.sequence(1,pages)}">
+                                    <a th:href="@{'/admin/trip/notShelf?pageNum='+${i}}" th:text="${i}">1</a>
+                                </li>
+
+                                <li th:class="${this == pages?'disabled':''}" >
+                                    <a th:if="${this==pages or this== pages+1}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                                    <a th:unless="${this==pages or this== pages+1}" th:href="@{'/admin/trip/notShelf?pageNum='+${this + 1}}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div><!-- /# card -->
+            </div><!-- /# column -->
+        </div><!-- /# row -->     </div>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js" ></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}" src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js" ></script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+</script>
+</html>

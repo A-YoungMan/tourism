@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.TrafficMapper">
+    <insert id="create" parameterType="Traffic" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_traffic(go_point,go_time,return_point,return_time) VALUES(#{goPoint},#{goTime},#{returnPoint},#{returnTime})
+    </insert>
+    <!--插入桥表 Schedule-->
+    <insert id="createSchedule" keyProperty="id" parameterType="map" >
+        INSERT INTO t_schedule(trip_id,traffic_id) VALUES(#{tripId},#{trafficId})
+    </insert>
+    <update id="update" parameterType="Traffic">
+        UPDATE t_traffic <set>
+        <if test="goPoint != null">go_point =#{goPoint}</if>
+        <if test="goTime != null">,go_time =#{goTime}</if>
+        <if test="returnPoint != null">,return_point =#{returnPoint}</if>
+        <if test="returnTime != null">,return_time =#{returnTime}</if>
+    </set>
+        WHERE id=#{id}
+    </update>
+    <delete id="delete" parameterType="int" >
+        DELETE FROM t_traffic WHERE id =#{id}
+    </delete>
+    <resultMap id="resultMap" type="Traffic">
+        <id property="id" column="id" />
+        <result property="goPoint" column="go_point" />
+        <result property="goTime" column="go_Time" />
+        <result property="returnPoint" column="return_point" />
+        <result property="returnTime" column="return_Time" />
+    </resultMap>
+    <select id="findById" parameterType="int" resultType="Traffic">
+      SELECT id,go_point goPoint,go_time goTime,return_point returnPoint,return_time returnTime FROM t_traffic WHERE id=#{id}
+    </select>
+    <!--按景区id查询-->
+    <select id="findByTripId" parameterType="int" resultMap="resultMap">
+        SELECT tr.id,tr.go_point,tr.go_time,tr.return_point,tr.return_time,t.id trip_id FROM t_traffic tr
+        LEFT JOIN t_schedule s ON s.traffic_id = tr.id
+        LEFT JOIN t_trip t on t.id = s.trip_id WHERE t.id=#{tripId}
+    </select>
+    <select id="findAll" resultMap="resultMap">
+        SELECT tr.id,tr.go_point,tr.go_time,tr.return_point,tr.return_time,t.id trip_id FROM t_traffic tr
+        LEFT JOIN t_schedule s ON s.traffic_id = tr.id
+        LEFT JOIN t_trip t on t.id = s.trip_id
+    </select>
+</mapper>

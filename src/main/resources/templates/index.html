@@ -1,0 +1,1084 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- Meta -->
+<meta charset="utf-8">
+<title>惠玩旅游网-首页</title>
+<!-- Bootstrap Core CSS -->
+<link rel="stylesheet" th:href="@{/index/assets/css/bootstrap.min.css}" href="../static/index/assets/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/bootstrap-3.3.7-dist/css/bootstrap.css}" href="../static/bootstrap-3.3.7-dist/css/bootstrap.css">
+<!-- Customizable CSS -->
+<link rel="stylesheet" th:href="@{/index/assets/css/main.css}" href="../static/index/assets/css/main.css">
+<link rel="stylesheet" th:href="@{/index/assets/css/blue.css}" href="../static/index/assets/css/blue.css">
+<link rel="stylesheet" th:href="@{/index/assets/css/owl.transitions.css}" href="../static/index/assets/css/owl.transitions.css">
+<link rel="stylesheet" th:href="@{/index/assets/css/animate.min.css}" href="../static/index/assets/css/animate.min.css">
+<link rel="stylesheet" th:href="@{/index/assets/css/rateit.css}" href="../static/index/assets/css/rateit.css">
+<link rel="stylesheet" th:href="@{/index/assets/css/bootstrap-select.min.css}" href="../static/index/assets/css/bootstrap-select.min.css">
+<!-- Icons/Glyphs -->
+<link rel="stylesheet" th:href="@{/index/assets/css/font-awesome.css}" href="../static/index/assets/css/font-awesome.css">
+<style>
+  .links li:hover{
+    background-color: #b4dbed;
+  }
+  .links li{
+    border-bottom: 1px solid saddlebrown;
+  }
+  a{
+    cursor: pointer;
+  }
+  .sub-cat li:hover{
+    background-color: #b4dbed;
+  }
+  .suba{
+    background-color: #b4dbed;
+  }
+</style>
+</head>
+<body class="cnt-home">
+<!-- ============================================== HEADER ============================================== -->
+<header class="header-style-1">
+  <!-- ============================================== TOP MENU ============================================== -->
+  <div class="top-bar animate-dropdown">
+    <div class="container" style="padding-right:15px">
+      <div class="header-top-inner">
+        <div class="cnt-account">
+          <ul class="list-unstyled">
+            <li class="myaccount"><a href="#"><span>关于我们</span></a></li>
+            <li class="wishlist"><a href="#"><span>站内地图</span></a></li>
+            <li class="header_cart hidden-xs"><a href="#"><span>服务热线</span></a></li>
+            <li class="check"><a href="#"><span>添加收藏</span></a></li>
+            <li class="login">
+              <a th:unless="${session.userLogin}" href="/login" th:href="@{'/login'}"><span>登录</span></a>
+              <div th:if="${session.userLogin}" class="dropdown">
+                <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" th:if="${session.userLogin}"  th:href="@{'/user/index'}">欢迎您:<span th:text="${session.userLogin.phone}"></span></a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                  <li style="text-align: center"><a th:href="@{'/user/index'}" style="color: black;display: block;width: 150px;">个人中心</a></li>
+                  <li style="text-align: center"><a  th:href="@{'/user/index'}" style="color: black;display: block;width: 150px;">查询订单</a></li>
+                  <li style="text-align: center"><a th:href="@{'/logout'}" style="color: black;display: block;width: 150px;">退出登录</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.header-top -->
+  <!-- ============================================== TOP MENU : END ============================================== -->
+  <div class="main-header">
+    <div class="container" style="margin-bottom: 5px;">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-3 logo-holder">
+          <!-- ============================================================= LOGO ============================================================= -->
+          <div class="logo"><h3>惠玩旅游网</h3> </div>
+          <!-- /.logo -->
+          <!-- ============================================================= LOGO : END ============================================================= --> </div>
+        <!-- /.logo-holder -->
+
+        <div class="col-lg-7 col-md-6 col-sm-8 col-xs-12 top-search-holder">
+          <!-- /.contact-row -->
+          <!-- ============================================================= SEARCH AREA ============================================================= -->
+          <div class="search-area">
+            <form action="/" method="post">
+              <input type="hidden" name="act" value="key">
+              <div class="control-group">
+                    <select name="type" class="categories-filter animate-dropdown" style="height: 56px;">
+                      <option value="0">- 国家</option>
+                      <option value="1">- 景点名称</option>
+                      <option value="2">- 主题</option>
+                    </select>
+                <input name="key" class="search-field" style="width: 70%" placeholder="请输入完整词汇或关键字...." />
+                <button class="search-button"></button>
+              </div>
+            </form>
+          </div>
+      </div>
+      <!-- /.row -->
+    </div>
+    <!-- /.container -->
+  </div>
+  <!-- /.main-header -->
+
+  <!-- ============================================== NAVBAR ============================================== -->
+  <div class="header-nav animate-dropdown">
+    <div class="container">
+      <div class="yamm navbar navbar-default" role="navigation">
+        <div class="nav-bg-class">
+          <div class="navbar-collapse collapse" id="mc-horizontal-menu-collapse">
+            <div class="nav-outer">
+              <ul class="nav navbar-nav">
+                <li class="dropdown"> <a href="/" th:href="@{/}">首页</a> </li>
+                <!--自行游-->
+                <li class="dropdown yamm mega-menu"> <a data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">自行游</a>
+                  <ul class="dropdown-menu container">
+                    <li>
+                      <div class="yamm-content ">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-6 col-md-12 col-menu">
+                            <ul class="links">
+                              <li th:each="since:${sinceTripList}">
+                                <a th:href="@{'/?act=trip&id='+${since.id}}" th:text="${since.title}" target='_blank'>Dresses</a>
+                                <span class='menu-label hot-menu hidden-xs'>new</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <!--国内游-->
+                <li class="dropdown yamm mega-menu"> <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">国内游</a>
+                  <ul class="dropdown-menu container">
+                    <li>
+                      <div class="yamm-content ">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-6 col-md-12 col-menu">
+                            <ul class="links">
+                              <li th:each="domestic:${domesticTripList}">
+                                <a target='_blank' th:href="@{'/?act=trip&id='+${domestic.id}}" th:text="${domestic.title}">Dresses</a>
+                                <span class='menu-label hot-menu hidden-xs'>new</span>
+                              </li>
+                            </ul>
+                          </div>
+                          <!-- /.col -->
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <!--境外游-->
+                <li class="dropdown mega-menu">
+                  <a data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">境外游 </a>
+                  <ul class="dropdown-menu container">
+                    <li>
+                      <div class="yamm-content">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-menu">
+                            <ul class="links">
+                              <li th:each="foreign,iterStat:${foreignTripList}">
+                                <a target='_blank' th:href="@{'/?act=trip&id='+${foreign.id}}" th:text="${foreign.title}">Gaming
+                                  </a><span class='menu-label hot-menu hidden-xs'>new</span></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <!--主题游-->
+                <li class="dropdown"> <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown">主题</a>
+                  <ul class="dropdown-menu pages">
+                    <li>
+                      <div class="yamm-content">
+                        <div class="row">
+                          <div class="col-xs-12 col-menu">
+                            <ul class="links">
+                              <li th:each="theme:${themeList}"><a target='_blank' th:text="${theme.name}" th:href="@{'/?act=theme&id='+${theme.id}}">Home</a></li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <!--特推-->
+                <li class="dropdown mega-menu" id="pushNew">
+                  <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">特推旅游 <span class="menu-label hot-menu hidden-xs">new</span> </a>
+                  <ul class="dropdown-menu container">
+                    <li>
+                      <div class="yamm-content">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-12 col-md-2 col-menu" th:each="place:${placeList}">
+                            <h2 class="title" th:text="${place.name}" th:attr="id=${place.id}">Laptops</h2>
+                            <ul class="links">
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                     </li>
+                  </ul>
+                </li>
+                <!--热门-->
+                <li class="dropdown mega-menu">
+                  <a  data-hover="dropdown" class="dropdown-toggle" data-toggle="dropdown">热门 <span class="menu-label hot-menu hidden-xs">热门</span> </a>
+                  <ul class="dropdown-menu container">
+                    <li>
+                      <div class="yamm-content">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-12 col-md-12 col-menu">
+                            <ul class="links">
+                              <li th:each="hot:${hotList}"><i class='glyphicon glyphicon-fire' style='color:red;float: right;margin-top: 5px;' ></i><a th:href="@{'/?act=trip&id='+${hot.id}}" th:text="${hot.title}" target='_blank'> </a></li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!-- /.row -->
+                      </div>
+                      <!-- /.yamm-content --> </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <!-- /.nav-outer -->
+          </div>
+          <!-- /.navbar-collapse -->
+
+        </div>
+        <!-- /.nav-bg-class -->
+      </div>
+      <!-- /.navbar-default -->
+    </div>
+    <!-- /.container-class -->
+
+  </div>
+  <!-- /.header-nav -->
+  <!-- ============================================== NAVBAR : END ============================================== -->
+  </div>
+</header>
+<!--左菜单栏-->
+<!-- ============================================== HEADER : END ============================================== -->
+<div class="body-content outer-top-vs" id="top-banner-and-menu">
+  <div class="container">
+    <div class="row"> 
+      <!-- ============================================== SIDEBAR ============================================== -->
+      <div class="col-xs-12 col-sm-12 col-md-3 sidebar">
+        <!-- ================================== TOP NAVIGATION ================================== -->
+        <div class="side-menu animate-dropdown outer-bottom-xs">
+          <div class="head"><i class="icon fa fa-align-justify fa-fw"></i> 站内地图</div>
+          <nav class="yamm megamenu-horizontal">
+            <ul class="nav">
+              <!--度假旅游-->
+              <li class="dropdown menu-item">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-shopping-bag" aria-hidden="true"></i>度假旅游</a>
+                <ul class="dropdown-menu mega-menu" style="min-width: 200%;background: url('images/bg5.jpg') no-repeat;background-size:cover;border-radius: 5px;">
+                  <li class="yamm-content">
+                    <div class="row">
+                      <div class="col-sm-12 col-md-6">
+                        <ul class="links list-unstyled">
+                          <li style="border-bottom: 0" th:each="findPlace:${placeFindAllList}"><a th:href="@{'/?act=place&id='+${findPlace.id}}" th:text="${findPlace.name}">Dresses</a></li>
+                        </ul>
+                      </div>
+                      <!-- /.col -->
+                      <div class="col-sm-12 col-md-6">
+                        <ul class="links list-unstyled">
+                          <li style="border-bottom: 0" th:each="findPlace:${placeFindAllList2}"><a th:href="@{'/?act=place&id='+${findPlace.id}}" th:text="${findPlace.name}">Dresses</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <!-- /.row -->
+                  </li>
+                </ul>
+              </li>
+              <!--境内-->
+              <li class="dropdown menu-item">
+                <a class="dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-laptop" aria-hidden="true"></i>境内游</a>
+                <!-- ================================== MEGAMENU VERTICAL ================================== -->
+                <ul class="dropdown-menu mega-menu" style="min-width: 200%;background: url('images/bg4.jpg') no-repeat;background-size:cover;border-radius: 5px;">
+                  <li class="yamm-content">
+                    <div class="row">
+                      <div style="padding: 0 10px 0 10px;float: left">
+                        <a th:each="place:${chinaPlace}" class="btn btn-info" style="width: 150px;float: left;margin-right: 10px;margin-bottom: 10px;color: green" th:text="${place.name}" th:href="@{'/?act=place&id='+${place.id}}" target="_blank">Dresses</a>
+                      </div>
+                    </div>
+                  </li>
+                  <!-- /.yamm-content -->
+                </ul>
+               </li>
+              <!--境外游-->
+              <li class="dropdown menu-item"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-clock-o"></i>境外游</a>
+                <ul class="dropdown-menu mega-menu" style="min-width: 200%;background: url('images/bg3.jpg') no-repeat;background-size:cover;border-radius: 5px;">
+                  <li class="yamm-content">
+                    <div class="row">
+                      <div style="padding: 0 10px 0 10px;float: left">
+                        <a th:each="place:${externalPlaceSet}" class="btn btn-warning" style="width: 150px;float: left;margin-right: 10px;margin-bottom: 10px;color: black" th:text="${place.name}" th:href="@{'/?act=place&id='+${place.id}}" target="_blank">Dresses</a>
+                      </div>
+                    </div>
+                    <!-- /.row -->
+                  </li>
+                  <!-- /.yamm-content -->
+                </ul>
+              </li>
+              <!-- /.menu-item -->
+              <!--牛人专线-->
+              <li class="dropdown menu-item">
+                <a class="dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-diamond"></i>牛人专线</a>
+                <ul class="dropdown-menu mega-menu" style="min-width: 200%;background: url('images/index_bg2.jpg') no-repeat;border-radius: 5px;">
+                  <li class="yamm-content">
+                    <div class="row">
+                      <div style="padding: 0 10px 0 10px;float: left">
+                        <a th:each="place:${placeSet}" class="btn btn-default" style="width: 150px;float: left;margin-right: 10px;margin-bottom: 10px;" th:text="${place.name}" th:href="@{'/?act=place&id='+${place.id}}" target="_blank">Dresses</a>
+                      </div>
+                      <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                  </li>
+                  <!-- /.yamm-content -->
+                </ul>
+               </li>
+              <!--热门推出-->
+              <li class="dropdown menu-item"> <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon fa fa-heartbeat"></i>热门推出</a>
+                <ul class="dropdown-menu mega-menu" style="min-width: 200%;background: url('images/index_bg.jpg') no-repeat;border-radius: 5px;">
+                  <li class="yamm-content">
+                    <div class="row">
+                      <div style="padding: 0 10px 0 10px;float: left">
+                        <a th:each="place:${hotPlaceSet}" class="btn btn-danger" style="width: 150px;float: left;margin-right: 10px;margin-bottom: 10px;opacity: 0.8" th:text="${place.name}" th:href="@{'/?act=place&id='+${place.id}}" target="_blank">Dresses</a>
+                      </div>
+                    </div>
+                    <!-- /.row -->
+                  </li>
+                  <!-- /.yamm-content -->
+                </ul>
+              </li>
+            </ul>
+            <!-- /.nav -->
+          </nav>
+          <!-- /.megamenu-horizontal -->
+        </div>
+        <!-- /.side-menu -->
+        <!-- ============================================== HOT DEALS: END ============================================== -->
+        <!-- ============================================== 左菜单键境外最新热门 ============================================== -->
+
+        <div class="sidebar-widget outer-bottom-small">
+          <h3 class="section-title">当前最新境外游 <i class="glyphicon glyphicon-fire" style="color: red"></i></h3>
+          <div class="sidebar-widget-body outer-top-xs">
+            <div class="owl-carousel sidebar-carousel special-offer custom-carousel owl-theme outer-top-xs">
+              <div class="item">
+                <div class="products special-product">
+                  <!--从此遍历-->
+                  <div class="product" th:each="foreign:${foreignTripList}" style="margin-top: 10px;">
+                    <div class="product-micro">
+                      <div class="row product-micro-row">
+                        <div class="col col-xs-5">
+                          <div class="product-image">
+                            <div class="image">
+                              <a th:href="@{'/?act=trip&id='+${foreign.id}}" target="_blank">
+                                <img th:src="${!#lists.isEmpty(foreign.tripPictures)}?${foreign.tripPictures[0].base64}:'images/notImage.jpg'">
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col col-xs-7">
+                          <div class="product-info">
+                            <h5 style="margin-top: 0;margin-bottom: 0"><a target="_blank" th:href="@{'/?act=trip&id='+${foreign.id}}" th:text="${foreign.title}">Floral Print Shirt</a></h5>
+                            <div class="product-price"> <span>￥<span style="color: red" th:text="${!#lists.isEmpty(foreign.prices)}?${foreign.prices[0].price}:'无'">450.99 </span>起</span> </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.sidebar-widget-body -->
+        </div>
+        <!-- /.sidebar-widget -->
+        <!-- ============================================== 左侧下拉第二块 TAGS ============================================== -->
+        <div class="sidebar-widget product-tag">
+          <h3 class="section-title">热门景点 <i class="glyphicon glyphicon-fire" style="color: red"></i></h3>
+          <div class="sidebar-widget-body outer-top-xs">
+            <div class="tag-list">
+              <a th:class="${findStar.index==0}?'item active '+${findPlace.id}:'item '+${findPlace.id}" class="item active" th:each="findPlace,findStar:${placeFindAllList}" th:text="${findPlace.name}">Phone</a>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================== 左侧下拉第二块 : END ============================================== -->
+        <!-- ============================================== 下展示图 DEALS ============================================== -->
+        <div class="sidebar-widget outer-bottom-small">
+          <h3 class="section-title">相关旅游</h3>
+          <div class="sidebar-widget-body outer-top-xs">
+            <div class="owl-carousel sidebar-carousel special-offer custom-carousel owl-theme outer-top-xs">
+              <div class="item">
+                <div class="products special-product HotSpots">
+
+                  <div class="product">
+                    <div class="product-micro">
+                      <div class="row product-micro-row">
+                        <div class="col col-xs-5">
+                          <div class="product-image">
+                            <div class="image">
+                              <a class="thumbnail" target="_blank">
+                                <img src="images/notImage.jpg"> </a> </div>
+                          </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col col-xs-7">
+                          <div class="product-info">
+                            <h5 style="margin-top: 0;margin-bottom: 0"><a target="_blank" class="name">Floral Print Shirt</a></h5>
+                            <div class="product-price"> <span>￥<span style="color:red;" class="price">450.99</span>起</span> </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.sidebar-widget -->
+        <!-- ============================================== SPECIAL DEALS : END ============================================== -->
+        <!-- ============================================== NEWSLETTER ============================================== -->
+        <div class="sidebar-widget newsletter outer-bottom-small">
+          <h3 class="section-title">服务热线 <i class="glyphicon glyphicon-earphone" style="color: red"></i></h3>
+          <div class="sidebar-widget-body outer-top-xs">
+            <p>您的建议与意见将是我们进步的最大动力!</p>
+            <form>
+              <div class="form-group">
+                <textarea class="form-control" rows="3" name="opinion" placeholder="请输入您的建议或意见...."></textarea>
+              </div>
+              <button class="btn btn-primary btn-xs">提交</button>
+            </form>
+          </div>
+          <!-- /.sidebar-widget-body -->
+        </div>
+        <!-- /.sidebar-widget -->
+        <!-- ============================================== NEWSLETTER: END ============================================== -->
+      </div>
+      <!-- ============================================== CONTENT ============================================== -->
+      <div class="col-xs-12 col-sm-12 col-md-9 homebanner-holder"> 
+        <!-- ========================================== 轮播 ========================================= -->
+        <div id="hero">
+          <div id="owl-main" class="owl-carousel owl-inner-nav owl-ui-sm">
+            <!--背景图片-->
+            <div class="item" style="background: url('/images/index_img.png') no-repeat;background-size: cover">
+
+            </div>
+          </div>
+        </div>
+        <!-- ========================================= SECTION – HERO : END ========================================= -->
+
+        <!-- ============================================== 境外;START ============================================== -->
+        <div class="scroll-tabs outer-top-vs" style="float: left">
+          <div class="more-info-tab clearfix ">
+            <h3 class="new-product-title pull-left">精选境外游</h3>
+            <ul class="nav nav-tabs nav-tab-line pull-right" >
+              <li><a th:href="@{'/?act=type&type=2'}"  style="color:blue">更多</a></li><!--th:href="@{'/?act=domestic&id='+${domestic.id}}"-->
+            </ul>
+          </div>
+          <!--展示-->
+          <div class="tab-content outer-top-xs">
+            <div  class="tab-pane in active">
+              <div class="product-slider">
+                  <div class="item item-carousel foreign" style="width: 1035px;">
+                    <!--此处遍历-->
+                    <div class="products" style="width: 180px;float: left;">
+                        <div class="product">
+                          <div class="product-image">
+                            <div class="image">
+                              <a class="thumbnail" target="_blank">
+                                <img src="images/notImage.jpg" >
+                              </a>
+                            </div>
+                            <div class="tag new" style="background-color: red"><span>新</span></div>
+                            <!--遮罩层-->
+                            <div class="product-image mask" style="position: absolute;background-color: silver;top: 0;width: 178px;height: 229px;opacity: 0.7; word-wrap: break-word;display: none">
+                              <h4><a class="text"></a></h4>
+                            </div>
+                          </div>
+                          <div class="product-info text-left" >
+                            <h3 style="width: 178px;overflow: hidden; text-overflow:ellipsis; white-space:nowrap;"><a class="name">Floral Print Buttoned</a></h3>
+                            <div class="product-price"> <span>￥<span class="price" style="color: red">452112</span>起</span></div>
+                          </div>
+                        </div>
+                    </div>
+
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================== 境外 : END ============================================== -->
+        <!-- ============================================== 国内 :START ============================================== -->
+        <div class="scroll-tabs outer-top-vs" style="float: left">
+          <div class="more-info-tab clearfix ">
+            <h3 class="new-product-title pull-left">精选国内游</h3>
+            <ul class="nav nav-tabs nav-tab-line pull-right" >
+              <li><a th:href="@{'/?act=type&type=1'}" style="color:blue">更多</a></li><!--th:href="@{'/?act=domestic&id='+${domestic.id}}"-->
+            </ul>
+          </div>
+          <!--展示-->
+          <div class="tab-content outer-top-xs">
+            <div  class="tab-pane in active">
+              <div class="product-slider">
+                <div class="item item-carousel domestic" style="width: 1035px;">
+                  <!--此处遍历-->
+                  <div class="products" style="width: 180px;float: left;">
+                    <div class="product">
+                      <div class="product-image">
+                        <div class="image">
+                          <a class="thumbnail" target="_blank">
+                            <img src="images/notImage.jpg" >
+                          </a>
+                        </div>
+                        <!-- /.image -->
+                        <div class="tag new" style="background-color: red"><span>新</span></div>
+                        <!--遮罩层显示文字-->
+                        <div class="product-image mask" style="position: absolute;background-color: silver;top: 0;width: 178px;height: 229px;opacity: 0.7; word-wrap: break-word;display: none">
+                          <h4><a class="text"></a></h4>
+                        </div>
+                      </div>
+                      <!-- /.product-image -->
+                      <div class="product-info text-left" >
+                        <h3 style="width: 178px;overflow: hidden; text-overflow:ellipsis; white-space:nowrap;"><a class="name">Floral Print Buttoned</a></h3>
+                        <div class="product-price"> <span>￥<span class="price" style="color: red">452112</span> 起</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================== 国内: END ============================================== -->
+        <!-- ============================================== 自行游 :START ============================================== -->
+        <div class="scroll-tabs outer-top-vs" style="float: left">
+          <div class="more-info-tab clearfix ">
+            <h3 class="new-product-title pull-left">精选自行游</h3>
+            <ul class="nav nav-tabs nav-tab-line pull-right" >
+              <li><a th:href="@{'/?act=type&type=0'}" style="color:blue">更多</a></li><!--th:href="@{'/?act=domestic&id='+${domestic.id}}"-->
+            </ul>
+          </div>
+          <!--展示-->
+          <div class="tab-content outer-top-xs">
+            <div  class="tab-pane in active">
+              <div class="product-slider">
+                <!--背景图片-->
+                <div class="item item-carousel since" style="width: 1035px;">
+                  <!--此处遍历-->
+                  <div class="products" style="width: 180px;float: left;">
+                    <div class="product">
+                      <div class="product-image">
+                        <div class="image">
+                          <a class="thumbnail" target="_blank">
+                            <img src="images/notImage.jpg" >
+                          </a>
+                        </div>
+                        <!-- /.image -->
+                        <div class="tag new" style="background-color: red"><span>新</span></div>
+                        <!--遮罩层显示文字-->
+                        <div class="product-image mask" style="position: absolute;background-color: silver;top: 0;width: 178px;height: 229px;opacity: 0.7; word-wrap: break-word;display: none">
+                          <h4><a class="text"></a></h4>
+                        </div>
+                      </div>
+                      <!-- /.product-image -->
+                      <div class="product-info text-left" >
+                        <h3 style="width: 178px;overflow: hidden; text-overflow:ellipsis; white-space:nowrap;"><a class="name">Floral Print Buttoned</a></h3>
+                        <div class="product-price"> <span >￥<span class="price" style="color: red">452112</span> 起</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================== 自行游: END ============================================== -->
+        <!-- ============================================== 精选 :欧洲 ============================================== -->
+        <div class="scroll-tabs outer-top-vs" style="float: left">
+          <div class="more-info-tab clearfix " style="padding:10px 10px 0 10px;border-bottom: 0">
+            <a  style="color:blue;position: absolute;right:30px;">更多</a>
+            <ul class="nav nav-tabs handpick">
+              <li  class="active"><a>欧洲</a></li>
+              <li><a>美洲</a></li>
+              <li><a>澳新</a></li>
+              <li><a>中东非</a></li>
+              <li><a>马代</a></li>
+              <li><a>大海岛</a></li>
+            </ul>
+          </div>
+          <!--展示-->
+          <div class="tab-content outer-top-xs">
+            <div  class="tab-pane in active">
+              <div class="product-slider">
+                <div class="item item-carousel europe" style="width: 1035px;">
+                  <!--此处遍历-->
+                  <div class="products" style="width: 180px;float: left;">
+                    <div class="product">
+                      <div class="product-image">
+                        <div class="image">
+                          <a class="thumbnail" target="_blank">
+                            <img src="images/notImage.jpg" >
+                          </a>
+                        </div>
+                        <!-- /.image -->
+                        <div class="tag new" style="background-color: red"><span>新</span></div>
+                        <!--遮罩层显示文字-->
+                        <div class="product-image mask" style="position: absolute;background-color: silver;top: 0;width: 178px;height: 229px;opacity: 0.7; word-wrap: break-word;display: none">
+                          <h4><a class="text"></a></h4>
+                        </div>
+                      </div>
+                      <!-- /.product-image -->
+                      <div class="product-info text-left" >
+                        <h3 style="width: 178px;overflow: hidden; text-overflow:ellipsis; white-space:nowrap;"><a class="name">暂无</a></h3>
+                        <div class="product-price"> <span >￥<span class="price" style="color: red">0</span>起</span></div>
+                        <!-- /.product-price -->
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================== 精选: END ============================================== -->
+        <!-- ============================================== 精选 :亚洲 ============================================== -->
+        <div class="scroll-tabs outer-top-vs" style="float: left">
+          <div class="more-info-tab clearfix " style="padding:10px 10px 0 10px;border-bottom: 0">
+            <a  style="color:blue;position: absolute;right:30px;">更多</a>
+            <ul class="nav nav-tabs handpick">
+              <li class="active"><a>东南亚</a></li>
+              <li><a>日本</a></li>
+              <li><a>泰国</a></li>
+              <li><a>港澳台</a></li>
+              <li><a>越柬南亚</a></li>
+            </ul>
+          </div>
+          <!--展示-->
+          <div class="tab-content outer-top-xs">
+            <div  class="tab-pane in active">
+              <div class="product-slider">
+                <div class="item item-carousel asia" style="width: 1035px;">
+                  <!--此处遍历-->
+                  <div class="products" style="width: 180px;float: left;">
+                    <div class="product">
+                      <div class="product-image">
+                        <div class="image">
+                          <a class="thumbnail" target="_blank">
+                            <img src="images/notImage.jpg" >
+                          </a>
+                        </div>
+                        <!-- /.image -->
+                        <div class="tag new" style="background-color: red"><span>新</span></div>
+                        <!--遮罩层显示文字-->
+                        <div class="product-image mask" style="position: absolute;background-color: silver;top: 0;width: 178px;height: 229px;opacity: 0.7; word-wrap: break-word;display: none">
+                          <h4><a class="text"></a></h4>
+                        </div>
+                      </div>
+                      <!-- /.product-image -->
+                      <div class="product-info text-left" >
+                        <h3 style="width: 178px;overflow: hidden; text-overflow:ellipsis; white-space:nowrap;"><a class="name">暂无</a></h3>
+                        <div class="product-price"> <span>￥<span  class="price" style="color: red">0</span>起</span> </div>
+                        <!-- /.product-price -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ============================================== 精选: END ============================================== -->
+
+        <!-- ============================================== FEATURED PRODUCTS ============================================== -->
+        <section class="section featured-product" style="clear: left;height: 639px;">
+        <div class="row">
+        <div class="col-lg-3">
+          <h3 class="section-title">精选主题</h3>
+          <ul class="sub-cat">
+            <li th:each="theme:${themeList}"><a th:text="${theme.name}" style="display: block" th:attr="name=${theme.id}">Computers</a></li>
+          </ul>
+          </div>
+          <div class="col-lg-9">
+          <div class="owl-carousel homepage-owl-carousel custom-carousel owl-theme outer-top-xs themeDown">
+
+            <div class="item item-carousel theme" style="width: 180px;float: left" >
+              <div class="products">
+                <div class="product">
+                  <div class="product-image">
+                    <div class="image"> 
+                          <a class="thumbnail" target="_blank">
+                             <img src="images/notImage.jpg"  >
+                          </a>
+                    </div>
+                    <div class="tag hot"><span>hot</span></div>
+                  </div>
+                  <!--遮罩层显示文字-->
+                  <div class="product-image mask" style="position: absolute;background-color: silver;top: 0;width: 160px;height: 206px;opacity: 0.7; word-wrap: break-word;display: none">
+                      <h4><a class="text"></a></h4>
+                  </div>
+                  <div class="product-info text-left" >
+                    <h3 style="width: 160px;overflow: hidden; text-overflow:ellipsis; white-space:nowrap;"><a class="name">Floral Print Buttoned</a></h3>
+                    <div class="product-price"> <span> ￥ <span  class="price" style="color: red">450.99</span>起 </span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.item -->
+          </div>
+          </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ============================================================= FOOTER ============================================================= -->
+<footer id="footer" class="footer color-bg">
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-3">
+        <div class="address-block">
+          <!-- /.module-heading -->
+          <div class="module-body">
+            <ul class="toggle-footer" style="">
+              <li class="media">
+                <div class="pull-left"> <span class="icon fa-stack fa-lg"> <i class="fa fa-map-marker fa-stack-1x fa-inverse"></i> </span> </div>
+                <div class="media-body">
+                  <p>ThemesGround, 789 Main rd, Anytown, CA 12345 USA</p>
+                </div>
+              </li>
+              <li class="media">
+                <div class="pull-left"> <span class="icon fa-stack fa-lg"> <i class="fa fa-mobile fa-stack-1x fa-inverse"></i> </span> </div>
+                <div class="media-body">
+                  <p> + (888) 123-4567 / + (888) 456-7890</p>
+                </div>
+              </li>
+              <li class="media">
+                <div class="pull-left"> <span class="icon fa-stack fa-lg"> <i class="fa fa-envelope fa-stack-1x fa-inverse"></i> </span> </div>
+                <div class="media-body"> <span><a href="#">marazzo@themesground.com</a></span> </div>
+              </li>
+            </ul>
+          </div>
+          </div>
+          <!-- /.module-body --> 
+        </div>
+        <!-- /.col -->
+        
+        <div class="col-xs-12 col-sm-6 col-md-3">
+          <div class="module-heading">
+            <h4 class="module-title">Customer Service</h4>
+          </div>
+          <!-- /.module-heading -->
+          
+          <div class="module-body">
+            <ul class='list-unstyled'>
+              <li class="first"><a href="#" title="Contact us">My Account</a></li>
+              <li><a href="#" title="About us">Order History</a></li>
+              <li><a href="#" title="faq">FAQ</a></li>
+              <li><a href="#" title="Popular Searches">Specials</a></li>
+              <li class="last"><a href="#" title="Where is my order?">Help Center</a></li>
+            </ul>
+          </div>
+          <!-- /.module-body --> 
+        </div>
+        <!-- /.col -->
+        
+        <div class="col-xs-12 col-sm-6 col-md-3">
+          <div class="module-heading">
+            <h4 class="module-title">Corporation</h4>
+          </div>
+          <!-- /.module-heading -->
+
+          <div class="module-body">
+            <ul class='list-unstyled'>
+              <li class="first"><a title="Your Account" href="#">About us</a></li>
+              <li><a title="Information" href="#">Customer Service</a></li>
+              <li><a title="Addresses" href="#">Company</a></li>
+              <li><a title="Addresses" href="#">Investor Relations</a></li>
+              <li class="last"><a title="Orders History" href="#">Advanced Search</a></li>
+            </ul>
+          </div>
+          <!-- /.module-body --> 
+        </div>
+        <!-- /.col -->
+        
+        <div class="col-xs-12 col-sm-6 col-md-3">
+          <div class="module-heading">
+            <h4 class="module-title">Why Choose Us</h4>
+          </div>
+          <!-- /.module-heading -->
+          <div class="module-body">
+            <ul class='list-unstyled'>
+              <li class="first"><a href="#" title="About us">Shopping Guide</a></li>
+              <li><a href="#" title="Blog">Blog</a></li>
+              <li><a href="#" title="Company">Company</a></li>
+              <li><a href="#" title="Investor Relations">Investor Relations</a></li>
+              <li class=" last"><a  title="Suppliers">Contact Us</a></li>
+            </ul>
+          </div>
+          <!-- /.module-body --> 
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================= FOOTER : END============================================================= --> 
+<script th:src="@{index/assets/js/jquery-1.11.1.min.js}" src="../static/index/assets/js/jquery-1.11.1.min.js"></script>
+<script th:src="@{index/assets/js/bootstrap.min.js}" src="../static/index/assets/js/bootstrap.min.js"></script>
+<script th:src="@{index/assets/js/bootstrap-hover-dropdown.min.js}" src="../static/index/assets/js/bootstrap-hover-dropdown.min.js"></script>
+<script th:src="@{index/assets/js/echo.min.js}" src="../static/index/assets/js/echo.min.js"></script>
+<script th:src="@{index/assets/js/jquery.easing-1.3.min.js}" src="../static/index/assets/js/jquery.easing-1.3.min.js"></script>
+<script th:src="@{index/assets/js/bootstrap-slider.min.js}" src="../static/index/assets/js/bootstrap-slider.min.js"></script>
+<script th:src="@{index/assets/js/jquery.rateit.min.js}" src="../static/index/assets/js/jquery.rateit.min.js"></script>
+<script th:src="@{index/assets/js/lightbox.min.js}" src="../static/index/assets/js/lightbox.min.js"></script>
+<script th:src="@{index/assets/js/bootstrap-select.min.js}" src="../static/index/assets/js/bootstrap-select.min.js"></script>
+<script th:src="@{index/assets/js/bootstrap-select.min.js}" src="../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+</body>
+<script>
+    $(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+        //鼠标经过效果
+        $(".thumbnail").mouseover(function(){
+            $(this).parents(".product").find(".mask").css("display","block");
+        })
+        $(".thumbnail").mouseout(function(){
+            $(".mask").css("display","none");
+        })
+      showHeadSpecialPush();/*头部导航栏特推Ajax请求*/
+      findType($(".foreign"),"foreign");//境外
+      findType($(".domestic"),"domestic"); //国内
+      findType($(".since"),"since"); //自行
+      findYAO();/*欧洲或亚洲样式效果*/
+      bottenThemeEdit();//底部主题操作
+      leftHotPlaceShow();//左边热门景点菜单
+    })
+
+    /*左菜单热门-景点操作*/
+    function leftHotPlaceShow(){
+        //页面首次加载
+        var url="/ajax/type";
+        $.post(url,{act:"hot"},function(data) {
+            var index = 1;
+            while (index < data.list.length) {
+                $(".HotSpots").find(".product:last").clone(true).appendTo($(".HotSpots"));
+                index++;
+            }
+            $.each(data.list,function(i,v){
+                if(typeof (v.tripPictures[0])!="undefined"  ){ //图片
+                    $(".HotSpots").find(".product:eq("+i+")").find("img").attr("src",v.tripPictures[0].base64);
+                }else{
+                    $(".HotSpots").find(".product:eq("+i+")").find("img").attr("src","images/notImage.jpg");
+                }
+                $(".HotSpots").find(".product:eq("+i+")").find(".thumbnail").attr("href","/?act=trip&id="+v.id);
+                $(".HotSpots").find(".product:eq("+i+")").find(".name").text(v.title)
+                $(".HotSpots").find(".product:eq("+i+")").find(".name").attr("title",v.title)
+                if(typeof (v.prices[0])!="undefined"){ //价格
+                    $(".HotSpots").find(".product:eq("+i+")").find(".price").text(v.prices[0].price);
+                }else{
+                    $(".HotSpots").find(".product:eq("+i+")").find(".price").text("未定价");
+                }
+                $(".HotSpots").find(".product:eq("+i+")").find(".name").attr("href","/?act=trip&id="+v.id);
+            })
+        })
+        /*左菜单热门-景点操作点击时发生改变*/
+        $(".tag-list").find("a").on("click",function(){
+            $(".tag-list").find("a").removeClass("active");
+            $(this).addClass("active");
+            var clazz = $(this).attr("class");
+            var  placeId = clazz.substring(4,clazz.indexOf("active")).trim();//获取景点id
+            var url="/ajax/type";
+            var number = $(".HotSpots").find(".product").length;//获取个数
+            $(".HotSpots").find(".product:lt("+(number - 1)+")").remove();//除了最后一个不删除其余全部删除
+            $.post(url,{act:"hot",placeId:placeId},function(data) {
+                if(data.list.length ==0){
+                    $(".HotSpots").find(".product").find("img").attr("src","images/notImage.jpg");
+                    $(".HotSpots").find(".product").find(".name").text("暂无")
+                    $(".HotSpots").find(".product").find(".thumbnail").removeAttr("href");
+                    $(".HotSpots").find(".product").find(".name").removeAttr("href");
+                    $(".HotSpots").find(".product").find(".name").removeAttr("title");
+                    $(".HotSpots").find(".product").find(".price").text("0");
+                }else {//克隆再遍历赋值
+                    var index = 1;
+                    while (index < data.list.length) {
+                        $(".HotSpots").find(".product:last").clone(true).appendTo($(".HotSpots"));
+                        index++;
+                    }
+                    $.each(data.list,function(i,v){
+                        if(typeof (v.tripPictures[0])!="undefined"  ){
+                            $(".HotSpots").find(".product:eq("+i+")").find("img").attr("src",v.tripPictures[0].base64);
+                        }else{
+                            $(".HotSpots").find(".product:eq("+i+")").find("img").attr("src","images/notImage.jpg");
+                        }
+                        $(".HotSpots").find(".product:eq("+i+")").find(".thumbnail").attr("href","/?act=trip&id="+v.id);
+                        $(".HotSpots").find(".product:eq("+i+")").find(".name").text(v.title)
+                        $(".HotSpots").find(".product:eq("+i+")").find(".name").attr("title",v.title)
+                        if(typeof (v.prices[0])!="undefined"){
+                            $(".HotSpots").find(".product:eq("+i+")").find(".price").text(v.prices[0].price);
+                        }else{
+                            $(".HotSpots").find(".product:eq("+i+")").find(".price").text("未定价");
+                        }
+                        $(".HotSpots").find(".product:eq("+i+")").find(".name").attr("href","/?act=trip&id="+v.id);
+                    })
+                }
+            })
+        })
+    }
+    function bottenThemeEdit(){
+        //页面刷新开始请求
+        var url="/ajax/type";
+        $.post(url,{act:"theme"},function(data) {
+            var index = 1;
+            while (index < data.list.length) {
+                $(".themeDown").find(".theme:last").clone(true).appendTo($(".themeDown"));
+                index++;
+            }
+            $.each(data.list, function (i, v) {
+                if (typeof (v.tripPictures[0]) != "undefined") {
+                    $(".themeDown").find(".theme:eq(" + i + ")").find("img").attr("src", v.tripPictures[0].base64);
+                } else {
+                    $(".themeDown").find(".theme:eq(" + i + ")").find("img").attr("src", "images/notImage.jpg");
+                }
+                $(".themeDown").find(".theme:eq(" + i + ")").find(".text").text(v.title);
+                $(".themeDown").find(".theme:eq(" + i + ")").find(".thumbnail").attr("href", "/?act=trip&id=" + v.id);
+                $(".themeDown").find(".theme:eq(" + i + ")").find(".name").text(v.title)
+                $(".themeDown").find(".theme:eq(" + i + ")").find(".name").attr("title", v.title)
+                if (typeof (v.prices[0]) != "undefined") {
+                    $(".themeDown").find(".theme:eq(" + i + ")").find(".price").text(v.prices[0].price);
+                } else {
+                    $(".themeDown").find(".theme:eq(" + i + ")").find(".price").text("未定价");
+                }
+                $(".themeDown").find(".theme:eq(" + i + ")").find(".name").attr("href", "/?act=trip&id=" + v.id);
+            })
+        })
+        /*底部主题操作点击时请求*/
+        $(".sub-cat").find("li").on("click",function(){
+            $(".sub-cat").find("li").removeClass("suba");
+            $(this).addClass("suba");
+            var id = $(this).children("a").attr("name");//获取id
+            var url="/ajax/type";
+            var number = $(".themeDown").find(".theme").length;//获取个数
+            $(".themeDown").find(".theme:lt("+(number - 1)+")").remove();//除了最后一个不删除其余全部删除
+            $.post(url,{act:"theme",themeId:id},function(data){
+                if(data.list.length ==0){
+                    $(".themeDown").find(".theme").find("img").attr("src","images/notImage.jpg");
+                    $(".themeDown").find(".theme").find(".name").text("暂无")
+                    $(".themeDown").find(".theme").find(".thumbnail").removeAttr("href");
+                    $(".themeDown").find(".theme").find(".name").removeAttr("href");
+                    $(".themeDown").find(".theme").find(".name").removeAttr("title");
+                    $(".themeDown").find(".theme").find(".price").text("0");
+                }else {//克隆再遍历赋值
+                    var index = 1;
+                    while (index < data.list.length) {
+                        $(".themeDown").find(".theme:last").clone(true).appendTo($(".themeDown"));
+                        index++;
+                    }
+                    $.each(data.list,function(i,v){
+                        if(typeof (v.tripPictures[0])!="undefined"  ){
+                            $(".themeDown").find(".theme:eq("+i+")").find("img").attr("src",v.tripPictures[0].base64);
+                        }else{
+                            $(".themeDown").find(".theme:eq("+i+")").find("img").attr("src","images/notImage.jpg");
+                        }
+                        $(".themeDown").find(".theme:eq("+i+")").find(".text").text(v.title);
+                        $(".themeDown").find(".theme:eq("+i+")").find(".thumbnail").attr("href","/?act=trip&id="+v.id);
+                        $(".themeDown").find(".theme:eq("+i+")").find(".name").text(v.title)
+                        $(".themeDown").find(".theme:eq("+i+")").find(".name").attr("title",v.title)
+                        if(typeof (v.prices[0])!="undefined"){
+                            $(".themeDown").find(".theme:eq("+i+")").find(".price").text(v.prices[0].price);
+                        }else{
+                            $(".themeDown").find(".theme:eq("+i+")").find(".price").text("未定价");
+                        }
+                        $(".themeDown").find(".theme:eq("+i+")").find(".name").attr("href","/?act=trip&id="+v.id);
+                    })
+                }
+            })
+        });
+    }
+
+    function showHeadSpecialPush(){
+        /*头部导航栏特推Ajax请求*/
+        $("#pushNew").hover(function(){
+            $(this).find("h2").each(function(){
+                var placeId = $(this).attr("id");//获取id
+                var ul = $(this).next(".links");//获取当前ul用于遍历
+                var url = "/ajax"
+                $.post(url,{placeId:placeId},function(data){
+                    ul.empty();//清空
+                    $.each(data.list,function(i,v){
+                        ul.append("<li><a href='/?act=trip&id="+v.id+"' target='_blank'>"+v.title+"</a></li>")
+                    })
+                })
+            })
+        })
+    }
+    /*欧洲或亚洲样式效果*/
+    function findYAO(){
+        $(".handpick").find("li").click(function(){
+            $(this).siblings().removeClass("active");
+            $(this).addClass("active");
+            var name = $(this).children("a").text().trim();//获取名称
+            var type = $(".handpick").index($(this).parents(".handpick"));//获取下标 0精选欧洲 1精选亚洲
+            var object;
+            if(type ==0){//欧洲
+                object =  $(this).parents(".clearfix").nextAll(".outer-top-xs").find(".europe");//获取节点
+            }else{//亚洲
+                object =  $(this).parents(".clearfix").nextAll(".outer-top-xs").find(".asia");//获取节点
+            }
+            var number = object.find(".products").length;//获取个数
+            object.find(".products:lt("+(number - 1)+")").remove();//除了最后一个不删除其余全部删除
+            var url="/ajax/type";
+            $.post(url,{act:"handpick",type:type,name:name},function(data){
+                if(data.list.length ==0){
+                    object.find(".products").find("img").attr("src","images/notImage.jpg");
+                    object.find(".products").find(".name").text("暂无")
+                    object.find(".products").find(".text").text("");
+                    object.find(".products").find(".thumbnail").removeAttr("href");
+                    object.find(".products").find(".name").removeAttr("href");
+                    object.find(".products").find(".price").text("0");
+                }else{
+                    var index = 1;
+                    while (index < data.list.length){
+                        object.find(".products:last").clone(true).appendTo(object);
+                        index++;
+                    }
+                    $.each(data.list,function(i,v){
+                        if(typeof (v.tripPictures[0])!="undefined"  ){
+                            object.find(".products:eq("+i+")").find("img").attr("src",v.tripPictures[0].base64);
+                        }else{
+                            object.find(".products:eq("+i+")").find("img").attr("src","images/notImage.jpg");
+                        }
+                        object.find(".products:eq("+i+")").find(".text").text(v.title);
+                        object.find(".products:eq("+i+")").find(".thumbnail").attr("href","/?act=trip&id="+v.id);
+                        object.find(".products:eq("+i+")").find(".name").text(v.title)
+                        if(typeof (v.prices[0])!="undefined"){
+                            object.find(".products:eq("+i+")").find(".price").text(v.prices[0].price);
+                        }else{
+                            object.find(".products:eq("+i+")").find(".price").text("未定价");
+                        }
+
+                        object.find(".products:eq("+i+")").find(".name").attr("href","/?act=trip&id="+v.id);
+                    })
+                }
+            });
+        });
+    }
+    /*用于查询境内，境外，自驾，精选*/
+  function findType(object,name){
+      var url="/ajax/type"
+      var number = $(".foreign").find(".products").length;//获取个数
+      object.find(".products:lt("+(number - 1)+")").remove();//除了最后一个不删除其余全部删除
+      $.post(url,{act:name},function(data){
+          var index = 1;
+          while (index < data.list.length){
+              object.find(".products:last").clone(true).appendTo(object);
+              index++;
+          }
+          $.each(data.list,function(i,v){
+              if(typeof (v.tripPictures[0])!="undefined"){
+                  object.find(".products:eq("+i+")").find("img").attr("src",v.tripPictures[0].base64);
+              }
+              object.find(".products:eq("+i+")").find(".text").text(v.title);
+              object.find(".products:eq("+i+")").find(".thumbnail").attr("href","/?act=trip&id="+v.id);
+              object.find(".products:eq("+i+")").find(".name").text(v.title)
+              if(typeof (v.prices[0])!="undefined"){
+                  object.find(".products:eq("+i+")").find(".price").text(v.prices[0].price);
+              }else{
+                  object.find(".products:eq("+i+")").find(".price").text("未定价");
+              }
+
+              object.find(".products:eq("+i+")").find(".name").attr("href","/?act=trip&id="+v.id);
+          })
+      })
+  }
+</script>
+</html>

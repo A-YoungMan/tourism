@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>主题列表</title>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .table tbody tr td, thead tr th {
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid" style="margin-bottom: 20px;">
+    <div class="row">
+        <div class="col-lg-12 p-0">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>主题管理</h1>
+                </div>
+                <ol class="breadcrumb text-right">
+                    <li><a>主题列表</a></li>
+                </ol>
+            </div>
+            <form class="form-inline" style="float: right" action="/admin/theme/key" method="post">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" autocomplete="off" name="key" class="form-control" id="exampleInputAmount" placeholder="主题名称或关键字....">
+                    </div>
+                </div>
+                <button type="submit" id="submit" class="btn btn-primary">搜索</button>
+            </form>
+        </div><!-- /# column -->
+    </div><!-- /# row -->
+    <p th:if="${error}" th:text="${error}" style="color: red"></p>
+    <p th:if="${success}" th:text="${success}" style="color: green"></p>
+    <div class="row">
+        <div class="main-content">
+            <div class="row">
+                <div class="col-lg-3" th:each="theme:${themeList}">
+                    <div class="card alert" style="padding: 0;border-radius: 5px;">
+                        <div class="products_1 text-center">
+                            <div class="pr_img_price" hidden>
+                                    <div class="prd_prc_box">
+                                        <div class="product_price" style="width: 25px;height: 25px;min-width: 0;min-height: 0;background-color: red;top:-5px;opacity: 0.6">
+                                            <p  style="padding-top: 3px;"><a href="#" th:href="@{'/admin/theme/addRecycle?id='+${theme.id}}" title="点击删除" onclick="return confirm('确定删除?,删除后加入回收站!'); "> X </a></p>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="product_details">
+                                <div class="product_name">
+                                    <h4 th:text="${theme.name}">名称</h4>
+                                </div>
+                                <div class="product_des">
+                                    <p th:text="${theme.detail}"> dummy text the printing and type setting indust.</p>
+                                </div>
+                                <div class="prdt_add_to_cart" style="opacity: 0.7">
+                                    <a class="btn btn-primary btn-rounded  m-l-5" th:href="@{'/admin/theme/edit?id='+${theme.id}}">修改</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /# card -->
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+        </div>
+        <!--分页-->
+        <nav th:if="${!#lists.isEmpty(themeList)}" aria-label="Page navigation" style="text-align: center;">
+            <span><span th:text="${this}"></span>/<span th:text="${pages}"></span>页</span>
+            <ul class="pagination" style="margin: 0;height:20px;">
+                <li class="disabled" th:class="${this==1?'disabled':''}" th:switch="${this}">
+                    <a th:case="1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    <a th:case="*" th:unless=${key} th:href="@{'/admin/theme/list?pageNum='+${this-1}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    <a th:case="*" th:if=${key} th:href="@{'/admin/theme/key?pageNum='+${this-1}+'&key='+${key}}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li th:each="i:${#numbers.sequence(1,pages)}">
+                    <a th:unless="${key}" th:href="@{'/admin/theme/list?pageNum='+${i}}" th:text="${i}">1</a>
+                    <a th:if="${key}" th:href="@{'/admin/theme/key?key='+${key}+'&pageNum='+${i}}" th:text="${i}">1</a>
+                </li>
+
+                <li th:class="${this == pages?'disabled':''}" th:switch="${this}">
+                    <a th:case='${pages}' aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                    <a th:case='${pages+1}' aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                    <a th:case='*' th:unless="${key}" th:href="@{'/admin/theme/list?pageNum='+${this + 1}}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                    <a th:case='*' th:if="${key}" th:href="@{'/admin/theme/key?pageNum='+${this + 1}+'&key='+${key}}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </div><!-- /# row -->
+    <a th:href="@{'/admin/theme/edit'}" class="btn btn-success" style="margin-bottom: 10px;">新增主题</a>
+    <a th:href="@{'/admin/theme/list'}" class="btn btn-info" style="margin-bottom: 10px;">查询所有</a>
+</div>
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}"
+        src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $(".col-lg-3").hover(function(){
+            $(".col-lg-3").find(".pr_img_price").attr("hidden",true);
+            $(this).find(".pr_img_price").attr("hidden",false).fadeIn("slow");;;
+        })
+        $("#submit").attr('disabled',true);
+        $("input[name]").bind("input propertychange",function(){
+            var value = $(this).val().trim();
+            if(value == ""){
+                $("#submit").attr('disabled',true);
+            }else{
+                $("#submit").attr('disabled',false);
+            }
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oaec.tourism.mapper.CommentMapper">
+    <insert id="create" parameterType="Comment" keyProperty="id" >
+        INSERT INTO t_comment(user_id,trip_id,order_id,place,hotel,service,traffic,content,create_time,type)
+        VALUES (#{user.id},#{trip.id},#{order.id},#{place},#{hotel},#{service},#{traffic},#{content},#{createTime},#{type})
+    </insert>
+    <delete id="delete" parameterType="int">
+        DELETE FROM t_comment WHERE id=#{id}
+    </delete>
+    <resultMap id="mapComment" type="Comment">
+        <id column="id" property="id" />
+        <result column="place" property="place" />
+        <result column="hotel" property="hotel" />
+        <result column="service" property="service" />
+        <result column="traffic" property="traffic" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <result column="type" property="type" />
+        <association property="order" column="order_id" select="com.oaec.tourism.mapper.OrderMapper.findById" />
+        <association property="trip" column="trip_id" select="com.oaec.tourism.mapper.TripMapper.findById" />
+        <association property="user" column="user_id" select="com.oaec.tourism.mapper.UserMapper.findByCommentUserId" />
+    </resultMap>
+    <select id="findById" parameterType="int" resultMap="mapComment">
+        SELECT id,user_id,trip_id,order_id,place,hotel,service,traffic,content,create_time,type  FROM t_comment WHERE id=#{id}
+    </select>
+    <select id="findByUserIdOrTripId" resultMap="mapComment" >
+        SELECT id,user_id,trip_id,order_id,place,hotel,service,traffic,content,create_time,type  FROM t_comment WHERE user_id=#{userId}
+         <if test="tripId != null"> AND trip_id=#{tripId} </if>
+         ORDER BY create_time DESC
+    </select>
+    <select id="findByTripOrType" resultMap="mapComment" >
+        SELECT id,user_id,trip_id,order_id,place,hotel,service,traffic,content,create_time,type  FROM t_comment WHERE trip_id=#{tripId}
+         <if test="type != null"> AND type=#{type} </if>
+         ORDER BY create_time DESC
+    </select>
+    <select id="findAll" resultMap="mapComment">
+        SELECT id,user_id,trip_id,order_id,place,hotel,service,traffic,content,create_time,type  FROM t_comment  ORDER BY create_time DESC
+    </select>
+    <select id="findByPlaceIdAndTypeAndTripType" resultMap="mapComment">
+        SELECT c.id,c.user_id,c.trip_id,c.order_id,c.place,c.hotel,c.service,c.traffic,c.content,c.create_time,c.type
+        FROM t_comment c
+        LEFT JOIN t_place_trip pt on pt.tripe = c.trip_id
+        LEFT JOIN t_trip t on t.id = c.trip_id
+        <where>
+        <choose>
+            <when test="placeId == -1"></when>
+            <otherwise>
+                pt.place_id=#{placeId}
+            </otherwise>
+        </choose>
+            <choose>
+                <when test="tripType == -1"></when>
+                <otherwise>
+                    AND t.type=#{tripType}
+                </otherwise>
+            </choose>
+            <choose>
+                <when test="type == -1"></when>
+                <otherwise>
+                    AND c.type=#{type}
+                </otherwise>
+            </choose>
+        </where>
+        ORDER BY c.create_time DESC
+    </select>
+</mapper>

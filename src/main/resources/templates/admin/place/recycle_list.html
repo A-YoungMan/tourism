@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>回收站列表</title>
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css" rel="stylesheet" />
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+</head>
+<style>
+    .table tbody tr td,thead tr th{
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 p-0">
+            <div class="page-header">
+                <div class="page-title">
+                    <h1>回收管理 </h1>
+                </div>
+                <ol class="breadcrumb text-right">
+                    <li><a>列表</a></li>
+                </ol>
+            </div>
+        </div><!-- /# column -->
+    </div><!-- /# row -->
+    <p th:if="${error}" th:text="${error}" style="color: red"></p>
+    <p th:if="${success}" th:text="${success}" style="color: green"></p>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card alert">
+            <div class="favourite-menu-details">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <div class="favourite-menu-img">
+                                景点编号
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-des" style="width:300px;margin-right: 0">
+                                <div class="product_name">
+                                    <h4>景点名称</h4>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    国家
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    区域
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    景点坐标
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    发布日期
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt" style="text-align: center">
+                                    操作
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="place:${placeList}">
+                        <td>
+                            <div class="favourite-menu-img" th:text="${place.id}">
+                                景点编号
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-des" style="width:300px;margin-right: 0">
+                                <div class="product_name">
+                                    <h4 th:text="${place.name}">景点名称</h4>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <span th:if="${place.city}" th:text="${place.city.name}"></span>
+                                    <span th:unless="${place.city}" th:text="未添加坐标">未添加国家</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <span th:text="${place.area}">地区</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <span th:if="${place} and ${place.position}" th:text="'经度:'+${place.position.p1}+'纬度:'+${place.position.p2}"></span>
+                                    <span th:unless="${place} and ${place.position}" th:text="未添加坐标">未添加坐标</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt" th:text="${#dates.format(place.createTime,'yyyy-MM-dd HH:hh:mm')}">
+                                    发布日期
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="favourite-menu-button">
+                                <div class="prdt_add_to_curt">
+                                    <a th:href="@{'/admin/place/recycleUpdate?id='+${place.id}}" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="恢复至列表!">恢复</a>  <a  th:href="@{'/admin/place/recycleDelete?id='+${place.id}}" class="btn btn-warning btn-xs" onClick="return confirm('删除后将无法恢复!');" data-toggle="tooltip" data-placement="top" title="删除后将无法恢复!">删除</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${!#lists.isEmpty(placeList)}">
+                <a th:href="@{'/admin/place/operation?act=update'}" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="全部恢复到列表!">全部恢复</a>&nbsp;&nbsp;
+                <a th:href="@{'/admin/place/operation?act=delete'}" class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="清空后将无法恢复!" onClick="return confirm('确定清空回收站?,删除后不可恢复!');">清空回收站</a>
+            </div>
+            <div th:unless="${!#lists.isEmpty(placeList)}">
+                <a  class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="全部恢复到列表!">全部恢复</a>&nbsp;&nbsp;
+                <a  class="btn btn-warning" data-toggle="tooltip" data-placement="bottom" title="清空后将无法恢复!" >清空回收站</a>
+            </div>
+        </div><!-- /# card -->
+    </div>
+</div><!-- /# row -->
+</div>
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js" ></script>
+<script th:src="@{/bootstrap-3.3.7-dist/js/bootstrap.js}" src="../../../static/bootstrap-3.3.7-dist/js/bootstrap.js" ></script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+</script>
+</html>

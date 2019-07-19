@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" xmlns:th="//http:www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+	<link th:href="@{css/jigsaw.css}"  href="../static/css/jigsaw.css" rel="stylesheet">
+	<link th:href="@{css/styles.css}"  href="../static/css/styles.css" rel="stylesheet">
+<title>惠玩旅游-登录</title>
+	<style>
+		#msg {
+			width: 100%;
+			line-height: 40px;
+			font-size: 14px;
+			text-align: center;
+			color: greenyellow;
+		}
+		button{
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body class="logobg_style">
+  	<div id="large-header" class="large-header login-page">
+		<div class="jq22-container" style="padding-top:100px">
+			<div class="login-wrap">
+				<div class="login-html">
+					<h4 style="text-align: center;color:silver">登录</h4>
+					<div class="login-form">
+						<form action="/login" method="post">
+							<div class="sign-in-htm">
+								<p th:text="${success}" style="color: green"></p>
+								<p th:text="${error}" style="color: red"></p>
+								<div class="group">
+									<label for="username" class="label">用户名</label>
+									<input id="username" name="phone" autocomplete="off" type="text" class="input">
+								</div>
+								<div class="group">
+									<label for="password" class="label">密码</label>
+									<input id="password" type="password" name="password" autocomplete="off" class="input" data-type="password">
+								</div>
+								<div class="group">
+									<div class="container" style="margin-left: 10px;">
+										<div id="captcha" style="position: relative" data-type="password"></div>
+										<div id="msg"></div>
+									</div>
+								</div>
+								<div class="group">
+									<span class="icon"></span> <a th:href="@{'/register'}">没有账号？点击注册</a></label>
+								</div>
+								<div class="group">
+									<button class="button" disabled>登录</button>
+								</div>
+
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+		</div>
+  	</div>
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/js/jigsaw.js}" src="../static/js/jigsaw.js"></script>
+<script>
+    var flag=false;
+    jigsaw.init(document.getElementById('captcha'), function () {
+        flag=true;
+        document.getElementById('msg').innerHTML = '验证成功！';
+        if(flag){
+            $("button").removeAttr("disabled");
+		}
+    })
+	$(function() {
+        var index = 1;
+        $("#large-header").css("background", "url(../images/" + index + ".jpg) no-repeat");
+        $("#large-header").css("backgroundSize", "cover");
+        $("#large-header").css("backgroundPosition", "center center");
+        setInterval(function () {
+            if (index > 5) {
+                index = 1;
+            }
+            $("#large-header").css("background", "url(../images/" + index + ".jpg) no-repeat");
+            $("#large-header").css("backgroundSize", "cover");
+            $("#large-header").css("backgroundPosition", "center center");
+            index++;
+        }, 10000)
+    })
+</script>
+</html>

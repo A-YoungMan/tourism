@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- Styles -->
+    <link th:href="@{/assets/css/lib/mmc-chat.css}" href="../../../static/assets/css/lib/mmc-chat.css"
+          rel="stylesheet"/>
+    <link th:href="@{/assets/css/lib/bootstrap.min.css}" href="../../../static/assets/css/lib/bootstrap.min.css"
+          rel="stylesheet">
+    <link th:href="@{/assets/css/lib/nixon.css}" href="../../../static/assets/css/lib/nixon.css" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" href="../../../static/assets/css/style.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" href="../../../static/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+<div class="content-wrap">
+    <div class="main">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 p-0">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h1>主题管理</h1>
+                        </div>
+                        <ol class="breadcrumb text-right">
+                            <li><a href="/admin/theme/list">主题列表</a></li>
+                            <li><a href="#">主题编辑/新增</a></li>
+                        </ol>
+                    </div>
+                </div><!-- /# column -->
+            </div><!-- /# row -->
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card alert">
+                            <div class="card-header">
+                                <h4>新增/修改主题</h4><br/>
+                                <a href="javascript:history.go(-1)" class="btn btn-success">返回上一页</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="menu-upload-form">
+                                    <!--表单-->
+                                    <form class="form-horizontal" action="/admin/theme/save" method="post">
+                                        <div class="form-group">
+                                            <div class="col-sm-10">
+                                                <input type="hidden" name="id" autocomplete="off" class="form-control"
+                                                       th:if="${theme}" th:value="${theme.id}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span
+                                                    style="color: red">*</span>主题名称</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="input" name="name" autocomplete="off" class="form-control"
+                                                       placeholder="名称....." th:if="${theme}"
+                                                       th:value="${theme.name}" />
+                                                <input type="text" id="input" name="name" autocomplete="off" class="form-control"
+                                                       placeholder="名称....." th:unless="${theme}" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label"><span
+                                                    style="color: red">*</span>简要概述</label>
+                                            <div class="col-sm-10">
+                                                <textarea name="detail" class="form-control" rows="3" th:if="${theme}" th:text="${theme.detail}"></textarea>
+                                                <textarea name="detail" class="form-control" rows="3" th:unless="${theme}">请输入简要概述.....</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="submit" class="btn btn-lg btn-primary " style="width: 100px;">保存</button>
+                                            </div>
+                                        </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div><!-- /# card -->
+                    </div><!-- /# column -->
+                </div><!-- /# row -->     </div>
+        </div><!-- /# container-fluid -->
+    </div><!-- /# main -->
+</div><!-- /# content wrap -->
+</body>
+<script th:src="@{/js/jquery-3.4.1.js}" src="../../../static/js/jquery-3.4.1.js"></script>
+<script th:src="@{/layDate-v5.0.9/laydate/laydate.js}" src="../../../static/layDate-v5.0.9/laydate/laydate.js"></script>
+<script th:src="@{/js/cropbox.js}" src="../../../static/js/cropbox.js"></script>
+
+<script>
+    $(function(){
+        /*Ajax请求判断是存在当前名称*/
+        $("#input").bind("input propertychange",function(){
+            var value = $(this).val();//获取输入的值
+            var input =$(this);//获取当前元素
+            var url = "/admin/theme/input";
+            $.get(url,{name:value},function(data){
+                if(data.ok){
+                    input.next().remove();//删除同辈下级元素
+                    input.after("<p style='color: red'>当前主题名称已存在!</p>")
+                    $(".btn-primary").attr('disabled',true);
+                }else{
+                    input.next().remove();//删除同辈下级元素
+                    input.after("<p style='color: green'>当前主题名称可添加!</p>")
+                    $(".btn-primary").attr('disabled',false);
+                }
+            })
+        })
+    })
+</script>
+</html>
